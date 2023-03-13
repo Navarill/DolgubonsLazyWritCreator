@@ -8,11 +8,9 @@
 ## APIVersion: 101037
 ## Author: Dolgubon
 ## Version: 3.1.1
-## DependsOn: LibAddonMenu-2.0 LibLazyCrafting
-## OptionalDependsOn: pChat LibFeedback LibCustomMenu 
+## DependsOn: LibAddonMenu-2.0 LibFeedback LibLazyCrafting
+## OptionalDependsOn: pChat LibCustomMenu 
 ## SavedVariables: DolgubonsWritCrafterSavedVars
-
-libs\LibFeedback\feedback.lua
 
 HelperFunctions.lua
 LootHandler.lua
