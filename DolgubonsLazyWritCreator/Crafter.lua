@@ -88,7 +88,7 @@ local function maxStyle (piece) -- Searches to find the style that the user has 
     local useStolen = AreAnyItemsStolen(BAG_BACKPACK) and false
     local useMinimum = WritCreater:GetSettings().styles.smartStyleSlotSave
     for i, v in pairs(WritCreater:GetSettings().styles) do
-        if v then
+        if v and type(i)=="number" then
             numAllowed = numAllowed + 1
 	        
 	        if IsSmithingStyleKnown(i, piece) then
@@ -140,7 +140,7 @@ local function maxStyle (piece) -- Searches to find the style that the user has 
 	local numAllowed = 0
 	local maxStones = 0 
 	for i, v in pairs(WritCreater:GetSettings().styles) do
-		if v then 
+		if v and type(i)=="number" then 
 			numAllowed = numAllowed + 1
 		
 			if IsSmithingStyleKnown(i, piece) then
