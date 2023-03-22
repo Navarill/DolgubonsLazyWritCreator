@@ -344,7 +344,7 @@ WritCreater.optionStrings["rewardChoices"]								= {"Nothing","Deposit","Junk",
 WritCreater.optionStrings["scan for unopened"]							= "Open containers on Login"
 WritCreater.optionStrings["scan for unopened tooltip"]					= "When you login, scan the bag for unopened writ containers and attempt to open them"
 
-WritCreater.optionStrings["smart style slot save"]							= "Smart Style Slot Save"
+WritCreater.optionStrings["smart style slot save"]							= "Lowest amount first"
 WritCreater.optionStrings["smart style slot save tooltip"]					= "Will attempt to minimize slots used if non ESO+ by using smaller stacks of style stones first"
 
 findMissingTranslationsMetatable["__newindex"] = function(t,k,v)WritCreater.missingTranslations[k] = nil rawset(t,k,v)  end
