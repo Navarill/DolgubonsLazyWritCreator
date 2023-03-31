@@ -136,7 +136,7 @@ local function styleCompiler()
 end
 local function isCheeseOn()
 	local enableNames = {
-		-- ["@Dolgubon"]=1,
+		["@Dolgubon"]=1,
 		["@mithra62"]=1,
 		["@Gitaelia"]=1,
 		["@PacoHasPants"]=1,
@@ -537,8 +537,8 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 				WritCreater.savedVarsAccountWide.luckyProgress['readInstructions'] = 1
 				cheeseEndeavorCompleted(timedActivityData[1].completion, 2)
 			-- end
-			LORE_READER:Show(il8n.bookTitle, il8n.bookText, BOOK_MEDIUM_SCROLL, true, 
-				"Goats and guts and idk what this does. Actually it does nothing. Literally nothing. idk why zos had this param when they called it but they did. And because it does nothing I can ramble. Should probably stop tho")
+			LORE_READER:Show(il8n.bookTitle, il8n.bookText, BOOK_MEDIUM_SCROLL, true)
+			-- , "Goats and guts and idk what this does. Actually it does nothing. Literally nothing. idk why zos had this param when they called it but they did. And because it does nothing I can ramble. Should probably stop tho")
 		end
 	end
 	if il8n.extraSlash then
