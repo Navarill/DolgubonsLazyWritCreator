@@ -338,8 +338,10 @@ WritCreater.optionStrings["jubilee"]									= "Loot Anniversary Boxes"
 WritCreater.optionStrings["jubilee tooltip"]							= "Auto Loot Anniversary Boxes"
 WritCreater.optionStrings["skin"]										= "Writ Crafter Skin"
 WritCreater.optionStrings["skinTooltip"]								= "The skin for the Writ Crafter UI"
-WritCreater.optionStrings["skinOptions"]								= {"Default", "Cheesy"}
-
+WritCreater.optionStrings["skinOptions"]								= {"Default", "Cheesy", "Goaty"}
+WritCreater.optionStrings["goatSkin"]									= "Goaty"
+WritCreater.optionStrings["cheeseSkin"]									= "Cheesy"
+WritCreater.optionStrings["defaultSkin"]								= "Default"
 WritCreater.optionStrings["rewardChoices"]								= {"Nothing","Deposit","Junk", "Destroy"}
 WritCreater.optionStrings["scan for unopened"]							= "Open containers on Login"
 WritCreater.optionStrings["scan for unopened tooltip"]					= "When you login, scan the bag for unopened writ containers and attempt to open them"

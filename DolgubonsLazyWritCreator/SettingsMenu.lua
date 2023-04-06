@@ -538,7 +538,6 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 				cheeseEndeavorCompleted(timedActivityData[1].completion, 2)
 			-- end
 			LORE_READER:Show(il8n.bookTitle, il8n.bookText, BOOK_MEDIUM_SCROLL, true)
-			-- , "Goats and guts and idk what this does. Actually it does nothing. Literally nothing. idk why zos had this param when they called it but they did. And because it does nothing I can ramble. Should probably stop tho")
 		end
 	end
 	if il8n.extraSlash then
@@ -828,8 +827,15 @@ function WritCreater.Options() --Sentimental
 
 	if WritCreater.savedVarsAccountWide.unlockedCheese or WritCreater.savedVarsAccountWide.unlockedGoat then
 		local skinOptions = {"default"}
-		if WritCreater.savedVarsAccountWide.unlockedCheese then table.insert(skinOptions, "cheese") end
-		if WritCreater.savedVarsAccountWide.unlockedGoat then table.insert(skinOptions, "goat") end
+		local skinChoices = {WritCreater.optionStrings["defaultSkin"]}
+		if WritCreater.savedVarsAccountWide.unlockedCheese then 
+			table.insert(skinOptions, "cheese") 
+			table.insert(skinChoices, WritCreater.optionStrings["cheeseSkin"])
+		end
+		if WritCreater.savedVarsAccountWide.unlockedGoat then 
+			table.insert(skinOptions, "goat") 
+			table.insert(skinChoices, WritCreater.optionStrings["goatSkin"])
+		end
 		table.insert(options, 4,
 		{
 			type = "divider",
@@ -843,7 +849,7 @@ function WritCreater.Options() --Sentimental
 			name = WritCreater.optionStrings["skin"],--"Master Writs",
 			tooltip =WritCreater.optionStrings["skinTooltip"],--"Craft Master Writ Items",
 			choices = WritCreater.optionStrings["skinOptions"],
-			choicesValues = {"default","cheese", "goat"},
+			choicesValues = skinOptions,
 			getFunc = function() return WritCreater.savedVarsAccountWide.skin end,
 			setFunc = function(value) 
 				WritCreater.savedVarsAccountWide.skin  = value
