@@ -828,8 +828,15 @@ function WritCreater.Options() --Sentimental
 
 	if WritCreater.savedVarsAccountWide.unlockedCheese or WritCreater.savedVarsAccountWide.unlockedGoat then
 		local skinOptions = {"default"}
-		if WritCreater.savedVarsAccountWide.unlockedCheese then table.insert(skinOptions, "cheese") end
-		if WritCreater.savedVarsAccountWide.unlockedGoat then table.insert(skinOptions, "goat") end
+		local skinChoices = {WritCreater.optionStrings["defaultSkin"]}
+		if WritCreater.savedVarsAccountWide.unlockedCheese then 
+			table.insert(skinOptions, "cheese") 
+			table.insert(skinChoices, WritCreater.optionStrings["cheeseSkin"])
+		end
+		if WritCreater.savedVarsAccountWide.unlockedGoat then 
+			table.insert(skinOptions, "goat") 
+			table.insert(skinChoices, WritCreater.optionStrings["goatSkin"])
+		end
 		table.insert(options, 4,
 		{
 			type = "divider",
@@ -843,7 +850,7 @@ function WritCreater.Options() --Sentimental
 			name = WritCreater.optionStrings["skin"],--"Master Writs",
 			tooltip =WritCreater.optionStrings["skinTooltip"],--"Craft Master Writ Items",
 			choices = WritCreater.optionStrings["skinOptions"],
-			choicesValues = {"default","cheese", "goat"},
+			choicesValues = skinOptions,
 			getFunc = function() return WritCreater.savedVarsAccountWide.skin end,
 			setFunc = function(value) 
 				WritCreater.savedVarsAccountWide.skin  = value
