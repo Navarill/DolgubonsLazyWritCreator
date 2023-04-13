@@ -849,7 +849,7 @@ function WritCreater.Options() --Sentimental
 			type = "dropdown",
 			name = WritCreater.optionStrings["skin"],--"Master Writs",
 			tooltip =WritCreater.optionStrings["skinTooltip"],--"Craft Master Writ Items",
-			choices = WritCreater.optionStrings["skinOptions"],
+			choices = skinChoices,
 			choicesValues = skinOptions,
 			getFunc = function() return WritCreater.savedVarsAccountWide.skin end,
 			setFunc = function(value) 
