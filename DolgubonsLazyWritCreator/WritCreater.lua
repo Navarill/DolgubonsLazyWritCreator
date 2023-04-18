@@ -94,6 +94,7 @@ WritCreater.default =
 		loot = IsESOPlusSubscriber(),
 	},
 	["scanForUnopened"] = false,
+	["transmuteBlock"] = {},
 }
 
 WritCreater.defaultAccountWide = {
