@@ -52,7 +52,7 @@ function WritCreater.initializeReticleChanges()
 	setupReplacement(ZO_ReticleContainerInteractContext, "SetText")
 end
 
-local interactionManager = FISHING_MANAGER or INTERACTIVE_WHEEL_MANAGER
+local interactionManager = INTERACTIVE_WHEEL_MANAGER
 local oldInteract = interactionManager.StartInteraction
 if oldInteract then
 
