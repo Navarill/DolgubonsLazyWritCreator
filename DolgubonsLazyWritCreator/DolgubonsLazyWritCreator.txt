@@ -9,10 +9,8 @@
 ## Author: Dolgubon
 ## Version: 3.1.6.2
 ## DependsOn: LibAddonMenu-2.0 LibLazyCrafting>=4007
-## OptionalDependsOn: pChat LibStub LibFeedback LibCustomMenu  LibHistoire
+## OptionalDependsOn: pChat LibFeedback LibCustomMenu LibHistoire
 ## SavedVariables: DolgubonsWritCrafterSavedVars
-
-libs\LibFeedback\feedback.lua
 
 HelperFunctions.lua
 LootHandler.lua
