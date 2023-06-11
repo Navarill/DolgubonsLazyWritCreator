@@ -15,7 +15,6 @@ local function toggleStatusWindow(override)
 		StatusBar:SetHidden(override)
 		return
 	end
-	local hidden = StatusBar:IsHidden()
 	StatusBar:SetHidden(not WritCreater:GetSettings().showStatusBar)
 end
 
@@ -112,7 +111,7 @@ local function updateQuestStatus(event)
 	if not anyActive then
 		toggleStatusWindow(true)
 	else
-		toggleStatusWindow(false)
+		toggleStatusWindow()
 	end
 
 end
