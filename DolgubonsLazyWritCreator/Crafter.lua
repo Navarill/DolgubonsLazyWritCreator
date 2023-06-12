@@ -239,6 +239,7 @@ local function setupConditionsTable(quest, info,indexTableToUse)
 	return conditionsTable
 end
 
+
 function isCurrentStationsWritComplete()
 	local questIndex = WritCreater.writSearch()[GetCraftingInteractionType()]
 	for i = 0, 7 do

@@ -350,7 +350,9 @@ WritCreater.optionStrings["scan for unopened tooltip"]					= "When you login, sc
 WritCreater.optionStrings["smart style slot save"]						= "Lowest amount first"
 WritCreater.optionStrings["smart style slot save tooltip"]				= "Will attempt to minimize slots used if non ESO+ by using smaller stacks of style stones first"
 WritCreater.optionStrings["abandon quest for item"]						= "Writs requiring <<1>>"
-WritCreater.optionStrings["abandon quest for item tooltip"]				= "Abandon writs that require <<1>>"
+WritCreater.optionStrings["abandon quest for item tooltip"]				= "If OFF, will auto abandon writs requiring <<1>>"
+WritCreater.optionStrings['showStatusBar']								= "Quest Status Bar"
+WritCreater.optionStrings['showStatusBarTooltip']						= "Show or hide quest status bar"
 
 
 findMissingTranslationsMetatable["__newindex"] = function(t,k,v)WritCreater.missingTranslations[k] = nil rawset(t,k,v)  end
