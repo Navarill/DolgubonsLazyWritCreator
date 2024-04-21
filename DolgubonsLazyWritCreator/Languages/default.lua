@@ -344,7 +344,7 @@ WritCreater.optionStrings["skinOptions"]								= {"Default", "Cheesy", "Goaty"}
 WritCreater.optionStrings["goatSkin"]									= "Goaty"
 WritCreater.optionStrings["cheeseSkin"]									= "Cheesy"
 WritCreater.optionStrings["defaultSkin"]								= "Default"
-WritCreater.optionStrings["rewardChoices"]								= {"Nothing","Deposit","Junk", "Destroy"}
+WritCreater.optionStrings["rewardChoices"]								= {"Nothing","Deposit","Junk", "Destroy", "Deconstruct"}
 WritCreater.optionStrings["scan for unopened"]							= "Open containers on Login"
 WritCreater.optionStrings["scan for unopened tooltip"]					= "When you login, scan the bag for unopened writ containers and attempt to open them"
 
