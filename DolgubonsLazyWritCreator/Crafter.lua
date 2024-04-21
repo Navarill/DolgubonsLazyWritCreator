@@ -640,9 +640,6 @@ local function enchantCrafting(info, quest,add)
 				local ta={}
 				local essence={}
 				local potency={}
-				local taString
-
-				taString = WritCreater.getTaString()
 
 				ta["bag"],ta["slot"] = findItem(45850)
 				local essenceId , potencyId = enchantSearch(nil,nil, nil,nil,quest)
@@ -718,7 +715,7 @@ local showOnce= true
 local updateWarningShown = false
 local function craftCheck(eventcode, station)
 
-	local currentAPIVersionOfAddon = 101040
+	local currentAPIVersionOfAddon = 101041
 
 	if GetAPIVersion() > currentAPIVersionOfAddon and GetWorldName()~="PTS" and not updateWarningShown then 
 		d("Update your addons!") 

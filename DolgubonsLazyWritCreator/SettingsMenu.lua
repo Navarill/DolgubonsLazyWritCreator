@@ -13,7 +13,7 @@
 local checks = {}
 local validLanguages = 
 {
-	["en"]=true,["de"] = true,["fr"] = true,["jp"] = true, ["ru"] = false, ["zh"] = false, ["pl"] = false,
+	["en"]=true,["de"] = true,["fr"] = true,["jp"] = true, ["ru"] = false, ["zh"] = false, ["pl"] = false,["es"] = true
 }
 if true then
 	EVENT_MANAGER:RegisterForEvent("WritCrafterLocalizationError", EVENT_PLAYER_ACTIVATED, function()
@@ -53,7 +53,7 @@ for i = 1, GetNumValidItemStyles() do
 end
 
 function WritCreater:GetSettings()
-	if not self or not self.savedVars then
+	if not self or not self.savedVars or not self.savedVarsAccountWide then
 		return false
 	end
 	if self.savedVars.useCharacterSettings then
@@ -145,12 +145,14 @@ local function isCheeseOn()
 		["@K3VLOL99"]=1,
 		
 	}
-	local dateCheck = GetDate()%10000 == 401 or false 
+	local dateCheck = GetDate()%10000 == 401 or false
 	return dateCheck or enableNames[GetDisplayName()]
 	-- return WritCreater.shouldDivinityprotocolbeactivatednowornotitshouldbeallthetimebutwhateveritlljustbeforabit and WritCreater.shouldDivinityprotocolbeactivatednowornotitshouldbeallthetimebutwhateveritlljustbeforabit() == 2
 end
+--  ZO_TimedActivitiesKeyboardListActivityHeader
+-- WritCreater.savedVarsAccountWide.unlockedCheese
+-- WritCreater.savedVarsAccountWide.cheeseCompletedTwice
 if isCheeseOn() then
-
 	local cheesyActivityTypeIndex = 2
 	while TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex] do 
 		cheesyActivityTypeIndex = cheesyActivityTypeIndex + 1 
@@ -162,10 +164,10 @@ if isCheeseOn() then
 	function ZO_TimedActivities_Keyboard:InitializeActivityFinderCategory()
 		local returnValue = originalInitializeKeyboardFinderCategory(self)
 
-		GROUP_MENU_KEYBOARD.nodeList[3].children[cheesyActivityTypeIndex] = 
+		GROUP_MENU_KEYBOARD.nodeList[2].children[cheesyActivityTypeIndex] = 
 		{
             priority = CATEGORY_PRIORITY + 20,
-            name = "RNGesus Sacrifice",
+            name = "Cheesy Endeavors",
             categoryFragment = self.sceneFragment,
             onTreeEntrySelected = onCheesyEndeavorsSelected,
         }
@@ -214,7 +216,7 @@ if isCheeseOn() then
 	GROUP_MENU_KEYBOARD.navigationTree:Commit()
 
 
-	TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex] = {completed = 0, limit = 5}
+	TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex] = {completed = 0, limit = 6}
 	-- Group up and wipe 5 times
 	-- Say "I love cheese!" in zone chat
 	-- Pay a visit to Sheogorath
@@ -226,63 +228,56 @@ if isCheeseOn() then
 	{
 		GetKeyboardIcon = function() return "/esoui/art/icons/heraldrycrests_misc_blank_01.dds" end,--return "/esoui/art/icons/quest_trollfat_001.dds" end,
 		GetGamepadIcon = function() return "/esoui/art/icons/heraldrycrests_misc_blank_01.dds" end,--	return "/esoui/art/icons/quest_trollfat_001.dds" end,
-		GetAbbreviatedQuantity = function() return "" end,
-		GetFormattedNameWithStack = function() return "" end,
-	}
-	local originalReward = 
-	{
-		GetKeyboardIcon = function() return "/esoui/art/icons/heraldrycrests_misc_blank_01.dds" end,--return "/esoui/art/icons/quest_trollfat_001.dds" end,
-		GetGamepadIcon = function() return "/esoui/art/icons/heraldrycrests_misc_blank_01.dds" end,--	return "/esoui/art/icons/quest_trollfat_001.dds" end,
-		GetAbbreviatedQuantity = function() return "????" end,
-		GetFormattedNameWithStack = function() return "????" end,
+		GetAbbreviatedQuantity = function() return il8n.reward end,
+		GetFormattedNameWithStack = function() return il8n.rewardStylized end,
 	}
 
 	local timedActivityData = 
 	{
-		{timedActivityId = 1000, index = 9, maxProgress = 1, reward = {standardReward}, svkey="readInstructions"},
-		{timedActivityId = 1001, index = 9, maxProgress = 1, reward = {standardReward}, svkey="lootGut"},
-		{timedActivityId = 1003, index = 9, maxProgress = 1, reward = {standardReward}, svkey="shootingOnLocation"},  -- in a movie sense
-		{timedActivityId = 1003, index = 9, maxProgress = 1, reward = {standardReward}, svkey="gutDestruction"},
-		{timedActivityId = 1003, index = 9, maxProgress = 1, reward = {standardReward}, svkey="rngesus"}, -- AKA Cheeses of Tamriel
+		{timedActivityId = 1000, index = 9, maxProgress = 1, reward = {standardReward}, svkey="cheeseProfession"},
+		{timedActivityId = 1001, index = 9, maxProgress = 1, reward = {standardReward}, svkey="sheoVisit"},
+		{timedActivityId = 1003, index = 9, maxProgress = 1, reward = {standardReward}, svkey="music"}, -- aka Play a joke on some group members?
+		{timedActivityId = 1003, index = 9, maxProgress = 1, reward = {standardReward}, svkey="cheesyDestruction"},
+		{timedActivityId = 1003, index = 9, maxProgress = 1, reward = {standardReward}, svkey="cheeseNerd"}, -- AKA Cheeses of Tamriel
 	}
+	local finalReward = ZO_ShallowTableCopy(standardReward)
+	finalReward.GetAbbreviatedQuantity = function()
+		if WritCreater.savedVarsAccountWide.unlockedCheese and il8n.alreadyUnlocked then
+			return il8n.alreadyUnlocked
+		end
+		return "???"
+	end
+	finalReward.GetFormattedNameWithStack = function() 
+		if not WritCreater.savedVarsAccountWide.cheeseCompleted2024 and WritCreater.savedVarsAccountWide.unlockedCheese and il8n.alreadyUnlockedTooltip then
+			return il8n.alreadyUnlockedTooltip
+		end
+		if WritCreater.savedVarsAccountWide.unlockedCheese and WritCreater.savedVarsAccountWide.unlockedCheese and il8n.settingsChooseSkin then
+			return il8n.settingsChooseSkin
+		end
+		return il8n.finalReward 
+	end
 
+	timedActivityData[#timedActivityData + 1] = {timedActivityId = 1004, index = 9, maxProgress = #timedActivityData, reward = {finalReward}, svkey="cheeseCompletion"}
 	for i = 1, #timedActivityData do
 		timedActivityData[i].name = il8n.tasks[i].name
-		timedActivityData[i].original = il8n.tasks[i].original
-		timedActivityData[i].completePrevious = il8n.completePrevious
 		timedActivityData[i].completion = il8n.tasks[i].completion
 		timedActivityData[i].description = il8n.tasks[i].description
 	end
 
 	local activityDataObjects = {}
-	local function addTimedActivity(k, v)
-		local newData = ZO_TimedActivityData:New(2000 + k)
-		newData.GetType = function(...) return cheesyActivityTypeIndex end
-		newData.GetName = function(...) 
-			if WritCreater.savedVarsAccountWide.luckyProgress["readInstructions"] == 0 then
-				return v.original 
-			else
-				if WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion+1<k and k~= #timedActivityData then
-					return v.completePrevious
-				end
-				return v.name
-			end 
-		end
-		newData.GetDescription = function(...) return v.description end
-		newData.GetMaxProgress = function(...) return v.maxProgress end
-		newData.GetProgress = function (...) return WritCreater.savedVarsAccountWide.luckyProgress[v.svkey] or 0 end
-		newData.GetRewardList = function(...) if WritCreater.savedVarsAccountWide.luckyProgress["readInstructions"] == 0 then return originalReward else return v.reward end  end
-		newData.timedActivityId = 1000 + k
-		table.insert(TIMED_ACTIVITIES_MANAGER.activitiesData, newData)
-		activityDataObjects[1000 + k] = newData
-	end
 	local function addNewTimedActivities()
-		-- addTimedActivity(1, timedActivityData[1])
-		for i=1, WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"]+1 do
-			if timedActivityData[i] then
-				addTimedActivity(i, timedActivityData[i])
-			end
-			-- addTimedActivity(k, v)
+
+		for k, v in pairs(timedActivityData) do
+			local newData = ZO_TimedActivityData:New(2000 + k)
+			newData.GetType = function(...) return cheesyActivityTypeIndex end
+			newData.GetName = function(...) return v.name end
+			newData.GetDescription = function(...) return v.description end
+			newData.GetMaxProgress = function(...) return v.maxProgress end
+			newData.GetProgress = function (...) return WritCreater.savedVarsAccountWide.cheesyProgress[v.svkey] or 0 end
+			newData.GetRewardList = function(...) return v.reward end
+			newData.timedActivityId = 1000 + k
+			table.insert(TIMED_ACTIVITIES_MANAGER.activitiesData, newData)
+			activityDataObjects[1000 + k] = newData
 		end
 	end
 	local originalNewTimedActivityData = ZO_TimedActivityData.New
@@ -298,7 +293,7 @@ if isCheeseOn() then
 	end
 	function TIMED_ACTIVITIES_GAMEPAD:Refresh()
 		TIMED_ACTIVITIES_GAMEPAD.headerData["data3HeaderText"] = il8n.endeavorName
-		TIMED_ACTIVITIES_GAMEPAD.headerData["data3Text"] = function() return WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"].."/5" end
+		TIMED_ACTIVITIES_GAMEPAD.headerData["data3Text"] = function() return WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"].."/6" end
 	    local currentActivityType = self:GetCurrentActivityType()
 	    local activityTypeFilters
 	    if currentActivityType == TIMED_ACTIVITY_TYPE_DAILY then
@@ -388,7 +383,7 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 		end
 		if self:GetCurrentActivityType() == nil then return end
 	    ZO_ClearNumericallyIndexedTable(self.activitiesData)
-	    TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed = WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"]
+	    TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed = WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"]
 
 	    local currentActivityType = self:GetCurrentActivityType()
 	    local activityTypeFilters
@@ -417,21 +412,16 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 
 	    self:RefreshCurrentActivityInfo()
 	end
-
-	local function cheeseEndeavorCompleted(subHeading, nextActivity)
-		if nextActivity then
-			addTimedActivity(nextActivity, timedActivityData[nextActivity])
-		end
+	local function cheeseEndeavorCompleted(subHeading)
 		TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed = TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed + 1
-		WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] = WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] + 1
-
+		WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"] = WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"] + 1
 		pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
 		local activityTypeName = "CHEESY ENDEAVOR" --GetString("SI_TIMEDACTIVITYTYPE", 2)
 	    -- local _, maxNumActivities = TIMED_ACTIVITIES_MANAGER:GetTimedActivityTypeLimitInfo(2)
-	    local messageTitle = zo_strformat(SI_TIMED_ACTIVITY_TYPE_COMPLETED_CSA,  WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"], #timedActivityData, il8n.menuName)
+	    local messageTitle = zo_strformat(SI_TIMED_ACTIVITY_TYPE_COMPLETED_CSA,  WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"], #timedActivityData - 1, il8n.menuName)
 	    -- local messageTitle = zo_strformat(SI_TIMED_ACTIVITY_TYPE_COMPLETED_CSA, 6, #timedActivityData, "Cheesy")
 	    local messageSubheading = subHeading
-	    if  WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] < #timedActivityData then
+	    if  WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"] < #timedActivityData - 1 then
 	    	messageSubheading = subHeading
 	    end
 
@@ -439,85 +429,37 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 	    messageParams:SetText(messageTitle, messageSubheading)
 	    CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(messageParams)
 
-	    if WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] == #timedActivityData  then
-	    	WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] = 5
+	    if WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"] == #timedActivityData - 1 then
+	    	WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"] = 6
 	    	local finalMessageTitle = il8n.allComplete
-	    	local finalSubheading = il8n.allCompleteSubheading
+	    	local finalSubheading = timedActivityData[6].completion
 	    	local finalMessageParams = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_LARGE_TEXT)
 		    finalMessageParams:SetText(finalMessageTitle, finalSubheading)
 		    -- zo_callLater( function()
 		    	CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(finalMessageParams)
 		    -- end, 1500 )
 
-		    WritCreater.savedVarsAccountWide.skin = "goat"
-		    WritCreater.savedVarsAccountWide.unlockedGoat = true
-		    WritCreater.applyGoatSkin()
+		    WritCreater.savedVarsAccountWide.skin = "cheese"
+		    WritCreater.savedVarsAccountWide.unlockedCheese = true
+		    WritCreater.savedVarsAccountWide.cheeseCompleted2024 = true
 	    end
 	    PlaySound(SOUNDS.ENDEAVOR_COMPLETED)
 	end
-	local alterLocation = {
-		[108] = {"Arangara", 244113, 3108, 299793, 1003081},
-		["zoneindex"] = 18,
-		["zoneId"] = 108,
-	}
-
-	local function calculateDistance()
-		local watchedZones=	alterLocation
-		local zoneIndex = GetUnitZoneIndex("player")
-		local zoneId = GetZoneId(zoneIndex)
-		if not watchedZones[zoneId] then
-			return
-		end
-		if not watchedZones[zoneId][2] then return end
-		-- Pretty sure that means we're in a tracked zone so let's calculate!
-		local _,x,z, y = GetUnitWorldPosition("player")
-		x = watchedZones[zoneId][2] - x
-		y = watchedZones[zoneId][4] - y
-		z = watchedZones[zoneId][3] - z
-		if z < -1500 or (x>4000 or x <-4000) or (y> 4000 or y < -4000) then
-			return
-		end
-		local dist = x*x + y*y + z*z
-		
-		return dist<(watchedZones[zoneId][5] or 0)
-	end
-	local function distanceUpdate()
-		if WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion~=2 or WritCreater.savedVarsAccountWide.luckyProgress.shootingOnLocation ~= 0 then
-			return
-		end
-		local watchedZones=	alterLocation
-		if calculateDistance() then
-			WritCreater.savedVarsAccountWide.luckyProgress["shootingOnLocation"] = 1
-			cheeseEndeavorCompleted(timedActivityData[3].completion, 4)
-		end
-	end
-
-	EVENT_MANAGER:RegisterForUpdate("AranangaThere", 300, distanceUpdate)
-	WritCreater.calculateDistance = function() calculateDistance() end
 	-- listeners
-	-- Ritual lines
+	-- Chese profession
 	local function alternateListener(eventCode,  channelType, fromName, text, isCustomerService, fromDisplayName)
-		if isCheeseOn() and WritCreater and WritCreater.savedVarsAccountWide and WritCreater.savedVarsAccountWide.luckyProgress and WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion == 4
-			and WritCreater.savedVarsAccountWide.luckyProgress["rngesus"] == 0 and (fromDisplayName == GetDisplayName() or channelType == 4) then
+
+		if isCheeseOn() and WritCreater and WritCreater.savedVarsAccountWide and WritCreater.savedVarsAccountWide.cheesyProgress 
+			and WritCreater.savedVarsAccountWide.cheesyProgress["cheeseProfession"] == 0 and (fromDisplayName == GetDisplayName() or channelType == 4) then
 			text = text:lower()
 			text = text:gsub(" ", "")
 			text = text:gsub("!", "")
 			text = text:gsub("%.", "")
 			text = text:gsub("'", "")
 			text = text:gsub("ä", "a")
-			local dist = calculateDistance()
-			if string.find(text, "rngesus") and dist then
-				WritCreater.savedVarsAccountWide.luckyProgress["rngesus"] = 1
-				cheeseEndeavorCompleted(timedActivityData[5].completion)
-			elseif string.find(text, "rngesus") then
-				ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
-			elseif dist then
-				ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.praiseHint)
-			end
-			if string.find(text, "nocturnal") or string.find(text, "fortuna") or string.find(text, "tyche") and dist then --Little easter egg I guess
-				WritCreater.savedVarsAccountWide.luckyProgress["rngesus"] = 1
-				cheeseEndeavorCompleted(timedActivityData[5].completion)
-				ZO_Alert(ERROR, SOUNDS.NONE ,il8n.closeEnough)
+			if WritCreater.cheeseBingos[text] then
+				WritCreater.savedVarsAccountWide.cheesyProgress["cheeseProfession"] = 1
+				cheeseEndeavorCompleted(timedActivityData[1].completion)
 			end
 		end
 	end
@@ -527,22 +469,23 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 	-- /script local a = PlayEmoteByIndex PlayEmoteByIndex = function(...) d(...) a(...) end
 	local terribleMusicEmotes = 
 	{
-		[10] = '/read',
+		[4] = '/horn',
+		[5] = '/lute',
+		[6] = '/drum',
+		[7] = '/flute',
+		[251] = '/festivebellring',
+		[271] = '/esraj',
+		[272] = '/qanun',
 	}
 	-- /playtinyviolin, /festivebellring
 	local originalEmoteFunction = PlayEmoteByIndex
 	PlayEmoteByIndex = function(index, ...)
 		originalEmoteFunction(index, ...)
-		if WritCreater.savedVarsAccountWide.luckyProgress['readInstructions'] == 0 and terribleMusicEmotes[index] then
-			-- if GetDisplayName() ~= "@Dolgubon" then
-				WritCreater.savedVarsAccountWide.luckyProgress['readInstructions'] = 1
-				cheeseEndeavorCompleted(timedActivityData[1].completion, 2)
-			-- end
-			LORE_READER:Show(il8n.bookTitle, il8n.bookText, BOOK_MEDIUM_SCROLL, true)
+
+		if WritCreater.savedVarsAccountWide.cheesyProgress['music'] == 0 and terribleMusicEmotes[index] then
+			WritCreater.savedVarsAccountWide.cheesyProgress['music'] = 1
+			cheeseEndeavorCompleted(timedActivityData[3].completion)
 		end
-	end
-	if il8n.extraSlash then
-		SLASH_COMMANDS[il8n.extraSlash] = function() PlayEmoteByIndex(10) end
 	end
 	local setup = false
 	-- local function setupCheesyMusic()
@@ -551,76 +494,55 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 	-- 	for k, v in pairs(terribleMusicEmotes) do
 	-- 		local originalMusic = SLASH_COMMANDS[v]
 	-- 		SLASH_COMMANDS[v] = function(...) originalMusic(...) 
-	-- 			if WritCreater.savedVarsAccountWide.luckyProgress['music'] == 0 then
-	-- 				WritCreater.savedVarsAccountWide.luckyProgress['music'] = 1
+	-- 			if WritCreater.savedVarsAccountWide.cheesyProgress['music'] == 0 then
+	-- 				WritCreater.savedVarsAccountWide.cheesyProgress['music'] = 1
 	-- 				cheeseEndeavorCompleted(timedActivityData[3].completion)
 	-- 			end
 	-- 		end
 	-- 	end
 	-- end
-	local extraGoatyGoatContextTextText = {
-		["Коза"] = 1,
-		["Cabra"] = 1,
-		["cabra^f"] = 1,
+	local sheoStrings = 
+	{
+		en = "Sheogorath",
+		de = "Sheogorath",
+		fr = "Shéogorath",
 	}
-	local goatFlag = false
-	local function setGoatFlag(text)
-		if text==il8n.goatContextTextText or text == il8n.extraGoatyContextTextText or extraGoatyGoatContextTextText[text] then
-			goatFlag = true
-		else
-			goatFlag = false
+	-- EVENT_MANAGER:RegisterForEvent(WritCreater.name.."cheesyMusic", EVENT_PLAYER_ACTIVATED, setupCheesyMusic)
+	-- Handles the dialogue where we actually complete the quest
+	local function isItUncleSheo(eventCode, journalIndex)
+		if WritCreater.savedVarsAccountWide.cheesyProgress['sheoVisit'] == 0 and zo_plainstrfind( ZO_InteractWindowTargetAreaTitle:GetText() ,sheoStrings[GetCVar("language.2")]) then
+			--d("complete")
+			WritCreater.savedVarsAccountWide.cheesyProgress['sheoVisit'] = 1
+			cheeseEndeavorCompleted(timedActivityData[2].completion)
+			return 
 		end
 	end
-	local originalContextTextTextText = ZO_ReticleContainerInteractContext.SetText
-	ZO_ReticleContainerInteractContext.SetText = function(self, text)
-		setGoatFlag(text)
-		originalContextTextTextText(self, text)
-	end
-	local function handleLootRecieved(_,_,name,_,_,_,ownLoot)
-		if WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] == 1 and goatFlag and ownLoot and GetItemLinkItemId(name) == 42870 then
-			WritCreater.savedVarsAccountWide.luckyProgress["lootGut"] = 1
-			cheeseEndeavorCompleted(timedActivityData[2].completion, 3)
-		else
-		end
-	end
-	EVENT_MANAGER:RegisterForEvent("GoatSacrifice", EVENT_LOOT_RECEIVED, handleLootRecieved)
-	local originalLootAllGuts = LootAll
-	local originalLootSomeGuts = LootItemById
-	LootAll = function(...) local target = GetLootTargetInfo() setGoatFlag(target) originalLootAllGuts(...) end
-	LootItemById = function(...) local target = GetLootTargetInfo() setGoatFlag(target) originalLootSomeGuts(...) end
+	EVENT_MANAGER:RegisterForEvent(WritCreater.name.."FunWithSheo", EVENT_CHATTER_BEGIN, isItUncleSheo)
 
 	local function cheesyScholar(_,_,_,_,_,  bookId)
-		-- if bookId == 1145 then
-		-- 	if WritCreater.savedVarsAccountWide.luckyProgress['cheeseNerd'] == 0 then
-		-- 	-- WritCreater.savedVarsAccountWide.luckyProgress['cheeseNerd'] = 1
-		-- 	-- cheeseEndeavorCompleted(timedActivityData[5].completion)
-		-- 	end
-		-- end
+		if bookId == 1145 then
+			if WritCreater.savedVarsAccountWide.cheesyProgress['cheeseNerd'] == 0 then
+			WritCreater.savedVarsAccountWide.cheesyProgress['cheeseNerd'] = 1
+			cheeseEndeavorCompleted(timedActivityData[5].completion)
+			end
+		end
 	end
 	local originalCheatyCheeseBook = ZO_LoreLibrary_ReadBook
 	ZO_LoreLibrary_ReadBook = function(categoryIndex, collectionIndex, bookIndex,...)
-		if WritCreater.savedVarsAccountWide.luckyProgress['cheeseNerd'] == 0 and categoryIndex == 3 and collectionIndex == 9 and bookIndex == 46  then
-			-- ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR , il8n["cheatyCheeseBook"])
+		if WritCreater.savedVarsAccountWide.cheesyProgress['cheeseNerd'] == 0 and categoryIndex == 3 and collectionIndex == 9 and bookIndex == 46  then
+			ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR , il8n["cheatyCheeseBook"])
 		else
 			originalCheatyCheeseBook(categoryIndex, collectionIndex, bookIndex,...)
 		end
 	end
 	EVENT_MANAGER:RegisterForEvent(WritCreater.name.."cheeseScholar", EVENT_SHOW_BOOK, cheesyScholar)
-
-	-----------------------------------
-	
-
-
 --ITEM_SOUND_CATEGORY_FOOD
 	local requestedCheeseMonster = false
 	local function cheeseMonsterConfirmed(eventCode, sound)
 		--- 38 is the sound cheese makes Must be squeaky right?
-		local inArea = calculateDistance()
-		if requestedCheeseMonster and sound == 39 and WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] == 0 and WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion==3 and inArea then
-			WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] = 1
-			cheeseEndeavorCompleted(timedActivityData[4].completion, 5)
-		elseif requestedCheeseMonster and sound == 39 and WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] == 0 and WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion==3 and not inArea then
-			ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
+		if sound == 38 and WritCreater.savedVarsAccountWide.cheesyProgress['cheesyDestruction'] == 0 then
+			WritCreater.savedVarsAccountWide.cheesyProgress['cheesyDestruction'] = 1
+			cheeseEndeavorCompleted(timedActivityData[4].completion)
 		end
 		requestedCheeseMonster = false
 		EVENT_MANAGER:UnregisterForEvent(WritCreater.name.."cheeseMonsterConfirmed", EVENT_INVENTORY_ITEM_DESTROYED)
@@ -634,75 +556,44 @@ local gpadActivitiesList = TIMED_ACTIVITIES_GAMEPAD.activitiesList
 	
 	local function cheeseMonster( eventCode,  bagId,  slotIndex,  itemCount,  name,  needsConfirm)
 		local itemId = GetItemId(bagId, slotIndex)
-		if WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] == 0 and itemId == 42870 and WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion==3 then
+		if WritCreater.savedVarsAccountWide.cheesyProgress['cheesyDestruction'] == 0 and itemId == 27057 then
 			requestedCheeseMonster = true
 			EVENT_MANAGER:RegisterForEvent(WritCreater.name.."cheeseMonsterConfirmed", EVENT_INVENTORY_ITEM_DESTROYED, cheeseMonsterConfirmed)
-			-- EVENT_MANAGER:RegisterForEvent(WritCreater.name.."notACheeseMonster", EVENT_INVENTORY_ITEM_DESTROYED, notACheeseMonster)
+			EVENT_MANAGER:RegisterForEvent(WritCreater.name.."notACheeseMonster", EVENT_INVENTORY_ITEM_DESTROYED, notACheeseMonster)
 		else
 			requestedCheeseMonster = false
 		end
 	end
 	local originalDestroyItem = DestroyItem
 	DestroyItem = function(bag,slot,...)
-		local inArea = calculateDistance()
 		local itemId = GetItemId(bagId, slotIndex)
-		if WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion==3 and WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] == 0 and itemId == 42870 and inArea then
-			WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] = 1
-			cheeseEndeavorCompleted(timedActivityData[4].completion, 5)
-		elseif WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion==3 and WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] == 0 and itemId == 42870 and not inArea then
-			ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
+		if WritCreater.savedVarsAccountWide.cheesyProgress['cheesyDestruction'] == 0 and itemId == 27057 then
+			WritCreater.savedVarsAccountWide.cheesyProgress['cheesyDestruction'] = 1
+			cheeseEndeavorCompleted(timedActivityData[4].completion)
 		end
 		originalDestroyItem(bag, slot, ...)
 	end
 	EVENT_MANAGER:RegisterForEvent(WritCreater.name.."CheeseMonster", EVENT_MOUSE_REQUEST_DESTROY_ITEM , cheeseMonster)
-	CALLBACK_MANAGER:RegisterCallback("AllDialogsHidden" , function() zo_callLater(function()requestedCheeseMonster = false end, 400) end)
-
-
-
-	-- /esraj /lute /drum /flute   /trumpetsolo /keyharp /panflute  /qunan /ragnarthered /sukun
+	-- /esraj /lute /drum /flute 
 	-- if GetDisplayName() == "@Dolgubon" then
 	-- 	enableAlternateUniverse(true)	
 	-- 	WritCreater.WipeThatFrownOffYourFace(true)	
 	-- end
-	SLASH_COMMANDS['/resetcheeseprogress'] = function(text)
-		local numComplete = tonumber(text) or 2
-		d("resetting to # "..numComplete)
-		for i = 1, #timedActivityData do
-			WritCreater.savedVarsAccountWide.luckyProgress[timedActivityData[i].svkey] = 0
-		end
-		for i = 1, numComplete do
-			WritCreater.savedVarsAccountWide.luckyProgress[timedActivityData[i].svkey] = 1
-		end
-		-- for k, v in pairs (WritCreater.savedVarsAccountWide.luckyProgress) do 
-		-- 	WritCreater.savedVarsAccountWide.luckyProgress[k] = 1
-		-- end 
-		-- WritCreater.savedVarsAccountWide.luckyProgress["cheeseProfession"] = 0
-		WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] = numComplete
+	SLASH_COMMANDS['/resetcheeseprogress'] = function() 
+		for k, v in pairs (WritCreater.savedVarsAccountWide.cheesyProgress) do 
+			WritCreater.savedVarsAccountWide.cheesyProgress[k] = 1
+		end 
+		WritCreater.savedVarsAccountWide.cheesyProgress["cheeseProfession"] = 0
+		WritCreater.savedVarsAccountWide.cheesyProgress["cheeseCompletion"] = 4
 		pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
 	end
 	SLASH_COMMANDS['/resetcheeseprogresscomplete'] = function() 
-		for k, v in pairs (WritCreater.savedVarsAccountWide.luckyProgress) do 
-			WritCreater.savedVarsAccountWide.luckyProgress[k] = 0
+		for k, v in pairs (WritCreater.savedVarsAccountWide.cheesyProgress) do 
+			WritCreater.savedVarsAccountWide.cheesyProgress[k] = 0
 		end 
 		pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
 	end
-		-- local sheoStrings = 
-	-- {
-	-- 	en = "Sheogorath",
-	-- 	de = "Sheogorath",
-	-- 	fr = "Shéogorath",
-	-- }
-	-- -- EVENT_MANAGER:RegisterForEvent(WritCreater.name.."cheesyMusic", EVENT_PLAYER_ACTIVATED, setupCheesyMusic)
-	-- -- Handles the dialogue where we actually complete the quest
-	-- local function isItUncleSheo(eventCode, journalIndex)
-	-- 	if WritCreater.savedVarsAccountWide.luckyProgress['sheoVisit'] == 0 and zo_plainstrfind( ZO_InteractWindowTargetAreaTitle:GetText() ,sheoStrings[GetCVar("language.2")]) then
-	-- 		--d("complete")
-	-- 		WritCreater.savedVarsAccountWide.luckyProgress['sheoVisit'] = 1
-	-- 		cheeseEndeavorCompleted(timedActivityData[2].completion)
-	-- 		return 
-	-- 	end
-	-- end
-	-- EVENT_MANAGER:RegisterForEvent(WritCreater.name.."FunWithSheo", EVENT_CHATTER_BEGIN, isItUncleSheo)
+	
 end
 
 
@@ -917,7 +808,23 @@ function WritCreater.Options() --Sentimental
 				elseif value == 3 then
 					WritCreater:GetSettings().ignoreAuto = true
 					WritCreater:GetSettings().autoLoot = false
+					WritCreater:GetSettings().lootContainerOnReceipt  = false
 				end
+			end,
+		},
+		{
+			type = "checkbox",
+			name = WritCreater.optionStrings["loot container"],
+			tooltip = WritCreater.optionStrings["loot container tooltip"],
+			disabled = function() return not WritCreater:GetSettings().autoLoot end,
+			getFunc = function() 
+				if not WritCreater:GetSettings().autoLoot then
+					WritCreater:GetSettings().lootContainerOnReceipt  = false
+				end
+				return WritCreater:GetSettings().lootContainerOnReceipt 
+			end,
+			setFunc = function(value) 
+			WritCreater:GetSettings().lootContainerOnReceipt = value					
 			end,
 		},
 		{
@@ -927,15 +834,6 @@ function WritCreater.Options() --Sentimental
 			getFunc = function() return WritCreater:GetSettings().keepNewContainer end,
 			setFunc = function(value) 
 			WritCreater:GetSettings().keepNewContainer = value			
-			end,
-		},
-		{
-			type = "checkbox",
-			name = WritCreater.optionStrings["loot container"],
-			tooltip = WritCreater.optionStrings["loot container tooltip"],
-			getFunc = function() return WritCreater:GetSettings().lootContainerOnReceipt end,
-			setFunc = function(value) 
-			WritCreater:GetSettings().lootContainerOnReceipt = value					
 			end,
 		},
 		--[[{
@@ -1103,13 +1001,14 @@ function WritCreater.Options() --Sentimental
 			-- psijic fragment
 
 	}
-	local function geRewardTypeOption(craftingIndex, rewardName)
+
+	local function geRewardTypeOption(craftingIndex, rewardName, validActions, actionNames)
 		return {
 				type = "dropdown",
 				name =  WritCreater.langWritNames()[craftingIndex],
 				tooltip = WritCreater.optionStrings[craftingIndex.."RewardTooltip"],
-				choices = WritCreater.optionStrings["rewardChoices"],
-				choicesValues = {1,2,3, 4},
+				choices = actionNames,
+				choicesValues = validActions,
 				disabled = function() return WritCreater:GetSettings().rewardHandling[rewardName].sameForAllCrafts end,
 				getFunc = function()
 					-- So I don't need to ennummerate it all in the default writ creator settings
@@ -1123,43 +1022,37 @@ function WritCreater.Options() --Sentimental
 			}
 	end
 	local validForReward = 
-	{
+	{  -- Name , list of crafts, valid actions
 		-- {"mats" ,    {1,2,3,4,5,6,7}, },
-		{"repair" ,  {}, false},
-		{"master" ,  {1,2,3,4,5,6,7}, true },
-		{"survey" ,  {1,2,3,4,6,7}, true},
+		{"repair" ,  {}, {1,2,3,4}},
+		{"master" ,  {1,2,3,4,5,6,7} , {1,2,3,4}},
+		{"survey" ,  {1,2,3,4,6,7}, {1,2,3,4}},
 		-- {"ornate" ,  {1,2,6,7}, },
-		-- {"intricate" ,  {1,2,6,7}, },
+		{"intricate" ,  {1,2,6,7}, {1,2,3,4,5}},
 		
 		-- {"soulGem" ,    {3}, },
 		-- {"glyph" ,    {3}, },
 		-- {"fragment" ,    {5}, },
 		-- {"recipe" ,    {5}, },
 	}
-	local function rewardSubmenu(submenuOptions, craftingIndex)
-		local writName
-		if craftingIndex == 0 then
-			writName = "Gear Crafts"
-		else
-			writName = WritCreater.langWritNames()[craftingIndex]
-		end
-		return {
-			type = "submenu",
-			name = writName,
-			tooltip = WritCreater.optionStrings["writRewards submenu tooltip"],
-			controls = submenuOptions,
-			reference = "WritCreaterRewardsSubmenu"..craftingIndex,
-		}
-	end
 	-- use same for all craft chaeckbox
 	-- option to use
 	------------------ divider
 	-- per craft
 	-- just the dropdown
+
+	function getChoiceListInfo(validActionList)
+		local a = {}
+		for k, v in ipairs(validActionList) do
+			a[#a+1] = WritCreater.optionStrings["rewardChoices"][v]
+		end
+		return a
+	end
+
 	for i = 1, #validForReward do
-		local rewardName, validCraftTypes = validForReward[i][1], validForReward[i][2]
-		local submenuOptions
-		if  #validCraftTypes > 1 then
+		local rewardName, validCraftTypes, validActions = validForReward[i][1], validForReward[i][2], validForReward[i][3]
+		local actionNames = getChoiceListInfo(validActions)
+		if #validCraftTypes > 1 then
 			submenuOptions = {
 				{
 					type = "checkbox",
@@ -1174,8 +1067,8 @@ function WritCreater.Options() --Sentimental
 					type = "dropdown",
 					name =  WritCreater.optionStrings["allReward"]	,
 					tooltip = WritCreater.optionStrings["allRewardTooltip"],
-					choices = WritCreater.optionStrings["rewardChoices"],
-					choicesValues = {1,2,3,4},
+					choices = actionNames,
+					choicesValues = validActions,
 					disabled = function() return not WritCreater:GetSettings().rewardHandling[rewardName].sameForAllCrafts end,
 					getFunc = function()
 						-- So I don't need to ennummerate it all in the default writ creator settings
@@ -1200,7 +1093,7 @@ function WritCreater.Options() --Sentimental
 				},
 			}
 			for j = 1, #validCraftTypes do
-				submenuOptions[#submenuOptions + 1] = geRewardTypeOption(validCraftTypes[j], rewardName)
+				submenuOptions[#submenuOptions + 1] = geRewardTypeOption(validCraftTypes[j], rewardName, validActions, actionNames)
 			end
 			rewardsSubmenu[#rewardsSubmenu + 1] = {
 			type = "submenu",
@@ -1214,8 +1107,8 @@ function WritCreater.Options() --Sentimental
 				type = "dropdown",
 				name =  WritCreater.optionStrings[rewardName.."Reward"]	,
 				tooltip = WritCreater.optionStrings["allRewardTooltip"],
-				choices = WritCreater.optionStrings["rewardChoices"],
-				choicesValues = {1,2,3,4},
+				choices = actionNames,
+				choicesValues = validActions,
 				disabled = function() return not WritCreater:GetSettings().rewardHandling[rewardName].sameForAllCrafts end,
 				getFunc = function()
 					-- So I don't need to ennummerate it all in the default writ creator settings
