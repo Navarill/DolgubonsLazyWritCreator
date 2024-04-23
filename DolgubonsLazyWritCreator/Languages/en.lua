@@ -129,14 +129,243 @@ function WritCreater.languageInfo() -- Vital
 
 local craftInfo = 
 	{
+		[ CRAFTING_TYPE_CLOTHIER] = 
+		{
+			["pieces"] = --exact!!
+			{
+				[1] = "robe",
+				[2] = "jerkin",
+				[3] = "shoes",
+				[4] = "gloves",
+				[5] = "hat",
+				[6] = "breeches",
+				[7] = "epaulet",
+				[8] = "sash",
+				[9] = "jack",
+				[10]= "boots",
+				[11]= "bracers",
+				[12]= "helmet",
+				[13]= "guards",
+				[14]= "cops",
+				[15]= "belt",
+			},
+			["match"] = --exact!!! This is not the material, but rather the prefix the material gives to equipment. e.g. Homespun Robe, Linen Robe
+			{
+				[1] = "Homespun", --lvtier one of mats
+				[2] = "Linen",	--l
+				[3] = "Cotton",
+				[4] = "Spidersilk",
+				[5] = "Ebonthread",
+				[6] = "Kresh",
+				[7] = "Ironthread",
+				[8] = "Silverweave",
+				[9] = "Shadowspun",
+				[10]= "Ancestor",
+				[11]= "Rawhide",
+				[12]= "Hide",
+				[13]= "Leather",
+				[14]= "Full-Leather",
+				[15]= "Fell",
+				[16]= "Brigandine",
+				[17]= "Ironhide",
+				[18]= "Superb",
+				[19]= "Shadowhide",
+				[20]= "Rubedo",
+			},
+	
+		},
+		[CRAFTING_TYPE_BLACKSMITHING] = 
+		{
+			["pieces"] = --exact!!
+			{
+				[1] = "axe",
+				[2] = "mace",
+				[3] = "sword",
+				[4] = "battle",
+				[5] ="maul",
+				[6] ="greatsword",
+				[7] = "dagger",
+				[8] = "cuirass",
+				[9] = "sabatons",
+				[10] = "gauntlets",
+				[11] = "helm",
+				[12] = "greaves",
+				[13] = "pauldron",
+				[14] = "girdle",
+			},
+			["match"] = --exact!!! This is not the material, but rather the prefix the material gives to equipment. e.g. Iron Axe, Steel Axe
+			{
+				[1] = "Iron",
+				[2] = "Steel",
+				[3] = "Orichalc",
+				[4] = "Dwarven",
+				[5] = "Ebon",
+				[6] = "Calcinium",
+				[7] = "Galatite",
+				[8] = "Quicksilver",
+				[9] = "Voidsteel",
+				[10]= "Rubedite",
+			},
+
+		},
+		[CRAFTING_TYPE_WOODWORKING] = 
+		{
+			["pieces"] = --Exact!!!
+			{
+				[1] = "bow",
+				[3] = "inferno",
+				[4] ="ice",
+				[5] ="lightning",
+				[6] ="restoration",
+				[2] ="shield",
+			},
+			["match"] = --exact!!! This is not the material, but rather the prefix the material gives to equipment. e.g. Maple Bow. Oak Bow.
+			{
+				[1] = "Maple",
+				[2] =  "Oak",
+				[3] =  "Beech",
+				[4] = "Hickory",
+				[5] = "Yew",
+				[6] =  "Birch",
+				[7] = "Ash",
+				[8] = "Mahogany",
+				[9] = "Nightwood",
+				[10] = "Ruby",
+			},
+
+		},
+		[CRAFTING_TYPE_JEWELRYCRAFTING] = 
+		{
+			["pieces"] = --Exact!!!
+			{
+				[1] = "ring",
+				[2] = "necklace",
+
+			},
+			["match"] = --exact!!! This is not the material, but rather the prefix the material gives to equipment. e.g. Maple Bow. Oak Bow.
+			{
+				[1] = "Pewter", -- 1
+				[2] = "Copper", -- 26
+				[3] = "Silver", -- CP10
+				[4] = "Electrum", --CP80
+				[5] = "Platinum", -- CP150
+			},
+
+		},
+		[CRAFTING_TYPE_ENCHANTING] = 
+		{
+			["pieces"] = --exact!!
+			{ --{String Identifier, ItemId, positive or negative}
+				{"disease", 45841,2},
+				{"foulness", 45841,1},
+				{"absorb stamina", 45833,2},
+				{"absorb magicka", 45832,2},
+				{"absorb health", 45831,2},
+				{"frost resist",45839,2},
+				{"frost",45839,1},
+				{"feat", 45836,2},
+				{"stamina recovery", 45836,1},
+				{"hardening", 45842,1},
+				{"crushing", 45842,2},
+				{"onslaught", 68342,2},
+				{"defense", 68342,1},
+				{"shielding",45849,2},
+				{"bashing",45849,1},
+				{"poison resist",45837,2},
+				{"poison",45837,1},
+				{"spell harm",45848,2},
+				{"magical",45848,1},
+				{"magicka recovery", 45835,1},
+				{"spell cost", 45835,2},
+				{"shock resist",45840,2},
+				{"shock",45840,1},
+				{"health recovery",45834,1},
+				{"decrease health",45834,2},
+				{"weakening",45843,2},
+				{"weapon",45843,1},
+				{"boost",45846,1},
+				{"speed",45846,2},
+				{"flame resist",45838,2},
+				{"flame",45838,1},
+				{"decrease physical", 45847,2},
+				{"increase physical", 45847,1},
+				{"stamina",45833,1},
+				{"health",45831,1},
+				{"magicka",45832,1}
+			},
+			["match"] = --exact!!! The names of glyphs. The prefix (in English) So trifling glyph of magicka, for example
+			{
+				[1] = {"trifling", 45855},
+				[2] = {"inferior",45856},
+				[3] = {"petty",45857},
+				[4] = {"slight",45806},
+				[5] = {"minor",45807},
+				[6] = {"lesser",45808},
+				[7] = {"moderate",45809},
+				[8] = {"average",45810},
+				[9] = {"strong",45811},
+				[10]= {"major",45812},
+				[11]= {"greater",45813},
+				[12]= {"grand",45814},
+				[13]= {"splendid",45815},
+				[14]= {"monumental",45816},
+				[15]= {"truly",{68341,68340,},},
+				[16]= {"superb",{64509,64508,},},
+				
+			},
+			["quality"] = 
+			{
+				{"normal",45850},
+				{"fine",45851},
+				{"superior",45852},
+				{"epic",45853},
+				{"legendary",45854},
+				{"", 45850} -- default, if nothing is mentioned. Default should be Ta.
+			}
+		},
 	} 
 
 	return craftInfo
 
 end
-
 function WritCreater.masterWritQuality() -- Vital . This is probably not necessary, but it stays for now because it works
 	return {{"Epic",4},{"Legendary",5}}
+end
+
+function WritCreater.langEssenceNames() -- Vital
+
+local essenceNames =  
+	{
+		[1] = "Oko", --health
+		[2] = "Deni", --stamina
+		[3] = "Makko", --magicka
+	}
+	return essenceNames
+end
+
+function WritCreater.langPotencyNames() -- Vital
+	--exact!! Also, these are all the positive runestones - no negatives needed.
+	local potencyNames = 
+	{
+		[1] = "Jora", --Lowest potency stone lvl
+		[2] = "Porade",
+		[3] = "Jera",
+		[4] = "Jejora",
+		[5] = "Odra",
+		[6] = "Pojora",
+		[7] = "Edora",
+		[8] = "Jaera",
+		[9] = "Pora",
+		[10]= "Denara",
+		[11]= "Rera",
+		[12]= "Derado",
+		[13]= "Rekura",
+		[14]= "Kura",
+		[15]= "Rejera",
+		[16]= "Repora", --v16 potency stone
+		
+	}
+	return potencyNames
 end
 
 
@@ -413,6 +642,10 @@ function WritCreater.langWritRewardBoxes () return {
 }
 end
 
+
+function WritCreater.getTaString()
+	return "ta"
+end
 
 WritCreater.optionStrings["alternate universe"] = "Turn off April"
 WritCreater.optionStrings["alternate universe tooltip"] = "Turn off the renaming of crafts, crafting stations, and other interactables"
