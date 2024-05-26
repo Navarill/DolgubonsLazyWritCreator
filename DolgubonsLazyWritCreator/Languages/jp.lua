@@ -646,25 +646,6 @@ function WritCreater.langStationNames()
 	 ["付呪台"] = 3,["錬金台"] = 4, ["調理用の火"] = 5, ["木工台"] = 6, ["宝飾台"] = 7, }
 end
 
-
-
-function WritCreater.langWritRewardBoxes () return {
-	[CRAFTING_TYPE_ALCHEMY] = "錬金術師の器",
-	[CRAFTING_TYPE_ENCHANTING] = "付呪師の貴品箱",
-	[CRAFTING_TYPE_PROVISIONING] = "調理師のパック",
-	[CRAFTING_TYPE_BLACKSMITHING] = "鍛冶師の木枠箱",
-	[CRAFTING_TYPE_CLOTHIER] = "仕立師のかばん",
-	[CRAFTING_TYPE_WOODWORKING] = "木工師のケース",
-	[CRAFTING_TYPE_JEWELRYCRAFTING] = "宝飾師の貴品箱",
-	[8] = "箱",
-}
-end
-
-
-function WritCreater.getTaString()
-	return "ター"
-end
-
 WritCreater.lang = "jp"
 WritCreater.langIsMasterWritSupported = true
 --WritCreater.needTranslations = "https://www.esoui.com/forums/showpost.php?p=41147&postcount=9"

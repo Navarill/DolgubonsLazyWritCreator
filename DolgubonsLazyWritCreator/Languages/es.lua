@@ -752,24 +752,6 @@ end
 
 EVENT_MANAGER:RegisterForEvent(WritCreater.name, EVENT_CHAT_MESSAGE_CHANNEL, alternateListener)
 
-function WritCreater.langWritRewardBoxes ()
-    return {
-        --@formatter:off
-        [CRAFTING_TYPE_ALCHEMY]         = "Recipiente de alquimista",
-        [CRAFTING_TYPE_ENCHANTING]      = "Cofre de encantador",
-        [CRAFTING_TYPE_PROVISIONING]    = "Paquete de cocinero",
-        [CRAFTING_TYPE_BLACKSMITHING]   = "Caja de herrero",
-        [CRAFTING_TYPE_CLOTHIER]        = "Morral de sastre",
-        [CRAFTING_TYPE_WOODWORKING]     = "Valija de carpintero",
-        [CRAFTING_TYPE_JEWELRYCRAFTING] = "Baúl de joyero",
-        [8]                             = "Cargamento"
-        --@formatter:on
-    }
-end
-
-function WritCreater.getTaString()
-    return "ta"
-end
 
 WritCreater.strings = WritCreater.strings or {}
 

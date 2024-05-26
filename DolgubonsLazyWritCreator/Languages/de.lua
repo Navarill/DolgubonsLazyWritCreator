@@ -647,25 +647,6 @@ WritCreater.cheeseyLocalizations
 
 }
 
-
---"<<1>> erhalten"
-function WritCreater.langWritRewardBoxes () return {
-	[1] = "Alchemistengefäß",
-	[2] = "Verzaubererkassette",
-	[3] = "Versorgerbeutel",
-	[4] = "Schmiedetruhe",
-	[5] = "Schneidertasche",
-	[6] = "Schreinerkästchen",
-	[7] = "Schmuckhandwerkerkassette",
-	[8] = "Lieferung",
-}
-end
-
-
-function WritCreater.getTaString()
-	return "ta"
-end
-
 WritCreater.lang = "de"
 
 WritCreater.langIsMasterWritSupported = true
