@@ -616,14 +616,15 @@ local function enchantCrafting(info, quest,add)
 	}
 	local incomplete = false
 	for i = 1, numConditions do
-
+		local deliverString = WritCreater.writCompleteStrings()["Deliver"] or "deliver"
+		local acquireString = WritCreater.writCompleteStrings()["Acquire"] or "acquire"
 		conditions["text"][i], conditions["cur"][i], conditions["max"][i],_,conditions["complete"][i] = GetJournalQuestConditionInfo(quest, 1, i)
 		conditions["text"][i] = WritCreater.enchantExceptions(conditions["text"][i])
 		if conditions["cur"][i]>0 then conditions["text"][i] = "" end
-		if string.find(myLower(conditions["text"][i]),"deliver") or string.find(myLower(conditions["text"][i]),WritCreater.writCompleteStrings()["Deliver"]) then
+		if string.find(myLower(conditions["text"][i]),deliverString) then
 			writCompleteUIHandle()
 			return
-		elseif string.find(myLower(conditions["text"][i]),"acquire") or string.find(myLower(conditions["text"][i]),WritCreater.writCompleteStrings()["Acquire"])   then
+		elseif string.find(myLower(conditions["text"][i]),acquireString) then
 
 			conditions["text"][i] = false
 			if not incomplete then

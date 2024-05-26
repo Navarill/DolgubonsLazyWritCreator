@@ -294,38 +294,6 @@ function WritCreater.masterWritQuality()
     }
 end
 
-function WritCreater.langEssenceNames()
-
-    local essenceNames = {
-        [1] = "Oko", -- vida
-        [2] = "Deni", -- aguante
-        [3] = "Makko" -- magia
-    }
-    return essenceNames
-end
-
-function WritCreater.langPotencyNames()
-    local potencyNames = {
-        [1] = "Jora", -- El menor nivel de piedra de potencia
-        [2] = "Porade",
-        [3] = "Jera",
-        [4] = "Jejora",
-        [5] = "Odra",
-        [6] = "Pojora",
-        [7] = "Edora",
-        [8] = "Jaera",
-        [9] = "Pora",
-        [10] = "Denara",
-        [11] = "Rera",
-        [12] = "Derado",
-        [13] = "Rekura",
-        [14] = "Kura",
-        [15] = "Rejera",
-        [16] = "Repora", -- Piedra de potencia de v16
-    }
-    return potencyNames
-end
-
 local function runeMissingFunction(ta, essence, potency)
     local missing = {}
     if not ta["bag"] then

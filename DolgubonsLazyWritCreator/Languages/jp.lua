@@ -456,46 +456,6 @@ function WritCreater.masterWritQuality() -- Vital . This is probably not necessa
 	return {{"上級",3},{"極上",4},{"伝説",5}}
 end
 
-
-
-
-function WritCreater.langEssenceNames() -- Vital
-
-local essenceNames =  
-	{
-		[1] = "オコ", --health
-		[2] = "デニ", --stamina
-		[3] = "マッコ", --magicka
-	}
-	return essenceNames
-end
-
-function WritCreater.langPotencyNames() -- Vital
-	--exact!! Also, these are all the positive runestones - no negatives needed.
-	local potencyNames = 
-	{
-		[1] = "ジョラ", --Lowest potency stone lvl
-		[2] = "ポラデ",
-		[3] = "ジェラ",
-		[4] = "ジェジョラ",
-		[5] = "オドラ",
-		[6] = "ポジョラ",
-		[7] = "エドラ",
-		[8] = "ジャエラ",
-		[9] = "ポラ",
-		[10]= "デナラ",
-		[11]= "レラ",
-		[12]= "デラド",
-		[13]= "レクラ",
-		[14]= "クラ",
-		[15]= "レジェラ",
-		[16]= "レポラ", --v16 potency stone
-		
-	}
-	return potencyNames
-end
-
-
 local exceptions = 
 {
 	[1] = 
