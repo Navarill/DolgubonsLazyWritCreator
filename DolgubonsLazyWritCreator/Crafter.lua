@@ -555,7 +555,11 @@ local function enchantSearch(info,conditions, position,parity,questId)
 	for i = 1, #glyphIds do
 		for j = 1, #itemLinkLevel do
 			local link = createItemLink(glyphIds[i][1], itemLinkLevel[j][1],itemLinkLevel[j][2])
-			if DoesItemLinkFulfillJournalQuestCondition(link,questId,1,2,true) or DoesItemLinkFulfillJournalQuestCondition(link,questId,1,1,true) then
+			local _,cur, max = GetJournalQuestConditionInfo(questId, 1, 2) 
+			if DoesItemLinkFulfillJournalQuestCondition(link,questId,1,2,true) and GetJournalQuestConditionValues(questId, 1, 2) == 0  then
+				return glyphIds[i][2], itemLinkLevel[j][3]
+			end
+			if DoesItemLinkFulfillJournalQuestCondition(link,questId,1,1,true) and GetJournalQuestConditionValues(questId, 1, 1) == 0  then
 				return glyphIds[i][2], itemLinkLevel[j][3]
 			end
 		end
@@ -621,10 +625,11 @@ local function enchantCrafting(info, quest,add)
 		conditions["text"][i], conditions["cur"][i], conditions["max"][i],_,conditions["complete"][i] = GetJournalQuestConditionInfo(quest, 1, i)
 		conditions["text"][i] = WritCreater.enchantExceptions(conditions["text"][i])
 		if conditions["cur"][i]>0 then conditions["text"][i] = "" end
-		if string.find(myLower(conditions["text"][i]),deliverString) then
+		-- Second hardcoded dliver is for backwards compatability with localizations that expect it
+		if string.find(myLower(conditions["text"][i]),deliverString) or string.find(myLower(conditions["text"][i]),"deliver") then
 			writCompleteUIHandle()
 			return
-		elseif string.find(myLower(conditions["text"][i]),acquireString) then
+		elseif string.find(myLower(conditions["text"][i]),acquireString) or string.find(myLower(conditions["text"][i]),"acquire") then
 
 			conditions["text"][i] = false
 			if not incomplete then
