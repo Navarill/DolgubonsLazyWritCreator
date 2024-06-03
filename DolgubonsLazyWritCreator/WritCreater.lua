@@ -705,8 +705,8 @@ local function initializeLocalization()
 		['es'] = 1,
 	}
 	-- Initializes Localizations 
-	if WritCreater.languageInfo then
-		WritCreater.craftInfo = WritCreater.languageInfo()
+	if WritCreater.langWritNames then
+		WritCreater.craftInfo = WritCreater.langWritNames()
 	else
 		if langs[GetCVar("language.2")] then
 			mandatoryRoadblockOut("Writ Crafter initialization failed. You are missing the language files. Try uninstalling and reinstalling the Writ Crafter")
