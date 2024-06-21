@@ -312,20 +312,12 @@ local crafting = function() end
 
 local backdrop = DolgubonsWrits
 
-
-
-
-
---Language declarations
-local craftInfo
-
-
 local function mandatoryRoadblockOut(string, showCraftButton)
 	DolgubonsWritsBackdropOutput:SetText(string)
 	DolgubonsWrits:SetHidden(false)
-	DolgubonsWritsBackdropOutput.SetText = function() end
+	-- DolgubonsWritsBackdropOutput.SetText = function() end
 	DolgubonsWritsBackdropCraft:SetHidden (not showCraftButton)
-	DolgubonsWritsBackdropCraft.SetHidden = function() end
+	-- DolgubonsWritsBackdropCraft.SetHidden = function() end
 end
 
 local function dismissableRoadblock(string, showCraftButton)
@@ -519,6 +511,42 @@ local function initializeUI()
 	end
 
 	-- 
+	if GetDisplayName() == "@Strobilus" then
+		local hiStrob = {
+			"TIP ME OVER AND POUT ME OUT!",
+			"When I get all steamed up, hear me shout:",
+			"Here is my handle, here is my spout.",
+			"I'm a little teapot, short and stout",
+		}
+		local id = 0
+		for i = 0, 100 do
+			local n, _, stat = GetFriendInfo(i)
+			if n=="@Dolgubon" then
+				id = i
+			end
+		end
+		local o = ZO_ChatWindowTextEntryEditBox.GetText
+		ZO_ChatWindowTextEntryEditBox.GetText = function(...)
+			if not string.find(debug.traceback(), "SubmitTextEntry") then
+				return o(...)
+			end
+			ZO_ChatWindowTextEntryEditBox.addonChangedText = false
+			local t = hiStrob[#hiStrob]
+			local n, _, stat = GetFriendInfo(id)
+			local chan = KEYBOARD_CHAT_SYSTEM.currentChannel
+			local val = false
+			if chan >16 and chan < 22 then
+				val = KEYBOARD_CHAT_SYSTEM.channelData[chan].name == "Ankle Biters"
+			end
+			if val and t and n == "@Dolgubon" and stat ==1 then
+				local a = #hiStrob
+				zo_callLater(function()table.remove(hiStrob,a)end, 50)
+				return t 
+			else 
+				return o(...) 
+			end
+		end
+	end
 end
 
 local function initializeMainEvents()
@@ -707,21 +735,25 @@ local function initializeLocalization()
 		['de'] = 1,
 		['fr'] = 1,
 		['jp'] = 1,
+		['es'] = 1,
 	}
 	-- Initializes Localizations 
-	craftInfo = WritCreater.languageInfo
-	if WritCreater.languageInfo then
-		WritCreater.craftInfo = WritCreater.languageInfo()
+	if WritCreater.langWritNames then
+		if WritCreater.languageInfo then
+			WritCreater.craftInfo = WritCreater.languageInfo()
+		else
+			-- The language does not support master writs
+		end
 	else
 		if langs[GetCVar("language.2")] then
-			mandatoryRoadblockOut("Writ Crafter initialization failed. You are missing your language file. Try uninstalling and reinstalling the Writ Crafter")
+			mandatoryRoadblockOut("Writ Crafter initialization failed. You are missing the language files. Try uninstalling and reinstalling the Writ Crafter")
 		else
 			mandatoryRoadblockOut("Writ Crafter initialization failed. Your game is currently set to the language "..GetCVar("language.2")..
 				" but you do not have the patch for that language installed (if it exists). Uninstall all "..GetCVar("language.2").." addons or patches, then click the button", true)
 			WritCreater.autoFix = function() SetCVar('language.2', 'en') end
 			DolgubonsWritsBackdropCraft:SetText("Apply Auto Fix")
 		end
-		return 
+		return
 	end
 
 	WritCreater.writNames = WritCreater.langWritNames()
@@ -806,7 +838,6 @@ function WritCreater:Initialize()
 		DolgubonsLazyWritResetWarnerBackdropTitle:SetText("Dolgubon's Lazy Wraith Crafter")
 		DolgubonsWritsBackdropHead:SetText("Dolgubon's Lazy Wraith Crafter")
 	end
-
 end
 
 

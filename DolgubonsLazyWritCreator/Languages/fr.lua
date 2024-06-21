@@ -544,7 +544,7 @@ WritCreater.optionStrings["automatic complete tooltip"]				  = "Accepte et valid
 WritCreater.optionStrings["new container"]							  = "Conserver le statut nouveau"
 WritCreater.optionStrings["new container tooltip"]					  = "Conserver le statut nouveau pour les conteneurs de récompenses de commande"
 WritCreater.optionStrings["master"]									  = "Commandes de maître"
-WritCreater.optionStrings["master tooltip"]							  = "Désactiver l’extension pour les Commandes de maître"
+WritCreater.optionStrings["master tooltip"]							  = "Fabriquer les Commandes de maître"
 WritCreater.optionStrings["right click to craft"]						= "Clic-Droit pour Fabriquer"
 WritCreater.optionStrings["right click to craft tooltip"]				= "Si cela est sur ON, l’extension fabriquera les commandes de maître que vous lui dites de faire après avoir clic-droit sur une commande scellée"
 WritCreater.optionStrings["crafting submenu"]							= "Fabrication des objets de commande"
@@ -641,25 +641,13 @@ WritCreater.optionStrings["goatSkin"]									= "Chèvre"
 WritCreater.optionStrings["cheeseSkin"]									= "Gratiné"
 WritCreater.optionStrings["defaultSkin"]								= "Défaut"
 
-WritCreater.optionStrings["rewardChoices"]								= {"Rien","Déposer","Rebut", "Détruire"}
+WritCreater.optionStrings["rewardChoices"]								= {"Rien","Déposer","Rebut", "Détruire", "Démontage"}
 
 
 function WritCreater.langStationNames()
 	return
 	{["Atelier de forge"] = 1, ["Atelier de couture"] = 2, 
 	 ["Table d'enchantement"] = 3,["Établi d'alchimie"] = 4, ["Feu de cuisine"] = 5, ["Atelier de travail du bois"] = 6, ["Atelier de joaillerie"] = 7, }
-end
-
-function WritCreater.langWritRewardBoxes () return {
-	[1] = "Récipient d'alchimiste",
-	[2] = "coffre d'enchanteur",
-	[3] = "paquet de cuisinier",
-	[4] = "caisse de forgeron",
-	[5] = "sacoche de tailleur",
-	[6] = "caisse de travailleur du bois",
-	[7] = "coffre de joailler",
-	[8] = "cargaison",
-}
 end
 
 WritCreater.cheeseyLocalizations
@@ -689,9 +677,6 @@ WritCreater.cheeseyLocalizations
 	["cheatyCheeseBook"] = "Peut-être devenez-vous fou, mais vous ne semblez pas reconnaître ce livre...",
 }
 
-function WritCreater.getTaString()
-	return "ta"
-end
 
 WritCreater.lang = "fr"
 

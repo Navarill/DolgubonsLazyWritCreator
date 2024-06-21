@@ -145,18 +145,6 @@ function WritCreater.writCompleteStrings() -- Vital for translation
 	return strings
 end
 
-function WritCreater.langWritRewardBoxes () return {
-	[CRAFTING_TYPE_ALCHEMY] = "Alchemist's Vessel",
-	[CRAFTING_TYPE_ENCHANTING] = "Enchanter's Coffer",
-	[CRAFTING_TYPE_PROVISIONING] = "Provisioner's Pack",
-	[CRAFTING_TYPE_BLACKSMITHING] = "Blacksmith's Crate",
-	[CRAFTING_TYPE_CLOTHIER] = "Clothier's Satchel",
-	[CRAFTING_TYPE_WOODWORKING] = "Woodworker's Case",
-	[CRAFTING_TYPE_JEWELRYCRAFTING] = "Jewelry Crafter's Coffer",
-	[8] = "Shipment",
-}
-end
-
 local function masterWritEnchantToCraft (pat,set,trait,style,qual,mat,writName,Mname,generalName)
 	local partialString = zo_strformat("Crafting a CP150 <<t:6>> <<t:1>> from <<t:2>> with the <<t:3>> trait and style <<t:4>> at <<t:5>> quality",pat,set,trait,style,qual,mat)
 	return zo_strformat("<<t:2>> <<t:3>> <<t:4>>: <<1>>",partialString,writName,Mname,generalName )
@@ -173,7 +161,10 @@ local findMissingTranslationsMetatable =
 WritCreater.strings = {}
 setmetatable(WritCreater.strings, findMissingTranslationsMetatable)
 
-WritCreater.strings["runeReq"] 						= function (essence, potency) return zo_strformat("|c2dff00Crafting will require 1 |rTa|c2dff00, 1 |cffcc66<<1>>|c2dff00 and 1 |c0066ff<<2>>|r", essence, potency) end
+WritCreater.strings["runeReq"] 						= function (essence, potency,taStack,essenceStack,potencyStack) 
+	return zo_strformat("|c2dff00Crafting will require 1/<<3>> |rTa|c2dff00, 1/<<4>> |cffcc66<<1>>|c2dff00 and 1/<<5>> |c0066ff<<2>>|r", 
+		essence, potency, taStack, essenceStack, potencyStack) 
+end
 WritCreater.strings["runeMissing"] 					= runeMissingFunction 
 WritCreater.strings["notEnoughSkill"]				= "You do not have a high enough crafting skill to make the required equipment"
 WritCreater.strings["smithingMissing"] 				= "\n|cf60000You do not have enough mats|r"

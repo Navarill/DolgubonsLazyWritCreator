@@ -294,38 +294,6 @@ function WritCreater.masterWritQuality()
     }
 end
 
-function WritCreater.langEssenceNames()
-
-    local essenceNames = {
-        [1] = "Oko", -- vida
-        [2] = "Deni", -- aguante
-        [3] = "Makko" -- magia
-    }
-    return essenceNames
-end
-
-function WritCreater.langPotencyNames()
-    local potencyNames = {
-        [1] = "Jora", -- El menor nivel de piedra de potencia
-        [2] = "Porade",
-        [3] = "Jera",
-        [4] = "Jejora",
-        [5] = "Odra",
-        [6] = "Pojora",
-        [7] = "Edora",
-        [8] = "Jaera",
-        [9] = "Pora",
-        [10] = "Denara",
-        [11] = "Rera",
-        [12] = "Derado",
-        [13] = "Rekura",
-        [14] = "Kura",
-        [15] = "Rejera",
-        [16] = "Repora", -- Piedra de potencia de v16
-    }
-    return potencyNames
-end
-
 local function runeMissingFunction(ta, essence, potency)
     local missing = {}
     if not ta["bag"] then
@@ -752,24 +720,6 @@ end
 
 EVENT_MANAGER:RegisterForEvent(WritCreater.name, EVENT_CHAT_MESSAGE_CHANNEL, alternateListener)
 
-function WritCreater.langWritRewardBoxes ()
-    return {
-        --@formatter:off
-        [CRAFTING_TYPE_ALCHEMY]         = "Recipiente de alquimista",
-        [CRAFTING_TYPE_ENCHANTING]      = "Cofre de encantador",
-        [CRAFTING_TYPE_PROVISIONING]    = "Paquete de cocinero",
-        [CRAFTING_TYPE_BLACKSMITHING]   = "Caja de herrero",
-        [CRAFTING_TYPE_CLOTHIER]        = "Morral de sastre",
-        [CRAFTING_TYPE_WOODWORKING]     = "Valija de carpintero",
-        [CRAFTING_TYPE_JEWELRYCRAFTING] = "Baúl de joyero",
-        [8]                             = "Cargamento"
-        --@formatter:on
-    }
-end
-
-function WritCreater.getTaString()
-    return "ta"
-end
 
 WritCreater.strings = WritCreater.strings or {}
 
@@ -940,7 +890,7 @@ WritCreater.optionStrings["skinOptions"]								= {"Por Defecto", "Cheesy", "Goa
 WritCreater.optionStrings["goatSkin"]									= "Goaty"
 WritCreater.optionStrings["cheeseSkin"]									= "Cheesy"
 WritCreater.optionStrings["defaultSkin"]								= "Por Defecto"
-WritCreater.optionStrings["rewardChoices"]                              = { "Nada", "Guardar en el inventario", "Marcar como Basura", "Destruir" }
+WritCreater.optionStrings["rewardChoices"]                              = { "Nada", "Guardar en el inventario", "Marcar como Basura", "Destruir", "Deconstruct" }
 WritCreater.optionStrings["scan for unopened"]							= "Abrir contenedor al iniciar sesión"
 WritCreater.optionStrings["scan for unopened tooltip"]					= "Cuando inicias sesión, se escanea la mochila en busca de contenedores de encargo no abiertos y se intenta abrirlos"
 

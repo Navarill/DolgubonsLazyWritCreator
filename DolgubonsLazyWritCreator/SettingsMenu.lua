@@ -1027,7 +1027,7 @@ function WritCreater.Options() --Sentimental
 		{"repair" ,  {}, {1,2,3,4}},
 		{"master" ,  {1,2,3,4,5,6,7} , {1,2,3,4}},
 		{"survey" ,  {1,2,3,4,6,7}, {1,2,3,4}},
-		-- {"ornate" ,  {1,2,6,7}, },
+		{"ornate" ,  {1,2,6,7}, {1,2,3,4,5}},
 		{"intricate" ,  {1,2,6,7}, {1,2,3,4,5}},
 		
 		-- {"soulGem" ,    {3}, },
