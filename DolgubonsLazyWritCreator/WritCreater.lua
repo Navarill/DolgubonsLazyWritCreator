@@ -36,9 +36,9 @@ WritCreater.versionAccount = 20
 WritCreater.savedVars = {}
 WritCreater.default = 
 {
-	["tutorial"]	= true,
+	["tutorial"]	= false,
 	["ignoreAuto"] = false,
-	["autoCraft"]	= false,
+	["autoCraft"]	= true,
 	["showWindow"]	= true,
 	[1]	= true,
 	[2]	= true,
@@ -562,7 +562,7 @@ local function initializeOtherStuff()
 		"DolgubonsWritCrafterSavedVars", WritCreater.versionAccount, nil, WritCreater.defaultAccountWide)
 	WritCreater.savedVars = ZO_SavedVars:NewCharacterIdSettings(
 		"DolgubonsWritCrafterSavedVars", WritCreater.version, nil, WritCreater.savedVarsAccountWide.accountWideProfile)
-
+	WritCreater:GetSettings().despawnBankerDeposits = WritCreater:GetSettings().despawnBankerDeposits == nil and WritCreater:GetSettings().despawnBanker or WritCreater:GetSettings().despawnBankerDeposits
 	if not WritCreater.savedVarsAccountWide.resetCheeseFor2024 then
 		WritCreater.savedVarsAccountWide.cheesyProgress = WritCreater.defaultAccountWide.cheesyProgress
 		WritCreater.savedVarsAccountWide.resetCheeseFor2024 = true
