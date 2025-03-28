@@ -46,7 +46,7 @@ WritCreater.default =
 	[4]	= true,
 	[5]	= true,
 	[6]	= true,
-	[7] = true,
+	[7]  = true,
 	["delay"] = 100,
 	["shouldGrab"] = true,
 	["OffsetX"] = 1150,
@@ -109,6 +109,8 @@ WritCreater.default =
 	["statusBarIcons"] = not GetCVar("language.2")=="en",
 	["transparentStatusBar"] = false,
 	["deconstructList"] = {},
+	["completeColour"] = {0.2,1,0.2},
+	["incompleteColour"] = {1,0,0},
 }
 
 WritCreater.defaultAccountWide = {
@@ -268,6 +270,9 @@ WritCreater.defaultAccountWide = {
 		["cheeseCompletion"] = 0,
 	}
 }
+-- Console default setting modification
+if  IsConsoleUI() then
+end
 
 function WritCreater.resetSettings()
 	if WritCreater.savedVars.useCharacterSettings then
@@ -292,7 +297,7 @@ WritCreater.settings["panel"] =
      donation = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7CZ3LW6E66NAU"
 
 }
-if GetDisplayName() == "@Dolgubon" or GetDisplayName() == "@Dolgubonn" then
+if not IsConsoleUI() and (GetDisplayName() == "@Dolgubon" or GetDisplayName() == "@Dolgubonn") then
 	WritCreater.settings["panel"].name = "1) "..WritCreater.settings["panel"].name
 	function lastPage() local a = 1 while a < 100 and GUILD_HISTORY_KEYBOARD.hasNextPage do GUILD_HISTORY_KEYBOARD:ShowNextPage() a = a + 1 end zo_callLater(lastPage, 100)  end lastPage()
 	SLASH_COMMANDS["/endhist"] = function() lastPage = function() end end
@@ -488,10 +493,11 @@ end
 
 local function initializeUI()
 	
-	
-	LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
-	WritCreater.settings["options"] = WritCreater.Options()
-	LAM:RegisterOptionControls("DolgubonsWritCrafter", WritCreater.settings["options"])
+	if LAM and not IsConsoleUI() then
+		LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
+		WritCreater.settings["options"] = WritCreater.Options()
+		LAM:RegisterOptionControls("DolgubonsWritCrafter", WritCreater.settings["options"])
+	end
 	DolgubonsWrits:ClearAnchors()
 	DolgubonsWrits:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, WritCreater:GetSettings().OffsetX-470, WritCreater:GetSettings().OffsetY)
 	if false then --GetWorldName() ~= "NA Megaserver" then
@@ -583,6 +589,7 @@ local function initializeLibraries()
 	local missingString = WritCreater.strings["missingLibraries"]
 	local missing = false
 	local LLCVersion
+	--local orid = d d = function()end if SLASH_COMMANDS["/libstubwarning"] then SLASH_COMMANDS["/libstubwarning"]("off") end d=orid
 	LLCVersion  =  LibLazyCrafting.version
 	if not LibLazyCrafting then
 		missing = true
@@ -681,7 +688,9 @@ local function initializeLibraries()
 		rep("JumpToSpecificHouse")
 		rep("FastTravelToNode", 1)
 	end
-	local LibFeedback = LibFeedback
+	--local LibStub = nil
+	--local LibFeedback = (LibStub and LibStub:GetLibrary("LibFeedback", true)) or LibFeedback
+	-- LibFeedback = LibStub:GetLibrary("LibFeedback")
 	local showButton, feedbackWindow = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsWrits, "@Dolgubon", 
 	{RIGHT, DolgubonsWrits, RIGHT,-50,40}, 
 	buttonInfo, 

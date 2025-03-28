@@ -290,7 +290,7 @@ end
 
 local function equipmentCheck(link, bag, slot)
 	return GetItemCreatorName(bag, slot)~= GetUnitName("player") or 
-		GetItemTrait(bag, slot) ~= ITEM_TRAIT_TYPE_NONE or GetItemLinkQuality(link) ~= ITEM_QUALITY_NORMAL or 
+		GetItemTrait(bag, slot) ~= ITEM_TRAIT_TYPE_NONE or GetItemLinkFunctionalQuality(link) ~= ITEM_FUNCTIONAL_QUALITY_NORMAL or 
 		GetItemRequiredChampionPoints(bag, slot) == 160 or IsItemPlayerLocked(bag, slot) 
 end
 
@@ -311,8 +311,8 @@ local validItemTypes =
 		[ITEMTYPE_GLYPH_ARMOR] = {true, function(link) return not IsItemLinkCrafted(link) end},
 	},
 	[CRAFTING_TYPE_PROVISIONING] = {
-		[ITEMTYPE_DRINK] = {true, function(link) return GetItemLinkQuality(link)~=ITEM_QUALITY_MAGIC end},
-		[ITEMTYPE_FOOD] = {true, function(link) return GetItemLinkQuality(link)~=ITEM_QUALITY_MAGIC end},
+		[ITEMTYPE_DRINK] = {true, function(link) return GetItemLinkFunctionalQuality(link)~=ITEM_FUNCTIONAL_QUALITY_MAGIC end},
+		[ITEMTYPE_FOOD] = {true, function(link) return GetItemLinkFunctionalQuality(link)~=ITEM_FUNCTIONAL_QUALITY_MAGIC end},
 	},
 	-- [[
 	[CRAFTING_TYPE_BLACKSMITHING] = {

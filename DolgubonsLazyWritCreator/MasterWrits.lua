@@ -386,6 +386,17 @@ local function SmithingMasterWrit(journalIndex, info, station, isArmour, materia
 
 	if foundAllRequirements(pattern, style, setIndex, trait, quality) then
 		-- too many variable stuff so need to do multiple calls to zo_strformat
+		if not WritWorthy and not IsConsoleUI() then 
+			d("The Master Writ crafting feature of Dolgubon's Lazy Writ Crafter will no longer be supported. Please download and use Writ Worthy by Ziggr from Minion or Esoui if you wish to do Master Writs.")
+		end
+		dbug("CALL:LLCCraftSmithing")
+		-- Cancel any previously added items with the same reference so we don't craft twice
+		WritCreater.LLCInteractionMaster:cancelItemByReference(reference)
+		-- (setId, trait, pattern, station,level, isCP, quality,style,  potencyId, essenceId , aspectId)
+		local expectedItemLink = WritCreater.LLCInteractionMaster.getItemLinkFromParticulars(setIndex, trait[2], pattern[2], station, 150, true, quality[2], style[2])
+		-- if DoesItemLinkFulfillJournalQuestCondition(expectedItemLink, journalIndex, 1, 1, true) then
+			-- Add to queue
+		WritCreater.LLCInteractionMaster:CraftSmithingItemByLevel( pattern[2], true , 150, style[2], trait[2], false, station, setIndex, quality[2], true, reference)
 		d(WritCreater.strings.masterWritSmithToCraft(
 			pattern[1], 
 			GetSetIndexes()[setIndex][1],
@@ -396,15 +407,11 @@ local function SmithingMasterWrit(journalIndex, info, station, isArmour, materia
 			WritCreater.langWritNames()[station],
 			WritCreater.langMasterWritNames()["M1"],
 			WritCreater.langWritNames()["G"]
-			))
-		if not WritWorthy then 
-			d("The Master Writ crafting feature of Dolgubon's Lazy Writ Crafter will no longer be supported. Please download and use Writ Worthy by Ziggr from Minion or Esoui if you wish to do Master Writs.")
-		end
-		dbug("CALL:LLCCraftSmithing")
-		-- Cancel any previously added items with the same reference so we don't craft twice
-		WritCreater.LLCInteractionMaster:cancelItemByReference(reference)
-		-- Add to queue
-		WritCreater.LLCInteractionMaster:CraftSmithingItemByLevel( pattern[2], true , 150, style[2], trait[2], false, station, setIndex, quality[2], true, reference)
+			).." : "..expectedItemLink)
+		-- else
+		-- 	d("Could not determine correct item to craft")
+		-- end
+
 		return true
 	else
 		dbug("ERROR:RequirementMissing")

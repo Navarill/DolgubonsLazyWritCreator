@@ -88,20 +88,20 @@ local function LootAllHook(boxType) -- technically not a hook.
 			end
 		elseif CanItemLinkBeVirtual(itemLink) then 
 			updateSavedVars(vars, GetItemLinkItemId(itemLink), quantity)
-			if GetItemLinkQuality(itemLink) == ITEM_QUALITY_LEGENDARY or GetItemLinkItemId(itemLink) ==135153 or GetItemLinkItemId(itemLink) == 135149 then
+			if GetItemLinkFunctionalQuality(itemLink) == ITEM_FUNCTIONAL_QUALITY_LEGENDARY or GetItemLinkItemId(itemLink) ==135153 or GetItemLinkItemId(itemLink) == 135149 then
 				lootOutput(itemLink, nil, quantity)
 			end
 		elseif itemType==ITEMTYPE_RECIPE then 
-			local quality = GetItemLinkQuality(itemLink)
-			if quality==ITEM_QUALITY_MAGIC then
+			local quality = GetItemLinkFunctionalQuality(itemLink)
+			if quality==ITEM_FUNCTIONAL_QUALITY_MAGIC then
 				updateSavedVars(vars["recipe"], "green", quantity)
-			elseif quality == ITEM_QUALITY_ARCANE then
+			elseif quality == ITEM_FUNCTIONAL_QUALITY_ARCANE then
 				updateSavedVars(vars["recipe"], "blue", quantity)
-			elseif quality == ITEM_QUALITY_ARTIFACT then
+			elseif quality == ITEM_FUNCTIONAL_QUALITY_ARTIFACT then
 				updateSavedVars(vars["recipe"], "purple", quantity)
-			elseif quality == ITEMITEM_QUALITY_NORMAL then
+			elseif quality == ITEMITEM_FUNCTIONAL_QUALITY_NORMAL then
 				updateSavedVars(vars["recipe"], "white", quantity)
-			elseif quality == ITEM_QUALITY_LEGENDARY then
+			elseif quality == ITEM_FUNCTIONAL_QUALITY_LEGENDARY then
 				updateSavedVars(vars["recipe"], "gold", quantity)
 			else
 				updateSavedVars(vars["recipe"], "unkownQuality", quantity)
@@ -218,13 +218,13 @@ local function OnLootUpdated(event)
 				local itemLink = GetLootItemLink(lootId, 0)
 				local itemId = GetItemLinkItemId(itemLink)
 				--d(itemLink)
-				local quality = GetItemLinkQuality(itemLink)
+				local quality = GetItemLinkFunctionalQuality(itemLink)
 				local itemType, specializedType = GetItemLinkItemType(itemLink) 
 				if specializedType == SPECIALIZED_ITEMTYPE_RACIAL_STYLE_MOTIF_CHAPTER then
 					lootOutput(itemLink, nil, quantity, true)
 				elseif specializedType == SPECIALIZED_ITEMTYPE_CONTAINER_STYLE_PAGE then
 					lootOutput(itemLink, nil, quantity, true)
-				elseif quality>=ITEM_QUALITY_ARCANE then
+				elseif quality>=ITEM_FUNCTIONAL_QUALITY_ARCANE then
 					lootOutput(itemLink, nil, quantity, true)
 				elseif itemId == 56863 or itemId == 56862 then
 					lootOutput(itemLink, nil, quantity, true)

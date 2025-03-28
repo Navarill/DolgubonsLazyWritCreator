@@ -192,7 +192,7 @@ local function doesCharHaveSkill(patternIndex,materialIndex,abilityIndex)
 	if GetCraftingInteractionType()==0 then return end
 	local requirement =  select(10,GetSmithingPatternMaterialItemInfo( patternIndex,  materialIndex))
 	
-	local _,skillIndex = GetCraftingSkillLineIndices(GetCraftingInteractionType())
+	local _,skillIndex = SKILLS_DATA_MANAGER:GetCraftingSkillLineData(GetCraftingInteractionType()):GetIndices()
 	local skillLevel = GetSkillAbilityUpgradeInfo(SKILL_TYPE_TRADESKILL ,skillIndex,abilityIndex )
 
 	if skillLevel>=requirement then
@@ -286,7 +286,7 @@ local matSaver = 0
 local function craftNextQueueItem(calledFromCrafting)
 	
 	if matSaver > 10 then return end
-	if (not IsPerformingCraftProcess()) and (craftingWrits or WritCreater:GetSettings().autoCraft ) then
+	if (not ZO_CraftingUtils_IsPerformingCraftProcess()) and (craftingWrits or WritCreater:GetSettings().autoCraft ) then
 
 		if queue[1] then
 
@@ -306,7 +306,7 @@ local function craftNextQueueItem(calledFromCrafting)
 		end
 	elseif calledFromCrafting then
 		return
-	elseif IsPerformingCraftProcess() then
+	elseif ZO_CraftingUtils_IsPerformingCraftProcess() then
 		return
 	else
 
@@ -483,7 +483,7 @@ function crafting(info,quest, craftItems)
 							if style == -3 then out(WritCreater.strings.moreStyleSettings) return false end
 						end
 						needed = math.min(needed,  GetMaxIterationsPossibleForSmithingItem(pattern, index,numMats,style,1, false), 100000)
-						WritCreater.LLCInteraction:CraftSmithingItem(pattern, index,numMats,LLC_FREE_STYLE_CHOICE,1, false, nil, 0, ITEM_QUALITY_NORMAL, 
+						WritCreater.LLCInteraction:CraftSmithingItem(pattern, index,numMats,LLC_FREE_STYLE_CHOICE,1, false, nil, 0, ITEM_FUNCTIONAL_QUALITY_NORMAL, 
 							true, GetCraftingInteractionType(), nil, nil, nil, needed, true)
 
 						DolgubonsWritsBackdropCraft:SetHidden(true) 

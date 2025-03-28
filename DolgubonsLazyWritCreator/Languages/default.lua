@@ -146,7 +146,7 @@ function WritCreater.writCompleteStrings() -- Vital for translation
 end
 
 local function masterWritEnchantToCraft (pat,set,trait,style,qual,mat,writName,Mname,generalName)
-	local partialString = zo_strformat("Crafting a CP150 <<t:6>> <<t:1>> from <<t:2>> with the <<t:3>> trait and style <<t:4>> at <<t:5>> quality",pat,set,trait,style,qual,mat)
+	local partialString = zo_strformat("Crafting a CP150 <<t:6>> <<t:1>> from <<t:2>> with the <<t:3>> trait and <<t:4>> style at <<t:5>> quality",pat,set,trait,style,qual,mat)
 	return zo_strformat("<<t:2>> <<t:3>> <<t:4>>: <<1>>",partialString,writName,Mname,generalName )
 end
 
@@ -355,6 +355,8 @@ WritCreater.optionStrings['transparentStatusBar']						= "Transparent Status Bar
 WritCreater.optionStrings['transparentStatusBarTooltip']				= "Make the status bar transparent"
 WritCreater.optionStrings['statusBarInventory']							= "Inventory Tracker"
 WritCreater.optionStrings['statusBarInventoryTooltip']					= "Add an inventory tracker to the status bar"
+WritCreater.optionStrings['incompleteColour']							= "Incomplete quest colour"
+WritCreater.optionStrings['completeColour']								= "Complete quest colour"
 
 
 findMissingTranslationsMetatable["__newindex"] = function(t,k,v)WritCreater.missingTranslations[k] = nil rawset(t,k,v)  end
