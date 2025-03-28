@@ -153,28 +153,30 @@ end
 -- WritCreater.savedVarsAccountWide.unlockedCheese
 -- WritCreater.savedVarsAccountWide.cheeseCompletedTwice
 if isCheeseOn() then
+	local isConsolePeasant = GetCVar("ForceConsoleFlow.2") == "1" -- kidding, you guys are fine :) But you'll likely never read this, sooooo
 	local cheesyActivityTypeIndex = 2
 	while TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex] do 
 		cheesyActivityTypeIndex = cheesyActivityTypeIndex + 1 
 	end
 	-- Localization
 	local il8n = WritCreater.cheeseyLocalizations
+	if not isConsolePeasant then
+		local originalInitializeKeyboardFinderCategory = ZO_TimedActivities_Keyboard.InitializeActivityFinderCategory
+		function ZO_TimedActivities_Keyboard:InitializeActivityFinderCategory()
+			local returnValue = originalInitializeKeyboardFinderCategory(self)
 
-	local originalInitializeKeyboardFinderCategory = ZO_TimedActivities_Keyboard.InitializeActivityFinderCategory
-	function ZO_TimedActivities_Keyboard:InitializeActivityFinderCategory()
-		local returnValue = originalInitializeKeyboardFinderCategory(self)
-
-		GROUP_MENU_KEYBOARD.nodeList[4].children[cheesyActivityTypeIndex] = 
-		{
-            priority = CATEGORY_PRIORITY + 20,
-            name = "Pyrite Endeavors",
-            categoryFragment = self.sceneFragment,
-            onTreeEntrySelected = onCheesyEndeavorsSelected,
-            isPromotionalEvent = true,
-        }
-		GROUP_MENU_KEYBOARD.navigationTree:Reset()
-		GROUP_MENU_KEYBOARD:AddCategoryTreeNodes(GROUP_MENU_KEYBOARD.nodeList)
-		GROUP_MENU_KEYBOARD.navigationTree:Commit()
+			GROUP_MENU_KEYBOARD.nodeList[4].children[cheesyActivityTypeIndex] = 
+			{
+	            priority = CATEGORY_PRIORITY + 20,
+	            name = "Pyrite Endeavors",
+	            categoryFragment = self.sceneFragment,
+	            onTreeEntrySelected = onCheesyEndeavorsSelected,
+	            isPromotionalEvent = true,
+	        }
+			GROUP_MENU_KEYBOARD.navigationTree:Reset()
+			GROUP_MENU_KEYBOARD:AddCategoryTreeNodes(GROUP_MENU_KEYBOARD.nodeList)
+			GROUP_MENU_KEYBOARD.navigationTree:Commit()
+		end
 	end
 
 	function ZO_TimedActivities_Gamepad:InitializeActivityFinderCategory()
@@ -208,15 +210,17 @@ if isCheeseOn() then
 	local function onCheesyEndeavorsSelected()
 	    TIMED_ACTIVITIES_KEYBOARD:SetCurrentActivityType(cheesyActivityTypeIndex)
 	end
-	GROUP_MENU_KEYBOARD.navigationTree:Reset()
-	table.insert(GROUP_MENU_KEYBOARD.nodeList[4]["children"] , {
-		priority = ZO_ACTIVITY_FINDER_SORT_PRIORITY.TIMED_ACTIVITIES + cheesyActivityTypeIndex * 10 + 10,
-		name = il8n.menuName,
-		categoryFragment = TIMED_ACTIVITIES_KEYBOARD.sceneFragment,
-		onTreeEntrySelected = onCheesyEndeavorsSelected,
-	})
-	GROUP_MENU_KEYBOARD:AddCategoryTreeNodes(GROUP_MENU_KEYBOARD.nodeList)
-	GROUP_MENU_KEYBOARD.navigationTree:Commit()
+	if not isConsolePeasant then
+		GROUP_MENU_KEYBOARD.navigationTree:Reset()
+		table.insert(GROUP_MENU_KEYBOARD.nodeList[4]["children"] , {
+			priority = ZO_ACTIVITY_FINDER_SORT_PRIORITY.TIMED_ACTIVITIES + cheesyActivityTypeIndex * 10 + 10,
+			name = il8n.menuName,
+			categoryFragment = TIMED_ACTIVITIES_KEYBOARD.sceneFragment,
+			onTreeEntrySelected = onCheesyEndeavorsSelected,
+		})
+		GROUP_MENU_KEYBOARD:AddCategoryTreeNodes(GROUP_MENU_KEYBOARD.nodeList)
+		GROUP_MENU_KEYBOARD.navigationTree:Commit()
+	end
 
 
 	TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex] = {completed = 0, limit = 5}
@@ -387,41 +391,43 @@ if isCheeseOn() then
 			return originalManagerTiming(self, activityType, ...)
 		end
 	end
-	local originalKeyboardRefresh = ZO_TimedActivities_Keyboard.Refresh
-	function ZO_TimedActivities_Keyboard:Refresh()
-		if self:GetCurrentActivityType() ~= cheesyActivityTypeIndex then
-			return originalKeyboardRefresh(self)
+	if not  isConsolePeasant then
+		local originalKeyboardRefresh = ZO_TimedActivities_Keyboard.Refresh
+		function ZO_TimedActivities_Keyboard:Refresh()
+			if self:GetCurrentActivityType() ~= cheesyActivityTypeIndex then
+				return originalKeyboardRefresh(self)
+			end
+			if self:GetCurrentActivityType() == nil then return end
+		    ZO_ClearNumericallyIndexedTable(self.activitiesData)
+		    TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed = WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"]
+
+		    local currentActivityType = self:GetCurrentActivityType()
+		    local activityTypeFilters
+		    if currentActivityType == TIMED_ACTIVITY_TYPE_DAILY then
+		        activityTypeFilters = { ZO_TimedActivityData.IsDailyActivity }
+		    elseif currentActivityType == TIMED_ACTIVITY_TYPE_WEEKLY then
+		        activityTypeFilters = { ZO_TimedActivityData.IsWeeklyActivity }
+		    elseif currentActivityType == cheesyActivityTypeIndex then
+		        activityTypeFilters = { isCheeseActivity }
+		    end
+
+		    for index, activityData in TIMED_ACTIVITIES_MANAGER:ActivitiesIterator(activityTypeFilters) do
+		        table.insert(self.activitiesData, activityData)
+		    end
+
+		    self.activityRewardPool:ReleaseAllObjects()
+		    self.activityRowPool:ReleaseAllObjects()
+		    self.nextActivityAnchorTo = nil
+
+		    self.isAtActivityLimit = TIMED_ACTIVITIES_MANAGER:IsAtTimedActivityTypeLimit(currentActivityType)
+
+		    for index, activityData in ipairs(self.activitiesData) do
+		        self:AddActivityRow(activityData)
+		    end
+		    self:RefreshAvailability()
+
+		    self:RefreshCurrentActivityInfo()
 		end
-		if self:GetCurrentActivityType() == nil then return end
-	    ZO_ClearNumericallyIndexedTable(self.activitiesData)
-	    TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed = WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"]
-
-	    local currentActivityType = self:GetCurrentActivityType()
-	    local activityTypeFilters
-	    if currentActivityType == TIMED_ACTIVITY_TYPE_DAILY then
-	        activityTypeFilters = { ZO_TimedActivityData.IsDailyActivity }
-	    elseif currentActivityType == TIMED_ACTIVITY_TYPE_WEEKLY then
-	        activityTypeFilters = { ZO_TimedActivityData.IsWeeklyActivity }
-	    elseif currentActivityType == cheesyActivityTypeIndex then
-	        activityTypeFilters = { isCheeseActivity }
-	    end
-
-	    for index, activityData in TIMED_ACTIVITIES_MANAGER:ActivitiesIterator(activityTypeFilters) do
-	        table.insert(self.activitiesData, activityData)
-	    end
-
-	    self.activityRewardPool:ReleaseAllObjects()
-	    self.activityRowPool:ReleaseAllObjects()
-	    self.nextActivityAnchorTo = nil
-
-	    self.isAtActivityLimit = TIMED_ACTIVITIES_MANAGER:IsAtTimedActivityTypeLimit(currentActivityType)
-
-	    for index, activityData in ipairs(self.activitiesData) do
-	        self:AddActivityRow(activityData)
-	    end
-	    self:RefreshAvailability()
-
-	    self:RefreshCurrentActivityInfo()
 	end
 	local function cheeseEndeavorCompleted(subHeading, nextActivity)
 		if nextActivity then
@@ -692,13 +698,17 @@ if isCheeseOn() then
 		-- end 
 		-- WritCreater.savedVarsAccountWide.luckyProgress["cheeseProfession"] = 0
 		WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] = numComplete
-		pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
+		if not isConsolePeasant then
+			pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
+		end
 	end
 	SLASH_COMMANDS['/resetcheeseprogresscomplete'] = function() 
 		for k, v in pairs (WritCreater.savedVarsAccountWide.luckyProgress) do 
 			WritCreater.savedVarsAccountWide.luckyProgress[k] = 0
 		end 
-		pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
+		if not isConsolePeasant then
+			pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
+		end
 	end
 		-- local sheoStrings = 
 	-- {
@@ -731,7 +741,7 @@ function WritCreater.Options() --Sentimental
 					profile = WritCreater.optionStrings.characterSpecific
 				end
 				return  string.format(WritCreater.optionStrings.nowEditing, profile)  
-			end, -- or string id or function returning a string
+			end, 
 		},
 
 		{
@@ -763,24 +773,24 @@ function WritCreater.Options() --Sentimental
 		
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['stealingProtection'], -- or string id or function returning a string
+			name = WritCreater.optionStrings['stealingProtection'], 
 			getFunc = function() return WritCreater:GetSettings().stealProtection end,
 			setFunc = function(value) WritCreater:GetSettings().stealProtection = value end,
-			tooltip = WritCreater.optionStrings['stealingProtectionTooltip'], -- or string id or function returning a string (optional)
+			tooltip = WritCreater.optionStrings['stealingProtectionTooltip'], 
 		} ,
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['suppressQuestAnnouncements'], -- or string id or function returning a string
+			name = WritCreater.optionStrings['suppressQuestAnnouncements'], 
 			getFunc = function() return WritCreater:GetSettings().suppressQuestAnnouncements end,
 			setFunc = function(value) WritCreater:GetSettings().suppressQuestAnnouncements = value end,
-			tooltip = WritCreater.optionStrings['suppressQuestAnnouncementsTooltip'], -- or string id or function returning a string (optional)
+			tooltip = WritCreater.optionStrings['suppressQuestAnnouncementsTooltip'], 
 		} ,
 		{
 			type = "dropdown",
-			name = WritCreater.optionStrings['dailyResetWarnType'],--"Master Writs",
-			tooltip = WritCreater.optionStrings['dailyResetWarnTypeTooltip'],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings['dailyResetWarnType'],
+			tooltip = WritCreater.optionStrings['dailyResetWarnTypeTooltip'],
 			choices = WritCreater.optionStrings["dailyResetWarnTypeChoices"],
-			choicesValues = {"none","announcement","alert","chat","window","all"},
+			choicesValues =  IsConsoleUI() and {"none","announcement","alert","chat","all"} or {"none","announcement","alert","chat","window","all"},
 			getFunc = function() return WritCreater:GetSettings().dailyResetWarnType end,
 			setFunc = function(value) 
 				WritCreater:GetSettings().dailyResetWarnType = value 
@@ -789,20 +799,20 @@ function WritCreater.Options() --Sentimental
 		},
 		{
 		    type = "slider",
-		    name = WritCreater.optionStrings['dailyResetWarnTime'], -- or string id or function returning a string
+		    name = WritCreater.optionStrings['dailyResetWarnTime'], 
 		    getFunc = function() return WritCreater:GetSettings().dailyResetWarnTime end,
 		    setFunc = function(value) WritCreater:GetSettings().dailyResetWarnTime = math.max(0,value) WritCreater.refreshWarning() end,
 		    min = 0,
 		    max = 300,
-		    step = 1, --(optional)
-		    clampInput = false, -- boolean, if set to false the input won't clamp to min and max and allow any number instead (optional)
-		    tooltip = WritCreater.optionStrings['dailyResetWarnTimeTooltip'], -- or string id or function returning a string (optional)
-		    requiresReload = false, -- boolean, if set to true, the warning text will contain a notice that changes are only applied after an UI reload and any change to the value will make the "Apply Settings" button appear on the panel which will reload the UI when pressed (optional)
+		    step = 1, 
+		    clampInput = false, 
+		    tooltip = WritCreater.optionStrings['dailyResetWarnTimeTooltip'], 
+		    requiresReload = false, 
 		} ,
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings["master"].." (Unsupported, use Writ Worthy)",--"Master Writs",
-			tooltip = WritCreater.optionStrings["master tooltip"],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings["master"].." (Unsupported, use Writ Worthy)",
+			tooltip = WritCreater.optionStrings["master tooltip"],
 			getFunc = function() return WritCreater.savedVarsAccountWide.masterWrits end,
 			setFunc = function(value) 
 			WritCreater.savedVarsAccountWide.masterWrits = value
@@ -820,8 +830,8 @@ function WritCreater.Options() --Sentimental
 		},
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings["right click to craft"],--"Master Writs",
-			tooltip = WritCreater.optionStrings["right click to craft tooltip"],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings["right click to craft"],
+			tooltip = WritCreater.optionStrings["right click to craft tooltip"],
 			getFunc = function() return WritCreater.savedVarsAccountWide.rightClick end,
 			disabled = not LibCustomMenu or WritCreater.savedVarsAccountWide.rightClick,
 			warning = "This option requires LibCustomMenu",
@@ -860,8 +870,8 @@ function WritCreater.Options() --Sentimental
 		table.insert(options, 4, 
 			{
 			type = "dropdown",
-			name = WritCreater.optionStrings["skin"],--"Master Writs",
-			tooltip =WritCreater.optionStrings["skinTooltip"],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings["skin"],
+			tooltip =WritCreater.optionStrings["skinTooltip"],
 			choices = skinChoices,
 			choicesValues = skinOptions,
 			getFunc = function() return WritCreater.savedVarsAccountWide.skin end,
@@ -967,18 +977,6 @@ function WritCreater.Options() --Sentimental
 			WritCreater:GetSettings().keepNewContainer = value			
 			end,
 		},
-		--[[{
-			type = "slider",
-			name = WritCreater.optionStrings["container delay"],
-			tooltip = WritCreater.optionStrings["container delay tooltip"]    ,
-			min = 0,
-			max = 5,
-			getFunc = function() return WritCreater:GetSettings().containerDelay end,
-			setFunc = function(value)
-			WritCreater:GetSettings().containerDelay = value
-			end,
-			disabled = function() return not WritCreater:GetSettings().lootContainerOnReceipt end,
-		  },--]]
 		{
 			type = "checkbox",
 			name = WritCreater.optionStrings["master writ saver"],
@@ -990,8 +988,8 @@ function WritCreater.Options() --Sentimental
 		},
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings["loot output"],--"Master Writs",
-			tooltip = WritCreater.optionStrings["loot output tooltip"],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings["loot output"],
+			tooltip = WritCreater.optionStrings["loot output tooltip"],
 			getFunc = function() return WritCreater:GetSettings().lootOutput end,
 			setFunc = function(value) 
 			WritCreater:GetSettings().lootOutput = value					
@@ -999,8 +997,8 @@ function WritCreater.Options() --Sentimental
 		},
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['reticleColour'],--"Master Writs",
-			tooltip = WritCreater.optionStrings['reticleColourTooltip'],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings['reticleColour'],
+			tooltip = WritCreater.optionStrings['reticleColourTooltip'],
 			getFunc = function() return  WritCreater:GetSettings().changeReticle end,
 			setFunc = function(value) 
 				WritCreater:GetSettings().changeReticle = value
@@ -1008,8 +1006,8 @@ function WritCreater.Options() --Sentimental
 		},
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['noDELETEConfirmJewelry'],--"Master Writs",
-			tooltip = WritCreater.optionStrings['noDELETEConfirmJewelryTooltip'],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings['noDELETEConfirmJewelry'],
+			tooltip = WritCreater.optionStrings['noDELETEConfirmJewelryTooltip'],
 			getFunc = function() return  WritCreater:GetSettings().EZJewelryDestroy end,
 			setFunc = function(value) 
 				WritCreater:GetSettings().EZJewelryDestroy = value
@@ -1017,8 +1015,8 @@ function WritCreater.Options() --Sentimental
 		},
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['questBuffer'],--"Master Writs",
-			tooltip = WritCreater.optionStrings['questBufferTooltip'],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings['questBuffer'],
+			tooltip = WritCreater.optionStrings['questBufferTooltip'],
 			getFunc = function() return  WritCreater:GetSettings().keepQuestBuffer end,
 			setFunc = function(value) 
 				WritCreater:GetSettings().keepQuestBuffer = value
@@ -1026,8 +1024,8 @@ function WritCreater.Options() --Sentimental
 		},
 		{
 			type = "slider",
-			name = WritCreater.optionStrings['craftMultiplier'],--"Master Writs",
-			tooltip = WritCreater.optionStrings['craftMultiplierTooltip'],--"Craft Master Writ Items",
+			name = WritCreater.optionStrings['craftMultiplier'],
+			tooltip = WritCreater.optionStrings['craftMultiplierTooltip'],
 			min = 1,
 			max = 8,
 			step = 1,
@@ -1069,46 +1067,66 @@ function WritCreater.Options() --Sentimental
 	local statusBarOptions = {
 	{
 			type = "checkbox",
-			name = WritCreater.optionStrings['showStatusBar'], -- or string id or function returning a string
+			name = WritCreater.optionStrings['showStatusBar'], 
 			getFunc = function() return WritCreater:GetSettings().showStatusBar end,
 			setFunc = function(value) 
 				WritCreater:GetSettings().showStatusBar = value
 				WritCreater.toggleQuestStatusWindow()
 			end,
-			tooltip = WritCreater.optionStrings['showStatusBarTooltip'], -- or string id or function returning a string (optional)
+			tooltip = WritCreater.optionStrings['showStatusBarTooltip'], 
 		} ,
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['statusBarInventory'], -- or string id or function returning a string
+			name = WritCreater.optionStrings['statusBarInventory'], 
 			getFunc = function() return WritCreater:GetSettings().statusBarInventory end,
 			disabled = function() return not WritCreater:GetSettings().showStatusBar end,
 			setFunc = function(value) WritCreater:GetSettings().statusBarInventory = value
 				WritCreater.updateQuestStatus()
 			end,
-			tooltip = WritCreater.optionStrings['statusBarInventoryTooltip'], -- or string id or function returning a string (optional)
+			tooltip = WritCreater.optionStrings['statusBarInventoryTooltip'], 
 			default = WritCreater.default.statusBarIcons,
 		},
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['statusBarIcons'], -- or string id or function returning a string
+			name = WritCreater.optionStrings['statusBarIcons'], 
 			getFunc = function() return WritCreater:GetSettings().statusBarIcons end,
 			disabled = function() return not WritCreater:GetSettings().showStatusBar end,
 			setFunc = function(value) WritCreater:GetSettings().statusBarIcons = value
 				WritCreater.updateQuestStatus()
 			end,
-			tooltip = WritCreater.optionStrings['statusBarIconsTooltip'], -- or string id or function returning a string (optional)
+			tooltip = WritCreater.optionStrings['statusBarIconsTooltip'], 
 			default = WritCreater.default.statusBarIcons,
 		},
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings['transparentStatusBar'], -- or string id or function returning a string
+			name = WritCreater.optionStrings['transparentStatusBar'], 
 			getFunc = function() return WritCreater:GetSettings().transparentStatusBar end,
 			disabled = function() return not WritCreater:GetSettings().showStatusBar end,
 			setFunc = function(value) WritCreater:GetSettings().transparentStatusBar = value
 				WritCreater.updateQuestStatus()
 			end,
-			tooltip = WritCreater.optionStrings['transparentStatusBarTooltip'], -- or string id or function returning a string (optional)
+			tooltip = WritCreater.optionStrings['transparentStatusBarTooltip'], 
 			default = WritCreater.default.transparentStatusBar,
+		} ,
+		{
+			type = "colorpicker",
+			name = WritCreater.optionStrings['incompleteColour'], 
+			getFunc = function() return unpack(WritCreater:GetSettings().incompleteColour) end,
+			disabled = function() return not WritCreater:GetSettings().showStatusBar end,
+			setFunc = function(...) WritCreater:GetSettings().incompleteColour = {...}
+				WritCreater.updateQuestStatus()
+			end,
+			default = WritCreater.default.incompleteColour,
+		} ,
+		{
+			type = "colorpicker",
+			name = WritCreater.optionStrings['completeColour'], 
+			getFunc = function() return unpack(WritCreater:GetSettings().completeColour) end,
+			disabled = function() return not WritCreater:GetSettings().showStatusBar end,
+			setFunc = function(...) WritCreater:GetSettings().completeColour = {...}
+				WritCreater.updateQuestStatus()
+			end,
+			default = WritCreater.default.completeColour,
 		} ,
 	}
 
@@ -1187,8 +1205,8 @@ function WritCreater.Options() --Sentimental
 			submenuOptions = {
 				{
 					type = "checkbox",
-					name = WritCreater.optionStrings['sameForALlCrafts'],--"Master Writs",
-					tooltip = WritCreater.optionStrings['sameForALlCraftsTooltip'],--"Craft Master Writ Items",
+					name = WritCreater.optionStrings['sameForALlCrafts'],
+					tooltip = WritCreater.optionStrings['sameForALlCraftsTooltip'],
 					getFunc = function() return  WritCreater:GetSettings().rewardHandling[rewardName].sameForAllCrafts end,
 					setFunc = function(value) 
 						WritCreater:GetSettings().rewardHandling[rewardName].sameForAllCrafts = value

@@ -334,7 +334,7 @@ function RewardsScroll:BuildMasterList()
 				elseif type(reward)== "number" then
 					local link = getItemLinkFromItemId(reward)
 					local trait = GetItemLinkItemType(link)
-					if trait == ITEMTYPE_WEAPON_TRAIT or trait==ITEMTYPE_JEWELRY_TRAIT or trait == ITEMTYPE_ARMOR_TRAIT or (trait == ITEMTYPE_INGREDIENT and GetItemLinkQuality(link)==1) then
+					if trait == ITEMTYPE_WEAPON_TRAIT or trait==ITEMTYPE_JEWELRY_TRAIT or trait == ITEMTYPE_ARMOR_TRAIT or (trait == ITEMTYPE_INGREDIENT and GetItemLinkFunctionalQuality(link)==1) then
 						traitMatTable.amount = traitMatTable.amount + amount
 					elseif trait == ITEMTYPE_JEWELRY_RAW_TRAIT then
 						pulverizedTraitMatTable.amount = pulverizedTraitMatTable.amount + amount

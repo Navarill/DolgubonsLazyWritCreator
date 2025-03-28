@@ -4,11 +4,12 @@
 ; States and/or other countries. All rights reserved.
 ; You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
-## Title: Dolgubon's Lazy Writ Creator v3.1.7.2
+## Title: Dolgubon's Lazy Writ Creator v3.1.7.3
+## Description: Simplifying writs since 2016
 ## APIVersion: 101045 101046
 ## Author: Dolgubon
-## Version: 3.1.7.2
-## DependsOn: LibAddonMenu-2.0 LibLazyCrafting>=4009
+## Version: 3.1.7.3
+## DependsOn: LibAddonMenu-2.0 LibLazyCrafting>=4014
 ## OptionalDependsOn: pChat LibStub LibFeedback LibCustomMenu  LibHistoire
 ## SavedVariables: DolgubonsWritCrafterSavedVars
 
@@ -20,12 +21,16 @@ HelperFunctions.lua
 LootHandler.lua
 QuestHandler.lua
 
-WritCreater.xml
+PC/WritCreater.xml
+; Console is added to the start so that it can be disincluded for console packaging
+; The packager I use grabs the PC file if the names are the same
+Console/ConsoleWritCreater.xml
 WritCreater.lua
 MasterWrits.lua
 BankWithdraw.lua
 
 Languages/default.lua
+Languages/$(officialLanguage).lua
 Languages/$(language).lua
 SettingsMenu.lua
 SlashCommands.lua

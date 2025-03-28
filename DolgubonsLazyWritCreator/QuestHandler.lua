@@ -36,9 +36,14 @@ local function HandleQuestCompleteDialog(eventCode, journalIndex)
 			currentWritDialogue= i
 		end
 	end
+	if IsConsoleUI() then
+		titleUIToUse = ZO_InteractWindow_GamepadTitle
+	else
+		titleUIToUse = ZO_InteractWindowTargetAreaTitle
+	end
 	--d(writs[currentWritDialogue])
 	--d(journalIndex)
-	if zo_plainstrfind( ZO_InteractWindowTargetAreaTitle:GetText() ,completionStrings["Rolis Hlaalu"]) then
+	if zo_plainstrfind( titleUIToUse:GetText() ,completionStrings["Rolis Hlaalu"]) then
 		--d("complete")
 		CompleteQuest()
 		EVENT_MANAGER:UnregisterForEvent(WritCreater.name, EVENT_QUEST_COMPLETE_DIALOG)
@@ -100,7 +105,12 @@ end
 --EVENT_MANAGER:RegisterForEvent("DolgubonsLazyWritCreatorMasterWrit", EVENT_QUEST_OFFERED, handleMasterWritQuestOffered)
 -- Handles dialogue start. It will fire on any NPC dialogue, so we need to filter out a bit
 local function HandleChatterBegin(eventCode, optionCount)
-
+	local titleUIToUse
+	if IsConsoleUI() then
+		titleUIToUse = ZO_InteractWindow_GamepadTitle
+	else
+		titleUIToUse = ZO_InteractWindowTargetAreaTitle
+	end
 	
     -- Ignore interactions with no options
     if optionCount == 0 then return end
@@ -151,7 +161,7 @@ local function HandleChatterBegin(eventCode, optionCount)
 	        SelectChatterOption(1)
 	        return
 	        -- Talking to the master writ person?
-	    elseif zo_plainstrfind( ZO_InteractWindowTargetAreaTitle:GetText() ,completionStrings["Rolis Hlaalu"]) then 
+	    elseif zo_plainstrfind( titleUIToUse:GetText() ,completionStrings["Rolis Hlaalu"]) then 
 	    	if not WritCreater:GetSettings().autoAccept then return end
 	    	--d(optionType)
 	    	--d(optionString)
