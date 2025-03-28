@@ -13,8 +13,6 @@
 ## OptionalDependsOn: pChat LibStub LibFeedback LibCustomMenu  LibHistoire
 ## SavedVariables: DolgubonsWritCrafterSavedVars
 
-libs\LibCustomTitles\LibCustomTitles.lua
-
 libs\LibFeedback\feedback.lua
 
 HelperFunctions.lua
