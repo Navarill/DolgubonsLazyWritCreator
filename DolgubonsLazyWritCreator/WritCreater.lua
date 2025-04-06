@@ -691,7 +691,7 @@ local function initializeLibraries()
 	--local LibStub = nil
 	--local LibFeedback = (LibStub and LibStub:GetLibrary("LibFeedback", true)) or LibFeedback
 	-- LibFeedback = LibStub:GetLibrary("LibFeedback")
-	local showButton, feedbackWindow = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsWrits, "@Dolgubon", 
+	--[[ local showButton, feedbackWindow = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsWrits, "@Dolgubon", 
 	{RIGHT, DolgubonsWrits, RIGHT,-50,40}, 
 	buttonInfo, 
 	feedbackString)
@@ -700,7 +700,7 @@ local function initializeLibraries()
 	{TOPRIGHT, DolgubonsLazyWritStatsWindow, TOPRIGHT,-20,55}, 
 	buttonInfo, 
 	feedbackString)
-	DolgubonsWritsFeedback2 = feedbackWindow2
+	DolgubonsWritsFeedback2 = feedbackWindow2 ]]
 end
 
 local function initializeLocalization()
