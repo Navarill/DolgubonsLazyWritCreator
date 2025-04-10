@@ -821,7 +821,6 @@ end
 
 local function closeWindow(event, station)
 	matSaver = 0
-	--DolgubonsWritsFeedback:SetHidden(true)
 	DolgubonsWrits:SetHidden(true)
 	craftingWrits = false
 	WritCreater:GetSettings().OffsetX = DolgubonsWrits:GetRight()

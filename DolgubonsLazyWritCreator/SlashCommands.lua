@@ -332,6 +332,10 @@ SLASH_COMMANDS['/dlwcstatwindowdebug'] = activateStatWindowDebug
 SLASH_COMMANDS['/abandonwrits'] = abandonWrits
 	-- Outputs all the writ journal quest IDs. Mainly a debug function
 SLASH_COMMANDS['/dlwcfindwrit'] = findWrits
+if GetDisplayName() == "@Dolgubon" then
+	SLASH_COMMANDS['/console'] = function()  local newVal = IsConsoleUI()and "0" or "1" SetCVar("ForceConsoleFlow.2",newVal) end
+	SLASH_COMMANDS['/quit'] =Quit
+end
 
 if WritCreater.needTranslations and GetTimeStamp()<1590361774 then
 	SLASH_COMMANDS['/writcraftertranslations'] = goToTranslationSite

@@ -492,7 +492,7 @@ WritCreater.applyGoatSkin = function()
 end
 
 local function initializeUI()
-	
+	WritCreater.initializeSettingsMenu()
 	if LAM and not IsConsoleUI() then
 		LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
 		WritCreater.settings["options"] = WritCreater.Options()
@@ -589,7 +589,6 @@ local function initializeLibraries()
 	local missingString = WritCreater.strings["missingLibraries"]
 	local missing = false
 	local LLCVersion
-	--local orid = d d = function()end if SLASH_COMMANDS["/libstubwarning"] then SLASH_COMMANDS["/libstubwarning"]("off") end d=orid
 	LLCVersion  =  LibLazyCrafting.version
 	if not LibLazyCrafting then
 		missing = true
@@ -688,19 +687,6 @@ local function initializeLibraries()
 		rep("JumpToSpecificHouse")
 		rep("FastTravelToNode", 1)
 	end
-	--local LibStub = nil
-	--local LibFeedback = (LibStub and LibStub:GetLibrary("LibFeedback", true)) or LibFeedback
-	-- LibFeedback = LibStub:GetLibrary("LibFeedback")
-	--[[ local showButton, feedbackWindow = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsWrits, "@Dolgubon", 
-	{RIGHT, DolgubonsWrits, RIGHT,-50,40}, 
-	buttonInfo, 
-	feedbackString)
-	DolgubonsWritsFeedback = feedbackWindow
-	local showButton2, feedbackWindow2 = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsLazyWritStatsWindow, "@Dolgubon", 
-	{TOPRIGHT, DolgubonsLazyWritStatsWindow, TOPRIGHT,-20,55}, 
-	buttonInfo, 
-	feedbackString)
-	DolgubonsWritsFeedback2 = feedbackWindow2 ]]
 end
 
 local function initializeLocalization()

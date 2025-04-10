@@ -1556,3 +1556,10 @@ function WritCreater.Options() --Sentimental
 
 	return options
 end
+function WritCreater.initializeSettingsMenu()
+	if LAM then
+		LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
+		WritCreater.settings["options"] = WritCreater.Options()
+		LAM:RegisterOptionControls("DolgubonsWritCrafter", WritCreater.settings["options"])
+	end
+end

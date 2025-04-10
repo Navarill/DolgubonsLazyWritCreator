@@ -11,6 +11,17 @@
 
 <GuiXml>
 	<Controls>
+		<TopLevelControl name="ConsoleAddonSettings" inherits="ZO_AnchoredToQuadrant_1_2_3_Background" hidden="true">
+            <OnInitialized>
+                WritCreater.consoleSettings = self
+            </OnInitialized>
+            <Controls>
+                <Label name="$(parent)Title" inherits="ZO_GamepadScreenHeaderTitleTextTemplate" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" text="HELLO WORLD" excludeFromResizeToFitExtents="true" >
+                    <Anchor point="BOTTOMLEFT" />
+                    <Anchor point="BOTTOMRIGHT" />
+                </Label>
+            </Controls>
+        </TopLevelControl>
 		<Control name="WritCrafterConsoleHideControl" virtual="true">
 			<!-- Use sparingly! Only use for controls which are commonly referenced in .lua code -->
 			<!-- Will force hide inheriting controls-->
