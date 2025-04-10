@@ -492,8 +492,8 @@ WritCreater.applyGoatSkin = function()
 end
 
 local function initializeUI()
-	
-	if LAM and not IsConsoleUI() then
+	WritCreater.initializeSettingsMenu()
+	if LAM and (LibAddonMenu2.versionNumber > 38 or not IsConsoleUI()) then
 		LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
 		WritCreater.settings["options"] = WritCreater.Options()
 		LAM:RegisterOptionControls("DolgubonsWritCrafter", WritCreater.settings["options"])

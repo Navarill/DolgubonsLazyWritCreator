@@ -431,6 +431,33 @@ local handledItemTypes =
 	[ITEM_TRAIT_TYPE_WEAPON_ORNATE-100] = "ornate",
 }
 
+local function getItemLinKCraftType(link)
+	local craftType = WritCreater.getWritAndSurveyType(link)
+	if craftType then
+		return craftType
+	end
+	local itemType, specializedType = GetItemLinkItemType(link)
+	local armourType = GetItemLinkArmorType(link)
+	local weaponType = GetItemLinkWeaponType(link)
+	if armourType == ARMORTYPE_HEAVY then
+		return CRAFTING_TYPE_BLACKSMITHING
+	elseif armourType == ARMORTYPE_MEDIUM or armourType == ARMORTYPE_LIGHT then
+		return CRAFTING_TYPE_CLOTHIER
+	elseif weaponType == WEAPONTYPE_FIRE_STAFF or 
+		   weaponType == WEAPONTYPE_FROST_STAFF or 
+		   weaponType == WEAPONTYPE_HEALING_STAFF or 
+		   weaponType == WEAPONTYPE_LIGHTNING_STAFF or
+		   weaponType == WEAPONTYPE_SHIELD then
+		return CRAFTING_TYPE_WOODWORKING
+	elseif itemType == ITEMTYPE_WEAPON then
+		return CRAFTING_TYPE_BLACKSMITHING
+	elseif specializedType == 0 then -- probably jewelry
+		return CRAFTING_TYPE_JEWELRYCRAFTING
+	end
+	return nil
+end
+
+
 -- EVENT_MANAGER:RegisterForUpdate(WritCreater.name.."OpenAllContainers", 1000, scanBagForUnopenedContainers)
 local function slotUpdateHandler(event, bag, slot, isNew,_,reason,changeAmount,...)
 
@@ -464,14 +491,14 @@ local function slotUpdateHandler(event, bag, slot, isNew,_,reason,changeAmount,.
 				-- d("Was logged "..link)
 			end
 			lootedItemLinks[itemId] = false
-			local itemType, specializedType = GetItemLinkItemType(link) 
+			local itemType, specializedType = GetItemLinkItemType(link)
 			local itemName = GetItemLinkName(link)
 			local itemTrait = GetItemLinkTraitInfo(link)
 			local actionSourceName = handledItemTypes[itemType] or handledItemTypes[specializedType] or handledItemTypes[itemId] or handledItemTypes[itemTrait-100]
 			if actionSourceName then
 				-- d("Passed first check")
 				local craftType
-				craftType = WritCreater.getWritAndSurveyType(link)
+				craftType = getItemLinKCraftType(link)
 				local actionSource = WritCreater:GetSettings().rewardHandling[actionSourceName]
 				local action
 
@@ -636,7 +663,7 @@ end
 ]]
 
 
-WritCreater.rewardBoxes = { --To get exact name strings of boxes
+WritCreater.rewardBoxData = { --To get exact name strings of boxes
 	[57851] =  {1, CRAFTING_TYPE_BLACKSMITHING} , -- Blacksmithing
 	[58131] =  {2, CRAFTING_TYPE_BLACKSMITHING} ,
 	[58503] =  {3, CRAFTING_TYPE_BLACKSMITHING} ,
@@ -761,6 +788,7 @@ WritCreater.rewardBoxes = { --To get exact name strings of boxes
 	[142172] = {0, CRAFTING_TYPE_JEWELRYCRAFTING} ,
 	[142173] = {0, CRAFTING_TYPE_JEWELRYCRAFTING} ,
 	[147603] = {0, CRAFTING_TYPE_JEWELRYCRAFTING} ,
+	[204459] = {0,0} , -- glorious jubilee box
 
 ["|H1:item:147616:175:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h"] = {10, CRAFTING_TYPE_CLOTHIER },
 ["|H1:item:58510:175:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h"] = {1, CRAFTING_TYPE_WOODWORKING},
@@ -773,7 +801,7 @@ WritCreater.rewardBoxes = { --To get exact name strings of boxes
 
 
 WritCreater.boxNames = {}
-for boxId, boxRank in pairs (WritCreater.rewardBoxes) do 
+for boxId, boxRank in pairs (WritCreater.rewardBoxData) do 
 	if type(boxId) == "number" then
 		local name = GetItemLinkName(getItemLinkFromItemId(boxId))
 		WritCreater.boxNames[name] = boxRank
@@ -786,3 +814,5 @@ local anniversaryBox = GetItemLinkName("|H1:item:183890:124:1:0:0:0:0:0:0:0:0:0:
 anniversaryBox = string.gsub(anniversaryBox, "%(","%%%(")
 anniversaryBox = string.gsub(anniversaryBox, "%)","%%%)")
 WritCreater.boxNames[anniversaryBox] = {0, 0}
+-- |H1:item:204459:124:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h - Glorious Anniversary Jubilee Gift Box
+-- |H1:item:194428:123:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h - Anniversary Jubilee Gift Box
