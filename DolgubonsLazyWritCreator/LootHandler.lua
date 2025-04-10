@@ -447,6 +447,7 @@ local function getItemLinKCraftType(link)
 		   weaponType == WEAPONTYPE_FROST_STAFF or 
 		   weaponType == WEAPONTYPE_HEALING_STAFF or 
 		   weaponType == WEAPONTYPE_LIGHTNING_STAFF or
+		   weaponType == WEAPONTYPE_BOW or
 		   weaponType == WEAPONTYPE_SHIELD then
 		return CRAFTING_TYPE_WOODWORKING
 	elseif itemType == ITEMTYPE_WEAPON then

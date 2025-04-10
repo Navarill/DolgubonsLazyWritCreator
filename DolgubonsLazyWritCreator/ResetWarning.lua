@@ -34,7 +34,7 @@ local function showAlert(msgText)
 	ZO_Alert(nil,nil,msgText)
 end
 local function chatWarning(msgText)
-	CHAT_SYSTEM:AddMessage(msgText)
+	CHAT_ROUTER:AddSystemMessage(msgText)
 end
 
 local needsReset = false
