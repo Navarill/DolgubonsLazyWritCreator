@@ -687,18 +687,6 @@ local function initializeLibraries()
 		rep("JumpToSpecificHouse")
 		rep("FastTravelToNode", 1)
 	end
-	--local LibFeedback = (LibStub and LibStub:GetLibrary("LibFeedback", true)) or LibFeedback
-	LibFeedback = LibFeedback
-	local showButton, feedbackWindow = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsWrits, "@Dolgubon", 
-	{RIGHT, DolgubonsWrits, RIGHT,-50,40}, 
-	buttonInfo, 
-	feedbackString)
-	DolgubonsWritsFeedback = feedbackWindow
-	local showButton2, feedbackWindow2 = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsLazyWritStatsWindow, "@Dolgubon", 
-	{TOPRIGHT, DolgubonsLazyWritStatsWindow, TOPRIGHT,-20,55}, 
-	buttonInfo, 
-	feedbackString)
-	DolgubonsWritsFeedback2 = feedbackWindow2
 end
 
 local function initializeLocalization()

@@ -12,15 +12,12 @@
 ## DependsOn: LibLazyCrafting>=4014
 ## PCDependsOn: LibAddonMenu-2.0
 ## ConsoleDependsOn: LibHarvensAddonSettings
-## OptionalDependsOn: pChat LibFeedback LibCustomMenu  LibHistoire
+## OptionalDependsOn: pChat LibCustomMenu  LibHistoire
 ## SavedVariables: DolgubonsWritCrafterSavedVars
-
-libs\LibFeedback\feedback.lua
 
 HelperFunctions.lua
 LootHandler.lua
 QuestHandler.lua
-
 
 Keyboard/WritCreater.xml
 Console/ConsoleWritCreater.xml
