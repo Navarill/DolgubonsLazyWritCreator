@@ -28,7 +28,6 @@ WritCreater.name = "DolgubonsLazyWritCreator"
 
 WritCreater.settings = {}
 local LAM
-local LAM2
 WritCreater.languageStrings = {}
 WritCreater.resetTime = true
 WritCreater.version = 19
@@ -493,11 +492,6 @@ end
 
 local function initializeUI()
 	WritCreater.initializeSettingsMenu()
-	if LAM and not IsConsoleUI() then
-		LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
-		WritCreater.settings["options"] = WritCreater.Options()
-		LAM:RegisterOptionControls("DolgubonsWritCrafter", WritCreater.settings["options"])
-	end
 	DolgubonsWrits:ClearAnchors()
 	DolgubonsWrits:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, WritCreater:GetSettings().OffsetX-470, WritCreater:GetSettings().OffsetY)
 	if false then --GetWorldName() ~= "NA Megaserver" then
