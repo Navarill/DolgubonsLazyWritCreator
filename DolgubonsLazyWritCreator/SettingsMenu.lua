@@ -1557,6 +1557,7 @@ function WritCreater.Options() --Sentimental
 	return options
 end
 function WritCreater.initializeSettingsMenu()
+	local LAM = LibAddonMenu2
 	if LAM and not IsConsoleUI() then
 		LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
 		WritCreater.settings["options"] = WritCreater.Options()
