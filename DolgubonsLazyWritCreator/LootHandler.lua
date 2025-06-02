@@ -12,7 +12,7 @@
 
 WritCreater = WritCreater or {}
 
-lootedItemLinks = {}
+local lootedItemLinks = {}
 -- {itemLink, bag, slot}
 local pendingItemActions = {}
 WritCreater.pendingItemActions = pendingItemActions
@@ -359,6 +359,7 @@ local function prepareToInteract()
 	if IsLooting() then return true end
 	if GetGameTimeMilliseconds() - cooldown < cooldownTimer then return true end
 	local _, interact = GetGameCameraInteractableActionInfo()
+	-- Comfort code, so localization is ok here
 	if interact and WritCreater.langWritNames() then
 		local names =WritCreater.langWritNames()
 		for i = 1, #WritCreater.langWritNames() do
@@ -431,7 +432,7 @@ local handledItemTypes =
 	[ITEM_TRAIT_TYPE_WEAPON_ORNATE-100] = "ornate",
 }
 
-local function getItemLinKCraftType(link)
+local function getItemLinkCraftType(link)
 	local craftType = WritCreater.getWritAndSurveyType(link)
 	if craftType then
 		return craftType
@@ -499,7 +500,7 @@ local function slotUpdateHandler(event, bag, slot, isNew,_,reason,changeAmount,.
 			if actionSourceName then
 				-- d("Passed first check")
 				local craftType
-				craftType = getItemLinKCraftType(link)
+				craftType = getItemLinkCraftType(link)
 				local actionSource = WritCreater:GetSettings().rewardHandling[actionSourceName]
 				local action
 
@@ -737,6 +738,7 @@ WritCreater.rewardBoxData = { --To get exact name strings of boxes
 	[59735] = {8, CRAFTING_TYPE_ENCHANTING },
 	[59736] = {9, CRAFTING_TYPE_ENCHANTING },
 	[71236] = {10, CRAFTING_TYPE_ENCHANTING },
+	[121300] = {10, CRAFTING_TYPE_ENCHANTING },
 	[59705] = {1, CRAFTING_TYPE_ALCHEMY } , -- alchemy
 	[59706] = {2, CRAFTING_TYPE_ALCHEMY } ,
 	[59707] = {3, CRAFTING_TYPE_ALCHEMY } ,
@@ -789,7 +791,7 @@ WritCreater.rewardBoxData = { --To get exact name strings of boxes
 	[142172] = {0, CRAFTING_TYPE_JEWELRYCRAFTING} ,
 	[142173] = {0, CRAFTING_TYPE_JEWELRYCRAFTING} ,
 	[147603] = {0, CRAFTING_TYPE_JEWELRYCRAFTING} ,
-	[204459] = {0,0} , -- glorious jubilee box
+	[204459] = {0,0} , -- glorious jubilee box|H1:item:121300:175:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h
 
 ["|H1:item:147616:175:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h"] = {10, CRAFTING_TYPE_CLOTHIER },
 ["|H1:item:58510:175:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h"] = {1, CRAFTING_TYPE_WOODWORKING},

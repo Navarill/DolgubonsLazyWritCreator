@@ -39,6 +39,9 @@ local function isQuestDeliverable(questIndex)
 		["pattern"] = {},
 		["mats"] = {},
 	}
+	if IsJournalQuestStepEnding(questIndex, 1,1) then
+		return QUEST_DELIVER
+	end
 	for condition = 1, GetJournalQuestNumConditions(questIndex,1) do
 		conditionsTable["text"][condition], conditionsTable["cur"][condition], conditionsTable["max"][condition],_,conditionsTable["complete"][condition] = GetJournalQuestConditionInfo(questIndex, 1, condition)
 		-- Check if the condition is complete or empty or at the deliver step

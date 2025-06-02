@@ -18,7 +18,6 @@ WritCreater.settings["panel"] =
 {
      type = "panel",
      label = "Lazy Writ Crafter",
-     registerForRefresh = true,
      displaylabel = "|c8080FF Dolgubon's Lazy Writ Crafter|r",
      author = "@Dolgubon",
      registerForRefresh = true,
@@ -29,43 +28,26 @@ WritCreater.settings["panel"] =
 }
 
 
-local function z(eventType, addonlabel)
-    
-    local LibHarvensAddonSettings = LibHarvensAddonSettings
-    
-    local options = {
-        allowDefaults = true, --will allow users to reset the settings to default values
-        allowRefresh = true, --if this is true, when one of settings is changed, all other settings will be checked for state change (disable/enable)
-        defaultsFunction = function() --this function is called when allowDefaults is true and user hit the reset button
-            d("Reset")
-        end,
-    }
-    --Create settings "container" for your addon
-    --First parameter is the label that will be displayed in the options,
-    --Second parameter is the options table (it is optional)
-    local settings = LibHarvensAddonSettings:AddAddon("Settings Examples", options)
-    if not settings then
-        return
-    end
- 
-    local areSettingsDisabled = false
-
-end
-
 function WritCreater.initializeSettingsMenu()
+    WritCreater.generateHASConversions()
     local LHA = LibHarvensAddonSettings
     local options = {
-        allowDefaults = true, --will allow users to reset the settings to default values
+        -- allowDefaults = true, --will allow users to reset the settings to default values
         allowRefresh = true, --if this is true, when one of settings is changed, all other settings will be checked for state change (disable/enable)
         defaultsFunction = function() --this function is called when allowDefaults is true and user hit the reset button
             d("Reset")
         end,
     }
-
-    local settings = LHA:AddAddon("|c8080FF Dolgubon's Lazy Writ Crafter|r", options)
+    local settingsMenuName = "|c8080FFDolgubon's Lazy Writ Crafter|r"
+    if GetDisplayName() == "@Dolgubon" then
+        settingsMenuName = "|c8080FFDolgubon's 1 Lazy Writ Crafter|r"
+    end
+    -- settings.version = panel.version
+    local settings = LHA:AddAddon(settingsMenuName, options)
     if not settings then
         return
     end
+    settings.author = "Dolgubon"
     WritCreater.consoleSettingsMenu = settings
     local areSettingsDisabled = false
  
@@ -78,6 +60,46 @@ function WritCreater.initializeSettingsMenu()
 
     local options =  {
         {
+            type = LHA.ST_BUTTON,
+            label = "Report a Bug",
+            tooltip = "Open a thread to report bugs specifically with the console version of writ crafter. Please check to make sure the issue hasn't been reported yet.",
+            buttonText = "Open URL",
+            clickHandler = function(control, button)
+                RequestOpenUnsafeURL("https://www.esoui.com/forums/showthread.php?t=11241")
+            end,
+            -- disable = function() return areSettingsDisabled end,
+        },
+        {
+            type = LHA.ST_BUTTON,
+            label = "Donate",
+            tooltip = "Donate to Dolgubon on Paypal",
+            buttonText = "Open URL",
+            clickHandler = function(control, button)
+                RequestOpenUnsafeURL("https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=7CZ3LW6E66NAU&ssrt=1747363295246")
+            end,
+            -- disable = function() return areSettingsDisabled end,
+        },
+        {
+            type = LHA.ST_BUTTON,
+            label = "Writ Stats",
+            tooltip = "View historical writ reward statistics of writs done with the addon installed",
+            buttonText = "Open Window",
+            clickHandler = function(control, button)
+                WritCreater.ShowStatsWindow(false)
+            end,
+            -- disable = function() return areSettingsDisabled end,
+        },
+        {
+            type = LHA.ST_BUTTON,
+            label = "Queue all sealed writs",
+            tooltip = "Queue all sealed writs in your inventory. Does not queue Alchemy sealed writs",
+            buttonText = "Queue",
+            clickHandler = function(control, button)
+                WritCreater.queueAllSealedWrits(BAG_BACKPACK)
+            end,
+            -- disable = function() return areSettingsDisabled end,
+        },
+        {
             type = LHA.ST_SECTION,
             label = function() 
                 local profile = WritCreater.optionStrings.accountWide
@@ -87,7 +109,6 @@ function WritCreater.initializeSettingsMenu()
                 return  string.format(WritCreater.optionStrings.nowEditing, profile)  
             end, 
         },
-
         {
             type = LHA.ST_CHECKBOX,
             label = WritCreater.optionStrings.useCharacterSettings,
@@ -108,31 +129,10 @@ function WritCreater.initializeSettingsMenu()
         --     alpha = 0.5,
         --     width = "full",
         -- },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["autocraft"]  ,
-            tooltip = WritCreater.optionStrings["autocraft tooltip"] ,
-            getFunction = function() return WritCreater:GetSettings().autoCraft end,
-            disable = function() return not WritCreater:GetSettings().showWindow end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().autoCraft = value 
-            end,
-        },
-        
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['stealingProtection'], 
-            getFunction = function() return WritCreater:GetSettings().stealProtection end,
-            setFunction = function(value) WritCreater:GetSettings().stealProtection = value end,
-            tooltip = WritCreater.optionStrings['stealingProtectionTooltip'], 
-        } ,
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['suppressQuestAnnouncements'], 
-            getFunction = function() return WritCreater:GetSettings().suppressQuestAnnouncements end,
-            setFunction = function(value) WritCreater:GetSettings().suppressQuestAnnouncements = value end,
-            tooltip = WritCreater.optionStrings['suppressQuestAnnouncementsTooltip'], 
-        } ,
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.autocraft],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.stealingProtection],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.suppressQuestAnnouncements],
+
         {
             type =  LibHarvensAddonSettings.ST_DROPDOWN,
             label = WritCreater.optionStrings['dailyResetWarnType'],
@@ -173,35 +173,20 @@ function WritCreater.initializeSettingsMenu()
                 WritCreater.showDailyResetWarnings("Example") -- Show the example warnings
             end
         },
-        {
-            type = LibHarvensAddonSettings.ST_SLIDER,
-            label = WritCreater.optionStrings['dailyResetWarnTime'], 
-            getFunction = function() return WritCreater:GetSettings().dailyResetWarnTime end,
-            setFunction = function(value) WritCreater:GetSettings().dailyResetWarnTime = math.max(0,value) WritCreater.refreshWarning() end,
-            min = 0,
-            max = 300,
-            step = 1, 
-            unit = "m",
-            tooltip = WritCreater.optionStrings['dailyResetWarnTimeTooltip'], 
-            requiresReload = false, 
-        } ,
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.dailyResetWarnTime],
         {
             type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["master"].." (Unsupported, use Writ Worthy)",
+            label = WritCreater.optionStrings["master"],
             tooltip = WritCreater.optionStrings["master tooltip"],
             getFunction = function() return WritCreater.savedVarsAccountWide.masterWrits end,
             setFunction = function(value) 
             WritCreater.savedVarsAccountWide.masterWrits = value
-            if LibCustomMenu or WritCreater.savedVarsAccountWide.rightClick then
-                WritCreater.savedVarsAccountWide.rightClick = not value
-            end
             WritCreater.LLCInteraction:cancelItem()
                 if value  then
-                    
                     for i = 1, 25 do WritCreater.MasterWritsQuestAdded(1, i,GetJournalQuestlabel(i)) end
+                else
+                    d("Master Writ crafting queue cleared")
                 end
-                
-                
             end,
         },
         -- {
@@ -225,124 +210,42 @@ function WritCreater.initializeSettingsMenu()
             type = LHA.ST_SECTION,
             label = WritCreater.optionStrings["timesavers submenu"],
         },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["automatic complete"],
-            tooltip = WritCreater.optionStrings["automatic complete tooltip"],
-            getFunction = function() return WritCreater:GetSettings().autoAccept end,
-            setFunction = function(value) WritCreater:GetSettings().autoAccept = value end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['autoCloseBank'],
-            tooltip = WritCreater.optionStrings['autoCloseBankTooltip'],
-            getFunction = function() return  WritCreater:GetSettings().autoCloseBank end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().autoCloseBank = value
-                if not value then
-                    EVENT_MANAGER:RegisterForEvent(WritCreater.label, EVENT_OPEN_BANK, WritCreater.alchGrab)
-                else
-                    EVENT_MANAGER:UnregisterForEvent(WritCreater.label)
-                end
-            end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['despawnBanker'],
-            tooltip = WritCreater.optionStrings['despawnBankerTooltip'],
-            getFunction = function() return  WritCreater:GetSettings().despawnBanker end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().despawnBanker = value
-            end,
-            disable = function() return not WritCreater:GetSettings().autoCloseBank end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['despawnBankerDeposit'],
-            tooltip = WritCreater.optionStrings['despawnBankerDepositTooltip'],
-            getFunction = function() return  WritCreater:GetSettings().despawnBankerDeposits end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().despawnBankerDeposits = value
-            end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["exit when done"],
-            tooltip = WritCreater.optionStrings["exit when done tooltip"],
-            getFunction = function() return WritCreater:GetSettings().exitWhenDone end,
-            setFunction = function(value) WritCreater:GetSettings().exitWhenDone = value end,
-        },
-        {
-            type = "dropdown",
-            label = WritCreater.optionStrings["autoloot behaviour"]  ,
-            tooltip = WritCreater.optionStrings["autoloot behaviour tooltip"],
-            choices = WritCreater.optionStrings["autoloot behaviour choices"],
-            choicesValues = {1,2,3},
-            getFunction = function() if not WritCreater:GetSettings().ignoreAuto then return 1 elseif WritCreater:GetSettings().autoLoot then return 2 else return 3 end end,
-            setFunction = function(value) 
-                if value == 1 then 
-                    WritCreater:GetSettings().ignoreAuto = false
-                elseif value == 2 then  
-                    WritCreater:GetSettings().autoLoot = true
-                    WritCreater:GetSettings().ignoreAuto = true
-                elseif value == 3 then
-                    WritCreater:GetSettings().ignoreAuto = true
-                    WritCreater:GetSettings().autoLoot = false
-                    WritCreater:GetSettings().lootContainerOnReceipt  = false
-                end
-            end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["loot container"],
-            tooltip = WritCreater.optionStrings["loot container tooltip"],
-            disable = function() return not WritCreater:GetSettings().autoLoot end,
-            getFunction = function() 
-                if not WritCreater:GetSettings().autoLoot then
-                    WritCreater:GetSettings().lootContainerOnReceipt  = false
-                end
-                return WritCreater:GetSettings().lootContainerOnReceipt 
-            end,
-            setFunction = function(value) 
-            WritCreater:GetSettings().lootContainerOnReceipt = value                    
-            end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["new container"],
-            tooltip = WritCreater.optionStrings["new container tooltip"],
-            getFunction = function() return WritCreater:GetSettings().keepNewContainer end,
-            setFunction = function(value) 
-            WritCreater:GetSettings().keepNewContainer = value          
-            end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["master writ saver"],
-            tooltip = WritCreater.optionStrings["master writ saver tooltip"],
-            getFunction = function() return WritCreater:GetSettings().preventMasterWritAccept end,
-            setFunction = function(value) 
-            WritCreater:GetSettings().preventMasterWritAccept = value                   
-            end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["loot output"],
-            tooltip = WritCreater.optionStrings["loot output tooltip"],
-            getFunction = function() return WritCreater:GetSettings().lootOutput end,
-            setFunction = function(value) 
-            WritCreater:GetSettings().lootOutput = value                    
-            end,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['reticleColour'],
-            tooltip = WritCreater.optionStrings['reticleColourTooltip'],
-            getFunction = function() return  WritCreater:GetSettings().changeReticle end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().changeReticle = value
-            end,
-        },
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["automatic complete"]],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.autoCloseBank],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.despawnBanker],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.despawnBankerDeposit],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["exit when done"]],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["autoloot behaviour"]],
+
+        -- {
+        --     type = "dropdown",
+        --     label = WritCreater.optionStrings["autoloot behaviour"]  ,
+        --     tooltip = WritCreater.optionStrings["autoloot behaviour tooltip"],
+        --     choices = WritCreater.optionStrings["autoloot behaviour choices"],
+        --     choicesValues = {1,2,3},
+        --     getFunction = function() if not WritCreater:GetSettings().ignoreAuto then return 1 elseif WritCreater:GetSettings().autoLoot then return 2 else return 3 end end,
+        --     setFunction = function(value) 
+        --         if value == 1 then 
+        --             WritCreater:GetSettings().ignoreAuto = false
+        --         elseif value == 2 then  
+        --             WritCreater:GetSettings().autoLoot = true
+        --             WritCreater:GetSettings().ignoreAuto = true
+        --         elseif value == 3 then
+        --             WritCreater:GetSettings().ignoreAuto = true
+        --             WritCreater:GetSettings().autoLoot = false
+        --             WritCreater:GetSettings().lootContainerOnReceipt  = false
+        --         end
+        --     end,
+        -- },
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["loot container"]],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["new container"]],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["master writ saver"]],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["loot output"]],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.reticleColour],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.questBuffer],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.craftMultiplier],
+
+
         -- {
         --     type = LHA.ST_CHECKBOX,
         --     label = WritCreater.optionStrings['noDELETEConfirmJewelry'],
@@ -352,27 +255,7 @@ function WritCreater.initializeSettingsMenu()
         --         WritCreater:GetSettings().EZJewelryDestroy = value
         --     end,
         -- },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['questBuffer'],
-            tooltip = WritCreater.optionStrings['questBufferTooltip'],
-            getFunction = function() return  WritCreater:GetSettings().keepQuestBuffer end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().keepQuestBuffer = value
-            end,
-        },
-        {
-            type = LibHarvensAddonSettings.ST_SLIDER,
-            label = WritCreater.optionStrings['craftMultiplier'],
-            tooltip = WritCreater.optionStrings['craftMultiplierTooltip'],
-            min = 1,
-            max = 8,
-            step = 1,
-            getFunction = function() return  WritCreater:GetSettings().craftMultiplier end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().craftMultiplier = value
-            end,
-        },
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["hireling behaviour"]],
         {
             type = "dropdown",
             label = WritCreater.optionStrings["hireling behaviour"]  ,
@@ -393,93 +276,17 @@ function WritCreater.initializeSettingsMenu()
                 end
             end,
         },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings["scan for unopened"],
-            tooltip = WritCreater.optionStrings["scan for unopened tooltip"],
-            getFunction = function() return  WritCreater:GetSettings().scanForUnopened end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().scanForUnopened = value
-            end,
-        },
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["scan for unopened"]],
         {
             type = LHA.ST_SECTION,
             label = WritCreater.optionStrings["status bar submenu"],
         },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['showStatusBar'], 
-            getFunction = function() return WritCreater:GetSettings().showStatusBar end,
-            setFunction = function(value) 
-                WritCreater:GetSettings().showStatusBar = value
-                WritCreater.toggleQuestStatusWindow()
-                zo_callLater(WritCreater.updateQuestStatus, statusBarSampleTimeout)
-            end,
-            tooltip = WritCreater.optionStrings['showStatusBarTooltip'], 
-        } ,
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['statusBarInventory'], 
-            getFunction = function() return WritCreater:GetSettings().statusBarInventory end,
-            disable = function() return not WritCreater:GetSettings().showStatusBar end,
-            setFunction = function(value) WritCreater:GetSettings().statusBarInventory = value
-                WritCreater.updateQuestStatus()
-                WritCreater.toggleQuestStatusWindow(false)
-                zo_callLater(WritCreater.updateQuestStatus, statusBarSampleTimeout)
-            end,
-            tooltip = WritCreater.optionStrings['statusBarInventoryTooltip'], 
-            default = WritCreater.default.statusBarIcons,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['statusBarIcons'], 
-            getFunction = function() return WritCreater:GetSettings().statusBarIcons end,
-            disable = function() return not WritCreater:GetSettings().showStatusBar end,
-            setFunction = function(value) WritCreater:GetSettings().statusBarIcons = value
-                WritCreater.updateQuestStatus()
-                WritCreater.toggleQuestStatusWindow(false)
-                zo_callLater(WritCreater.updateQuestStatus, statusBarSampleTimeout)
-            end,
-            tooltip = WritCreater.optionStrings['statusBarIconsTooltip'], 
-            default = WritCreater.default.statusBarIcons,
-        },
-        {
-            type = LHA.ST_CHECKBOX,
-            label = WritCreater.optionStrings['transparentStatusBar'], 
-            getFunction = function() return WritCreater:GetSettings().transparentStatusBar end,
-            disable = function() return not WritCreater:GetSettings().showStatusBar end,
-            setFunction = function(value) WritCreater:GetSettings().transparentStatusBar = value
-                WritCreater.updateQuestStatus()
-                WritCreater.toggleQuestStatusWindow(false)
-                zo_callLater(WritCreater.updateQuestStatus, statusBarSampleTimeout)
-            end,
-            tooltip = WritCreater.optionStrings['transparentStatusBarTooltip'], 
-            default = WritCreater.default.transparentStatusBar,
-        } ,
-        {
-            type = LHA.ST_COLOR,
-            label = WritCreater.optionStrings['incompleteColour'], 
-            getFunction = function() return unpack(WritCreater:GetSettings().incompleteColour) end,
-            disable = function() return not WritCreater:GetSettings().showStatusBar end,
-            setFunction = function(...) WritCreater:GetSettings().incompleteColour = {...}
-                WritCreater.updateQuestStatus()
-                WritCreater.toggleQuestStatusWindow(false)
-                zo_callLater(WritCreater.updateQuestStatus, statusBarSampleTimeout)
-            end,
-            default = WritCreater.default.incompleteColour,
-        } ,
-        {
-            type = LHA.ST_COLOR,
-            label = WritCreater.optionStrings['completeColour'], 
-            getFunction = function() return unpack(WritCreater:GetSettings().completeColour) end,
-            disable = function() return not WritCreater:GetSettings().showStatusBar end,
-            setFunction = function(...) WritCreater:GetSettings().completeColour = {...}
-                WritCreater.updateQuestStatus()
-                WritCreater.toggleQuestStatusWindow(false)
-                zo_callLater(WritCreater.updateQuestStatus, statusBarSampleTimeout)
-            end,
-            default = WritCreater.default.completeColour,
-        } ,
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.showStatusBar],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.statusBarInventory],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.statusBarIcons],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.transparentStatusBar],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.incompleteColour],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings.completeColour],
         {
             type = LHA.ST_SECTION,
             label = WritCreater.optionStrings["writRewards submenu"],
@@ -488,13 +295,39 @@ function WritCreater.initializeSettingsMenu()
             type = LHA.ST_SECTION,
             label = WritCreater.optionStrings["crafting submenu"],
         },
-        {
-            type = LHA.ST_SECTION,
-            label = WritCreater.optionStrings["style stone menu"],
-        },
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["blackmithing"].." (All features supported)"],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["clothing"].." (All features supported)"],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["woodworking"].." (All features supported)"],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["jewelry crafting"].." (All features supported)"],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["provisioning"].." (All features supported)"],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["enchanting"].." (All features supported)"],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:45850:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:45831:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[WritCreater.optionStrings["alchemy"].." (All features supported)"],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:30152:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:30165:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:77591:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        -- {
+        --     type = LHA.ST_SECTION,
+        --     label = WritCreater.optionStrings["style stone menu"],
+        -- },
     }
+    local addAbandon = {
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:45850:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:45831:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:30152:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:30165:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+        WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:77591:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
+    }
+    for k, v in pairs(addAbandon) do
+        v.label = "Abandon "..v.label
+    end
     for i = 1, #options do
-        settings:AddSetting(options[i])
+        -- if options[i] then
+            settings:AddSetting(options[i])
+        -- else
+            
+        -- end
     end
 
 end
