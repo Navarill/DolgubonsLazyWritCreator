@@ -275,7 +275,12 @@ end
 
 
 local function searchDailyCombos(journalIndex)
-	local requiredItemId, materialItemId = GetQuestConditionItemInfo(journalIndex, 1, getConditionIndex(journalIndex))
+	local conditionIndex = getConditionIndex(journalIndex)
+	local requiredItemId, materialItemId = GetQuestConditionItemInfo(journalIndex, 1, conditionIndex)
+	local _,current, max = GetJournalQuestConditionInfo(journalIndex,1,conditionIndex)
+	if current == max then
+		return nil
+	end
 	local effectId = GetTraitIdFromBasePotion(requiredItemId)
 	local shortList = getShortlist(effectId)
 	local parity = (effectId % 2 == 0) and -1 or 1
@@ -384,7 +389,10 @@ Returns: string link, ProspectiveAlchemyResult prospectiveAlchemyResult
 	local questItems = ALCHEMY.questItems
 	if not isMasterWrit then
 		questItems = searchDailyCombos(journalIndex)
-		IsAlchemySolventForItemAndMaterialId()
+		if not questItems then
+			WritCreater.writCompleteUIHandle()
+			return
+		end
 	end
 	local reagents = questItems.reagents
 	local solvent = questItems.solvent
