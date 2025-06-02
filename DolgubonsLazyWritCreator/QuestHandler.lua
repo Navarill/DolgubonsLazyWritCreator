@@ -112,15 +112,17 @@ local function checkMasterWritCraftable(bag, slot)
 	local link = GetItemLink(bag, slot)
 	local station = WritCreater.sealedWritNames[GetItemLinkName(link)]
 	if station == CRAFTING_TYPE_ALCHEMY then
+		lastSlotCraftable = true
 		return
 	elseif station == CRAFTING_TYPE_PROVISIONING then
+		lastSlotCraftable = true
 		return
 	elseif station == CRAFTING_TYPE_ENCHANTING then
+		lastSlotCraftable = true
 		return
 	elseif not (station == CRAFTING_TYPE_BLACKSMITHING or station == CRAFTING_TYPE_JEWELRYCRAFTING or station == CRAFTING_TYPE_WOODWORKING or station == CRAFTING_TYPE_CLOTHIER ) then
 		return
 	end
-	lastSlotCraftable = false
 	local x = { ZO_LinkHandler_ParseLink(link) }
 	local itemQuality = tonumber(x[12])
 	local itemTemplateId = tonumber(x[10])
@@ -141,7 +143,13 @@ local function checkMasterWritCraftable(bag, slot)
 	request.level = 150
 	request.isCP = true
 	local craftableResults = LibLazyCrafting.craftInteractionTables[CRAFTING_TYPE_BLACKSMITHING].getNonCraftableReasons(request)
-	lastSlotCraftable= not craftableResults.missingKnowledge
+	local numMissings = (craftableResults and craftableResults.missingKnowledge and craftableResults.knowledge and NonContiguousCount(craftableResults.missingKnowledge.knowledge)) or 0
+	if craftableResults and craftableResults.missingKnowledge and craftableResults.knowledge and craftableResults.missingKnowledge.missingKnowledge.knowledge.style then
+		numMissings = numMissings - 1
+	end
+	-- if craftableResults.
+	lastSlotCraftable= numMissings < 1
+
 end
 local lastSlotChecked = -1
 local function slotActionHook(...)
@@ -414,7 +422,11 @@ function WritCreater.InitializeQuestHandling()
 			ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR ,"Lazy Writ Crafter™ prevented you from accepting this writ because you cannot craft it")
 		else
 			-- d("Accept")
-			original()
+			if GetDisplayName()=="@Dolgubon" and true then
+				d("Accept")
+			else
+				original()
+			end
 		end
 		-- reset craftable Check
 		lastSlotChecked = -1
