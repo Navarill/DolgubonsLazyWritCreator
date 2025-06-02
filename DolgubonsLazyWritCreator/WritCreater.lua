@@ -579,7 +579,7 @@ WritCreater.masterWritCompletion = function(...) end -- Empty function, intended
 WritCreater.writItemCompletion = function(...) end -- also empty
 
 local libraryDependencies = {
-	["LibStub"] = true, ["LibLazyCrafting"] = true, ["LibAddonMenu-2.0"] = true,
+	["LibLazyCrafting"] = true, ["LibAddonMenu-2.0"] = true,
 }
 
 local function determineTrueMissingLibraries()
@@ -598,7 +598,6 @@ local function initializeLibraries()
 	local missingString = WritCreater.strings["missingLibraries"]
 	local missing = false
 	local LLCVersion
-	local orid = d d = function()end if SLASH_COMMANDS["/libstubwarning"] then SLASH_COMMANDS["/libstubwarning"]("off") end d=orid
 	LLCVersion  =  LibLazyCrafting.version
 	if not LibLazyCrafting then
 		missing = true
@@ -612,8 +611,8 @@ local function initializeLibraries()
 	if missing then
 		mandatoryRoadblockOut(missingString)
 		-- cause an error if they aren't found so we get the error to catch
-		LibStub:GetLibrary("LibLazyCrafting")
-		LibStub:GetLibrary("LibAddonMenu-2.0")
+		"LibLazyCrafting"
+		"LibAddonMenu-2.0"
 		return
 	end
 	if LLCVersion <2.33 then
@@ -697,9 +696,7 @@ local function initializeLibraries()
 		rep("JumpToSpecificHouse")
 		rep("FastTravelToNode", 1)
 	end
-	local LibStub = nil
-	local LibFeedback = (LibStub and LibStub:GetLibrary("LibFeedback", true)) or LibFeedback
-	-- LibFeedback = LibStub:GetLibrary("LibFeedback")
+	LibFeedback = LibFeedback
 	local showButton, feedbackWindow = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsWrits, "@Dolgubon", 
 	{RIGHT, DolgubonsWrits, RIGHT,-50,40}, 
 	buttonInfo, 
