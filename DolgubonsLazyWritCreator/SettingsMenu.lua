@@ -17,10 +17,10 @@ local validLanguages =
 }
 if true then
 	EVENT_MANAGER:RegisterForEvent("WritCrafterLocalizationError", EVENT_PLAYER_ACTIVATED, function()
-		if not WritCreater.languageInfo then 
+		if not WritCreater.writCompleteStrings then 
 			local language = GetCVar("language.2")
 			if validLanguages[language] == nil then
-				d("Dolgubon's Lazy Writ Crafter: Your language is not supported for this addon. If you are looking to translate the addon, check the lang/en.lua file for more instructions.")
+				d("Dolgubon's Lazy Writ Crafter: Your language is not fully supported for this addon. Some features may not work as expected. If you are looking to translate the addon, check the lang/en.lua file for more instructions.")
 			elseif validLanguages[language] == false then
 				d("Dolgubon's Lazy Writ Crafter: The Localization file could not be loaded.")
 				d("Troubleshooting:")
@@ -97,6 +97,10 @@ end
 
 local optionStrings = WritCreater.optionStrings
 local function styleCompiler()
+	-- Console just gets basic styles for now
+	if IsConsoleUI() then
+		return {}
+	end
 	local submenuTable = {}
 	local styleNames = WritCreater.styleNames
 	
@@ -137,14 +141,25 @@ local function styleCompiler()
 end
 local function isCheeseOn()
 	local enableNames = {
-		["@Dolgubon"]=1,
+		["@Dolgubon"]=UI_PLATFORM_PC,
 		-- ["@mithra62"]=1,
 		-- ["@Gitaelia"]=1,
 		-- ["@PacoHasPants"]=1,
 		-- ["@Architecture"]=1,
 		-- ["@K3VLOL99"]=1,
+		["@J3zdaz"] =UI_PLATFORM_XBOX,
 		
 	}
+	local platform = GetUIPlatform()
+        
+	if enableNames[GetDisplayName()] == UI_PLATFORM_XBOX then
+		local dateCheck = GetDate()%10000
+		if IsConsoleUI() and dateCheck <700 and dateCheck > 600 then
+			return true
+		end
+	elseif enableNames[GetDisplayName()] == platform then
+		return true
+	end
 	local dateCheck = GetDate()%10000 == 401 or false
 	return dateCheck or enableNames[GetDisplayName()]
 	-- return WritCreater.shouldDivinityprotocolbeactivatednowornotitshouldbeallthetimebutwhateveritlljustbeforabit and WritCreater.shouldDivinityprotocolbeactivatednowornotitshouldbeallthetimebutwhateveritlljustbeforabit() == 2
@@ -157,6 +172,12 @@ if isCheeseOn() then
 	local cheesyActivityTypeIndex = 2
 	while TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex] do 
 		cheesyActivityTypeIndex = cheesyActivityTypeIndex + 1 
+	end
+	local function refreshTimedActivities()
+		if not IsConsoleUI() then
+			TIMED_ACTIVITIES_KEYBOARD:Refresh()
+		end
+		TIMED_ACTIVITIES_GAMEPAD:Refresh()
 	end
 	-- Localization
 	local il8n = WritCreater.cheeseyLocalizations
@@ -435,7 +456,7 @@ if isCheeseOn() then
 		end
 		TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed = TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex].completed + 1
 		WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] = WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] + 1
-		pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
+		pcall(refreshTimedActivities)
 		local activityTypeName = "CHEESY ENDEAVOR" --GetString("SI_TIMEDACTIVITYTYPE", 2)
 	    -- local _, maxNumActivities = TIMED_ACTIVITIES_MANAGER:GetTimedActivityTypeLimitInfo(2)
 	    local messageTitle = zo_strformat(SI_TIMED_ACTIVITY_TYPE_COMPLETED_CSA,  WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"], #timedActivityData, il8n.menuName)
@@ -523,14 +544,14 @@ if isCheeseOn() then
 				WritCreater.savedVarsAccountWide.luckyProgress["rngesus"] = 1
 				cheeseEndeavorCompleted(timedActivityData[5].completion)
 			elseif string.find(text, "rngesus") then
-				ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
+				ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
 			elseif dist then
-				ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.praiseHint)
+				ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.praiseHint)
 			end
 			if string.find(text, "nocturnal") or string.find(text, "fortuna") or string.find(text, "tyche") and dist then --Little easter egg I guess
 				WritCreater.savedVarsAccountWide.luckyProgress["rngesus"] = 1
 				cheeseEndeavorCompleted(timedActivityData[5].completion)
-				ZO_Alert(ERROR, SOUNDS.NONE ,il8n.closeEnough)
+				ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.NONE ,il8n.closeEnough)
 			end
 		end
 	end
@@ -620,7 +641,7 @@ if isCheeseOn() then
 	local originalCheatyCheeseBook = ZO_LoreLibrary_ReadBook
 	ZO_LoreLibrary_ReadBook = function(categoryIndex, collectionIndex, bookIndex,...)
 		if WritCreater.savedVarsAccountWide.luckyProgress['cheeseNerd'] == 0 and categoryIndex == 3 and collectionIndex == 9 and bookIndex == 46  then
-			-- ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR , il8n["cheatyCheeseBook"])
+			-- ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR , il8n["cheatyCheeseBook"])
 		else
 			originalCheatyCheeseBook(categoryIndex, collectionIndex, bookIndex,...)
 		end
@@ -640,7 +661,7 @@ if isCheeseOn() then
 			WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] = 1
 			cheeseEndeavorCompleted(timedActivityData[4].completion, 5)
 		elseif requestedCheeseMonster and sound == 39 and WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] == 0 and WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion==3 and not inArea then
-			ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
+			ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
 		end
 		requestedCheeseMonster = false
 		EVENT_MANAGER:UnregisterForEvent(WritCreater.name.."cheeseMonsterConfirmed", EVENT_INVENTORY_ITEM_DESTROYED)
@@ -670,7 +691,7 @@ if isCheeseOn() then
 			WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] = 1
 			cheeseEndeavorCompleted(timedActivityData[4].completion, 5)
 		elseif WritCreater.savedVarsAccountWide.luckyProgress.luckCompletion==3 and WritCreater.savedVarsAccountWide.luckyProgress['gutDestruction'] == 0 and itemId == 42870 and not inArea then
-			ZO_Alert(ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
+			ZO_Alert(UI_ALERT_CATEGORY_ERROR, SOUNDS.GENERAL_ALERT_ERROR ,il8n.outOfRange)
 		end
 		originalDestroyItem(bag, slot, ...)
 	end
@@ -699,7 +720,7 @@ if isCheeseOn() then
 		-- WritCreater.savedVarsAccountWide.luckyProgress["cheeseProfession"] = 0
 		WritCreater.savedVarsAccountWide.luckyProgress["luckCompletion"] = numComplete
 		if not isConsolePeasant then
-			pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
+			pcall(refreshTimedActivities)
 		end
 	end
 	SLASH_COMMANDS['/resetcheeseprogresscomplete'] = function() 
@@ -707,7 +728,7 @@ if isCheeseOn() then
 			WritCreater.savedVarsAccountWide.luckyProgress[k] = 0
 		end 
 		if not isConsolePeasant then
-			pcall(function()TIMED_ACTIVITIES_KEYBOARD:Refresh() end )
+			pcall(refreshTimedActivities)
 		end
 	end
 		-- local sheoStrings = 
@@ -811,40 +832,44 @@ function WritCreater.Options() --Sentimental
 		} ,
 		{
 			type = "checkbox",
-			name = WritCreater.optionStrings["master"].." (Unsupported, use Writ Worthy)",
+			name = WritCreater.optionStrings["master"],
 			tooltip = WritCreater.optionStrings["master tooltip"],
 			getFunc = function() return WritCreater.savedVarsAccountWide.masterWrits end,
 			setFunc = function(value) 
 			WritCreater.savedVarsAccountWide.masterWrits = value
-			if LibCustomMenu or WritCreater.savedVarsAccountWide.rightClick then
-				WritCreater.savedVarsAccountWide.rightClick = not value
-			end
-			WritCreater.LLCInteraction:cancelItem()
+			WritCreater.LLCInteractionMaster:cancelItem()
 				if value  then
-					
 					for i = 1, 25 do WritCreater.MasterWritsQuestAdded(1, i,GetJournalQuestName(i)) end
+				else
+					d("Master Writ crafting queue cleared")
 				end
-				
-				
 			end,
 		},
 		{
-			type = "checkbox",
-			name = WritCreater.optionStrings["right click to craft"],
-			tooltip = WritCreater.optionStrings["right click to craft tooltip"],
-			getFunc = function() return WritCreater.savedVarsAccountWide.rightClick end,
-			disabled = not LibCustomMenu or WritCreater.savedVarsAccountWide.rightClick,
-			warning = "This option requires LibCustomMenu",
-			setFunc = function(value) 
-			WritCreater.savedVarsAccountWide.masterWrits = not value
-			WritCreater.savedVarsAccountWide.rightClick = value
-			WritCreater.LLCInteraction:cancelItem()
-				if not value  then
-					
-					for i = 1, 25 do WritCreater.MasterWritsQuestAdded(1, i,GetJournalQuestName(i)) end
-				end
+			type = "button",
+			name = "Queue all sealed writs",
+            tooltip = "Queue all sealed writs in your inventory. Does not queue Alchemy sealed writs. Skips junked writs.",
+			func = function(value) 
+				WritCreater.queueAllSealedWrits(BAG_BACKPACK)
 			end,
 		},
+		-- {
+		-- 	type = "checkbox",
+		-- 	name = WritCreater.optionStrings["right click to craft"],
+		-- 	tooltip = WritCreater.optionStrings["right click to craft tooltip"],
+		-- 	getFunc = function() return WritCreater.savedVarsAccountWide.rightClick end,
+		-- 	disabled = not LibCustomMenu or WritCreater.savedVarsAccountWide.rightClick,
+		-- 	warning = "This option requires LibCustomMenu",
+		-- 	setFunc = function(value) 
+		-- 	WritCreater.savedVarsAccountWide.masterWrits = not value
+		-- 	WritCreater.savedVarsAccountWide.rightClick = value
+		-- 	WritCreater.LLCInteraction:cancelItem()
+		-- 		if not value  then
+					
+		-- 			for i = 1, 25 do WritCreater.MasterWritsQuestAdded(1, i,GetJournalQuestName(i)) end
+		-- 		end
+		-- 	end,
+		-- },
 
 			
 	}
@@ -1190,7 +1215,7 @@ function WritCreater.Options() --Sentimental
 	-- per craft
 	-- just the dropdown
 
-	function getChoiceListInfo(validActionList)
+	local function getChoiceListInfo(validActionList)
 		local a = {}
 		for k, v in ipairs(validActionList) do
 			a[#a+1] = WritCreater.optionStrings["rewardChoices"][v]
@@ -1202,7 +1227,7 @@ function WritCreater.Options() --Sentimental
 		local rewardName, validCraftTypes, validActions = validForReward[i][1], validForReward[i][2], validForReward[i][3]
 		local actionNames = getChoiceListInfo(validActions)
 		if #validCraftTypes > 1 then
-			submenuOptions = {
+			local submenuOptions = {
 				{
 					type = "checkbox",
 					name = WritCreater.optionStrings['sameForALlCrafts'],
@@ -1356,7 +1381,7 @@ function WritCreater.Options() --Sentimental
 	},
 	{
 		type = "checkbox",
-		name = WritCreater.optionStrings["provisioning"].." (Crafting not supported)",
+		name = WritCreater.optionStrings["provisioning"].." (All features supported)",
 		tooltip = WritCreater.optionStrings["provisioning tooltip"]  ,
 		getFunc = function() return WritCreater:GetSettings()[CRAFTING_TYPE_PROVISIONING] end,
 		setFunc = function(value) 
@@ -1408,7 +1433,7 @@ function WritCreater.Options() --Sentimental
 	},
 	{
 		type = "checkbox",
-		name = WritCreater.optionStrings["alchemy"].." (Crafting not supported)",
+		name = WritCreater.optionStrings["alchemy"].." (All features supported)",
 		tooltip = WritCreater.optionStrings["alchemy tooltip"]  ,
 		getFunc = function() return WritCreater:GetSettings()[CRAFTING_TYPE_ALCHEMY] end,
 		setFunc = function(value) 
@@ -1449,13 +1474,6 @@ function WritCreater.Options() --Sentimental
 			WritCreater:GetSettings().skipItemQuests["|H1:item:77591:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h"] = value 
 		end,
 	},
-	{
-		type = "divider",
-		height = 15,
-		alpha = 0.5,
-		width = "full",
-	},
-
 }
 
   if WritCreater.lang ~="jp" then
@@ -1556,8 +1574,97 @@ function WritCreater.Options() --Sentimental
 
 	return options
 end
+
+
+local function addToControlTable(newOption, t)
+	t.indexed[#t.indexed + 1 ] = newOption
+	t.nameMap[newOption.label] = newOption
+	newOption.conversionIndex = #t.indexed
+end
+local function LAMtoHASDropdownConverter(option, controlTable)
+	local newOption = {
+		type = LibHarvensAddonSettings.ST_DROPDOWN,
+		label = option.name,
+		default = option.default,
+		-- setFunction = option.setFunc,
+		getFunction = option.getFunc,
+		tooltip = option.tooltip,
+		disable = option.disabled,
+	}
+
+	newOption.setFunction = function(combobox, name, item) option.setFunc(item.data) end
+	
+	local items = {}
+	local labelMap = {}
+	for i = 1, # option.choices do
+		items[i] = {name = option.choices[i], data = option.choicesValues[i]}
+		if option.choicesValues[i] then
+			labelMap[items[i].data] = items[i].name
+		end
+	end
+	newOption.items = items
+	newOption.getFunction = function() return labelMap[option.getFunc()]  end
+	addToControlTable(newOption, controlTable)
+end
+
+local function convertlamToHasTable(optionsTable, controlTable)
+	local LAMtoHAS = {
+		slider = LibHarvensAddonSettings.ST_SLIDER,
+		header = LibHarvensAddonSettings.ST_SECTION,
+		checkbox = LibHarvensAddonSettings.ST_CHECKBOX,
+		colorpicker = LibHarvensAddonSettings.ST_COLOR,
+		button = LibHarvensAddonSettings.ST_BUTTON,
+		editbox = LibHarvensAddonSettings.ST_EDIT,
+	}
+	local LAMtoHASSpecial = {
+		dropdown = LAMtoHASDropdownConverter,
+		submenu = function(option, controlTable) convertlamToHasTable(option.controls, controlTable) end
+	}
+	local controlTable = controlTable or {
+		indexed = {},
+		nameMap = {},
+	}
+	
+	-- LAMHASMissing = {}
+	
+	for i, entry in ipairs(optionsTable) do
+		local newType = LAMtoHAS[entry.type]
+		if newType and not entry.isPCOnly then
+			local newOption = {
+				type = newType,
+				label = entry.name,
+				default = entry.default,
+				setFunction = entry.setFunc,
+				getFunction = entry.getFunc,
+				tooltip = entry.tooltip,
+				min = entry.min,
+				max = entry.max,
+				step = entry.step,
+				disable = entry.disabled,
+				clickHandler = entry.func,
+				buttonText = entry.name,
+			}
+			addToControlTable(newOption, controlTable)
+			-- settings:AddSetting(newOption)
+		elseif LAMtoHASSpecial[entry.type] then
+			LAMtoHASSpecial[entry.type](entry, controlTable)
+		else
+			-- LAMHASMissing[entry.type] = entry.type
+		end
+	end
+	return controlTable
+end
+
+function WritCreater.generateHASConversions()
+	local optionsTable = WritCreater.Options()
+	WritCreater.lamConvertedOptions = {}
+	local controlTable = convertlamToHasTable(optionsTable)
+	WritCreater.lamConvertedOptions = controlTable.nameMap
+end
+
 function WritCreater.initializeSettingsMenu()
-	if LAM then
+	local LAM = LibAddonMenu2
+	if LAM and not IsConsoleUI() then
 		LAM:RegisterAddonPanel("DolgubonsWritCrafter", WritCreater.settings["panel"])
 		WritCreater.settings["options"] = WritCreater.Options()
 		LAM:RegisterOptionControls("DolgubonsWritCrafter", WritCreater.settings["options"])
