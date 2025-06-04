@@ -91,7 +91,7 @@ local function isQuestTypeActive(optionString)
 	return false
 end
 
-local lastSlotCraftable = false
+local lastSlotCraftable = true
 
 -- Automatically accepts master writs. Off by default but it's written so not deleting it just in case
 local function handleMasterWritQuestOffered()
@@ -174,6 +174,22 @@ ZO_InventorySlot_SetUpdateCallback(slotActionHook)
 -- SecurePostHook(ZO_InventorySlotActions, "AddSlotAction" , slotActionHook)
 -- in case an addon calls use item directly
 SecurePostHook("CalLSecureProtected", secureProtectedHook)
+
+local function gamepadInventoryHook(inventoryInfo, slotActions)
+	if not IsInGamepadPreferredMode() and not IsConsoleUI() then
+		return
+	end
+	if not inventoryInfo or not inventoryInfo.dataSource then
+		return
+	end
+	local bag = inventoryInfo.dataSource.bagId
+	local slot = inventoryInfo.dataSource.slotIndex
+	checkMasterWritCraftable(bag, slot)
+end
+
+if IsConsoleUI() or IsInGamepadPreferredMode() then
+	ZO_PreHook(_G, "ZO_InventorySlot_DiscoverSlotActionsFromActionList", gamepadInventoryHook)
+end
 
 
 -- Handles dialogue start. It will fire on any NPC dialogue, so we need to filter out a bit
@@ -424,6 +440,7 @@ function WritCreater.InitializeQuestHandling()
 			-- d("Accept")
 			if GetDisplayName()=="@Dolgubon" and true then
 				d("Accept")
+				-- original()
 			else
 				original()
 			end
