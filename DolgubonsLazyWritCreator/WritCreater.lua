@@ -18,13 +18,36 @@
 --local d = function() for i = 1, #abc do end end
 --test
 local dbug = function(...) d(...) end
-
-CRAFTING_TYPE_JEWELRYCRAFTING = CRAFTING_TYPE_JEWELRYCRAFTING or 7
-DolgubonsWritsBackdropQuestOutput.SetText = function()end
--- if GetDisplayName()~="@Dolgubon" then DolgubonsWritsBackdropQuestOutput.SetText = function() end end
-
 WritCreater = WritCreater or {}
 WritCreater.name = "DolgubonsLazyWritCreator"
+WritCreater.expectedVersion = 4004
+
+CRAFTING_TYPE_JEWELRYCRAFTING = CRAFTING_TYPE_JEWELRYCRAFTING or 7
+if DolgubonsWritsBackdropQuestOutput then DolgubonsWritsBackdropQuestOutput.SetText = function()end end
+
+local function GetAddOnVersion( name )
+	local am = GetAddOnManager()
+	for i = 1, am:GetNumAddOns() do
+		if (am:GetAddOnInfo(i) == name) then
+			return am:GetAddOnVersion(i)
+		end
+	end
+	return nil
+end
+-- Make sure Minion didn't mess up the manifest - thanks Code!
+if (GetAddOnVersion(WritCreater.name) < WritCreater.expectedVersion) then
+	EVENT_MANAGER:RegisterForEvent(WritCreater.name.."IntegrityCheck", EVENT_PLAYER_ACTIVATED, function()
+		EVENT_MANAGER:UnregisterForEvent(WritCreater.name.."IntegrityCheck", EVENT_PLAYER_ACTIVATED)
+		-- Fallback message if the localization file is unavailable
+		zo_callLater(function() CHAT_ROUTER:AddSystemMessage("ERROR: Corrupted installation of Dolgubon's Lazy Writ Crafter detected; please uninstall and reinstall.") end , 1000)
+	end)
+	-- return
+end
+
+-- the GetAddOnVersion function looked like this:
+
+
+-- if GetDisplayName()~="@Dolgubon" then DolgubonsWritsBackdropQuestOutput.SetText = function() end end
 
 WritCreater.settings = {}
 local LAM
