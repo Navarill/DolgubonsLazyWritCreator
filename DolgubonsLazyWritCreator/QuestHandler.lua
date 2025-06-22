@@ -439,8 +439,8 @@ function WritCreater.InitializeQuestHandling()
 		else
 			-- d("Accept")
 			if GetDisplayName()=="@Dolgubon" and true then
-				d("Accept")
-				-- original()
+				-- d("Accept")
+				original()
 			else
 				original()
 			end

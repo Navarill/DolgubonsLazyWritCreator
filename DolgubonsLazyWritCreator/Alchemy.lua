@@ -253,10 +253,21 @@ function WritCreater.alchemyWrit(solvent, reagents, requiredItemId, craftingWrit
 		if craftingWrits then
 			out(getOut().."\n"..WritCreater.strings.crafting)
 		end
+		local factor = GetAlchemyResultQuantity(findItemLocationById(solvent.itemId))
+		local quantity = 1
 		-- DolgubonsWritsBackdropCraft:SetHidden(craftingWrits)
+		if WritCreater:GetSettings().consumableMultiplier == 25 then
+			if factor == 4 then
+				quantity = 25
+			elseif factor == 16 then
+				quantity = 6
+			else
+				d("You have selected to craft a full stack, but you do not have the craft multiplication passives active")
+			end
+		end
 		DolgubonsWritsBackdropCraft:SetText(WritCreater.strings.craft)
 		WritCreater.showCraftButton(craftingWrits)
-		WritCreater.LLCInteraction:CraftAlchemyItemId(solvent.itemId, minCombo[1], minCombo[2], nil, 1, craftingWrits)
+		WritCreater.LLCInteraction:CraftAlchemyItemId(solvent.itemId, minCombo[1], minCombo[2], nil, quantity, craftingWrits)
 		WritCreater.setCloseOnce()
 	else
 		WritCreater.writCompleteUIHandle()
