@@ -13,11 +13,9 @@
 ## DependsOn: LibLazyCrafting>=4025
 ## PCDependsOn: LibAddonMenu-2.0
 ## ConsoleDependsOn: LibHarvensAddonSettings LibPrice
-## OptionalDependsOn: pChat LibStub LibFeedback LibCustomMenu  LibHistoire ArkadiusTradeToolsSales
+## OptionalDependsOn: pChat LibFeedback LibCustomMenu LibHistoire ArkadiusTradeToolsSales
 ## SavedVariables: DolgubonsWritCrafterSavedVars
 
-
-Libs\LibFeedback\feedback.lua
 
 HelperFunctions.lua
 LootHandler.lua
