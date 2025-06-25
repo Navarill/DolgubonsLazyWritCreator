@@ -123,6 +123,9 @@ local function LootAllHook(boxType) -- technically not a hook.
 			lootOutput(itemLink, ITEMTYPE_MASTER_WRIT, quantity)
 			updateSavedVars(vars, "master", quantity)
 			updateSavedVars(vars, "voucher", toVoucherCount(itemLink))
+		elseif itemType == ITEMTYPE_CONTAINER_STACKABLE then
+			lootOutput(itemLink, nil, quantity)
+			updateSavedVars(vars, "unknownMaster", 1)
 		elseif specializedType == SPECIALIZED_ITEMTYPE_RACIAL_STYLE_MOTIF_CHAPTER then
 			lootOutput(itemLink, nil, quantity)
 		elseif specializedType == SPECIALIZED_ITEMTYPE_CONTAINER_STYLE_PAGE then
@@ -421,6 +424,7 @@ end
 local handledItemTypes = 
 {
 	[ITEMTYPE_MASTER_WRIT] = "master",
+	[ITEMTYPE_CONTAINER_STACKABLE] = "master",
 	[SPECIALIZED_ITEMTYPE_TROPHY_SURVEY_REPORT] = "survey",
 	[44879] = "repair",
 	-- Subtracting 100 so that an item with an item type matching the item trait does not return intricate

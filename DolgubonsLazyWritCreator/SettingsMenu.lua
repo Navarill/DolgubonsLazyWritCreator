@@ -168,7 +168,7 @@ end
 -- WritCreater.savedVarsAccountWide.unlockedCheese
 -- WritCreater.savedVarsAccountWide.cheeseCompletedTwice
 if isCheeseOn() then
-	local isConsolePeasant = GetCVar("ForceConsoleFlow.2") == "1" -- kidding, you guys are fine :) But you'll likely never read this, sooooo
+	local isConsolePeasant = IsConsoleUI() -- kidding, you guys are fine :) But you'll likely never read this, sooooo
 	local cheesyActivityTypeIndex = 2
 	while TIMED_ACTIVITIES_MANAGER.activityTypeLimitData[cheesyActivityTypeIndex] do 
 		cheesyActivityTypeIndex = cheesyActivityTypeIndex + 1 
