@@ -543,12 +543,12 @@ local function initializeUI()
 	WritCreater.initializeSettingsMenu()
 	DolgubonsWrits:ClearAnchors()
 	DolgubonsWrits:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, WritCreater:GetSettings().OffsetX-470, WritCreater:GetSettings().OffsetY)
-	if false then --GetWorldName() ~= "NA Megaserver" then
+--[[	if false then --GetWorldName() ~= "NA Megaserver" then
 		DolgubonsWritsFeedbackSmall:SetHidden(true)
 		DolgubonsWritsFeedbackMedium:SetHidden(true)
 		DolgubonsWritsFeedbackLarge:SetHidden(true)
 		DolgubonsWritsFeedbackNote:SetText("If you found a bug, have a request or a suggestion, send me a mail. Note that mails with no attachments will expire within three days. Consider attaching 1g.")
-	end
+	end ]]
 	if WritCreater.savedVarsAccountWide.skin == "cheese"  then
 		DolgubonsWritsBackdropBackdrop:SetCenterTexture("/esoui/art/icons/housing_gen_inc_cheesewheel001.dds")
 		DolgubonsWritsBackdropBackdrop:ClearAnchors()
@@ -633,7 +633,7 @@ WritCreater.masterWritCompletion = function(...) end -- Empty function, intended
 WritCreater.writItemCompletion = function(...) end -- also empty
 
 local libraryDependencies = {
-	["LibStub"] = true, ["LibLazyCrafting"] = true, ["LibAddonMenu-2.0"] = true,
+	["LibLazyCrafting"] = true, ["LibAddonMenu-2.0"] = true,
 }
 
 local function determineTrueMissingLibraries()
@@ -652,7 +652,6 @@ local function initializeLibraries()
 	local missingString = WritCreater.strings["missingLibraries"]
 	local missing = false
 	local LLCVersion
-	local orid = d d = function()end if SLASH_COMMANDS["/libstubwarning"] then SLASH_COMMANDS["/libstubwarning"]("off") end d=orid
 	LLCVersion  =  LibLazyCrafting.version
 	if not LibLazyCrafting then
 		missing = true
@@ -663,13 +662,7 @@ local function initializeLibraries()
 		missing = true
 		missingString = missingString.."LibAddonMenu-2.0"
 	end
-	-- if missing then
-	-- 	mandatoryRoadblockOut(missingString)
-	-- 	-- cause an error if they aren't found so we get the error to catch
-	-- 	-- LibStub:GetLibrary("LibLazyCrafting")
-	-- 	-- LibStub:GetLibrary("LibAddonMenu-2.0")
-	-- 	return
-	-- end
+
 	if LLCVersion <2.33 then
 
 		mandatoryRoadblockOut("You have an old version of LibLazyCrafting loaded. Please obtain the newest version of the library by downloading it from esoui or minion")
@@ -720,7 +713,7 @@ local function initializeLibraries()
 	 end, nil , function()return WritCreater:GetSettings().styles end)
 
 
-	
+	--[[
 	local buttonInfo = 
 	{0,25000,100000, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7CZ3LW6E66NAU&source=url"
 		-- ,{"https://www.patreon.com/Dolgubon", "Patreon"}
@@ -737,9 +730,7 @@ local function initializeLibraries()
 		buttonInfo[#buttonInfo+1] = { function()JumpToSpecificHouse( "@Dolgubon", 9) end, "Visit Maze 2"}
 		-- feedbackString = "If you found a bug, have a request or a suggestion, or simply wish to donate, send a mail. You can also check out my house, or donate through Paypal or on Patreon."
 	end
-	local LibStub = nil
-	local LibFeedback = (LibStub and LibStub:GetLibrary("LibFeedback", true)) or LibFeedback
-	-- LibFeedback = LibStub:GetLibrary("LibFeedback")
+	local LibFeedback = LibFeedback
 	local showButton, feedbackWindow = LibFeedback:initializeFeedbackWindow(WritCreater, "Dolgubon's Lazy Writ Crafter",DolgubonsWrits, "@Dolgubon", 
 	{RIGHT, DolgubonsWrits, RIGHT,-50,40}, 
 	buttonInfo, 
@@ -749,7 +740,7 @@ local function initializeLibraries()
 	{TOPRIGHT, DolgubonsLazyWritStatsWindow, TOPRIGHT,-20,55}, 
 	buttonInfo, 
 	feedbackString)
-	DolgubonsWritsFeedback2 = feedbackWindow2
+	DolgubonsWritsFeedback2 = feedbackWindow2 ]]
 end
 
 local function initializeLocalization()
