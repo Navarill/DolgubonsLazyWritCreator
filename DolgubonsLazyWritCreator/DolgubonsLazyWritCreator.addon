@@ -17,8 +17,6 @@
 ## SavedVariables: DolgubonsWritCrafterSavedVars
 
 
-Libs\LibFeedback\feedback.lua
-
 HelperFunctions.lua
 LootHandler.lua
 QuestHandler.lua
