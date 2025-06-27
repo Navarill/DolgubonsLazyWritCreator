@@ -126,7 +126,7 @@ end
 
 local function improvedMasterWritQuest(journalIndex, questName)
 	local _, _, station, itemQuality, itemTemplateId, setIndex, itemTraitType, itemStyleId =  GetQuestConditionMasterWritInfo(journalIndex)
-	queueMasterWrit(station, itemQuality, itemTemplateId, setIndex, itemTraitType, itemStyleId, questName, journalIndex)
+	queueMasterWrit(station, itemQuality, itemTemplateId, setIndex, itemTraitType, itemStyleId, questName, itemTemplateId)
 end
 
 local function improvedRightClick(link, station, uniqueId)
@@ -160,7 +160,7 @@ end
 
 local function improvedEnchantJournal(journalIndex, name)
 	local itemId, levelId, station, quality = GetQuestConditionMasterWritInfo(journalIndex, 1,1)
-	EnchantingMasterWrit(itemId, levelId, quality, journalIndex, name)
+	EnchantingMasterWrit(itemId, levelId, quality, itemId, name)
 end
 
 local function provisioningJournal(journalIndex, name)
@@ -174,7 +174,7 @@ local function provisioningJournal(journalIndex, name)
 	end
 	local quantity = calculateRequiredProvisioningAmount(needed, itemId)
 	if quantity > 0 then
-		ProvisioningMasterWrit(itemId, quantity, journalIndex, name)
+		ProvisioningMasterWrit(itemId, quantity, itemId, name)
 	else
 		d(name..": Could not queue for writ. You might not know the required recipe")
 	end

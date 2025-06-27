@@ -46,7 +46,7 @@ local function updateSavedVars(vars, location, quantity)
 	end
 end
 
-local function lootOutput(itemLink, itemType, quantity, isAnniversary)
+local function lootOutput(itemLink, itemType, quantity, isAnniversary, isZenithar)
 
 	if WritCreater:GetSettings().lootOutput then
 		local amountBag, amountBank, amountCraft = GetItemLinkStacks( itemLink)
@@ -59,6 +59,8 @@ local function lootOutput(itemLink, itemType, quantity, isAnniversary)
 		end
 		if isAnniversary then
 			text = text.. " (Anniversary Box)"
+		elseif isZenithar then
+			text = text.. " (Zenithar Box)"
 		else
 			d(text)
 		end
@@ -147,7 +149,7 @@ end
 
 local function shouldSaveStats(boxType)
 	if GetNumLootItems() < 2 then return false end
-	if boxType == 0 then return false end -- then it's an anniversary box
+	if boxType == 0 then return false end -- then it's an anniversary box or zenithar box
 
 	return true
 end
@@ -275,12 +277,18 @@ local flavours = {
 	[GetItemLinkFlavorText("|H1:item:142175:3:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")] = true, -- Shipment reward
 	
 }
+local eventBoxes = {
+	[GetItemLinkFlavorText("|H1:item:194428:124:1:0:0:0:2023:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")] = true, -- anniversary box
+	-- [GetItemLinkFlavorText("|H1:item:153502:123:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")] = true, -- witches box
+	[GetItemLinkFlavorText("|H1:item:187701:5:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")] = true, -- zenithar box
+	[GetItemLinkFlavorText("|H1:item:187746:6:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")] = true, -- glorious zenithar box
+}
 local anniversaryBoxie = GetItemLinkFlavorText("|H1:item:194428:124:1:0:0:0:2023:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")
 local plunderSkulls = GetItemLinkFlavorText("|H1:item:153502:123:1:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")
 local flavourTexts = {}
 setmetatable(flavourTexts, {__index = function(t, i)
 	if flavours[i] then return true end
-	if i == anniversaryBoxie then
+	if eventBoxes[i]then
 		return WritCreater:GetSettings().lootJubileeBoxes
 	end
 	if i==plunderSkulls and GetDisplayName()=="@Dolgubon" then
@@ -821,5 +829,9 @@ local anniversaryBox = GetItemLinkName("|H1:item:183890:124:1:0:0:0:0:0:0:0:0:0:
 anniversaryBox = string.gsub(anniversaryBox, "%(","%%%(")
 anniversaryBox = string.gsub(anniversaryBox, "%)","%%%)")
 WritCreater.boxNames[anniversaryBox] = {0, 0}
+local zenitharBox = GetItemLinkName("|H1:item:187701:5:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")
+local gloriousZenitharBox = GetItemLinkName("|H1:item:187746:6:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h")
+WritCreater.boxNames[zenitharBox] = {0, 0}
+WritCreater.boxNames[gloriousZenitharBox] = {0, 0}
 -- |H1:item:204459:124:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h - Glorious Anniversary Jubilee Gift Box
 -- |H1:item:194428:123:1:0:0:0:2025:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h - Anniversary Jubilee Gift Box
