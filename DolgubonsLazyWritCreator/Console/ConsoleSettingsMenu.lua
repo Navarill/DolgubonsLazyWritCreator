@@ -380,6 +380,44 @@ function WritCreater.initializeSettingsMenu()
         WritCreater.lamConvertedOptions[WritCreater.optionStrings.transparentStatusBar],
         WritCreater.lamConvertedOptions[WritCreater.optionStrings.incompleteColour],
         WritCreater.lamConvertedOptions[WritCreater.optionStrings.completeColour],
+        {
+            type = LibHarvensAddonSettings.ST_SLIDER,
+            label = "Horizontal Position",
+            tooltip = "Horizontal position of the status bar",
+            setFunction = function(value)
+                WritCreater:GetSettings().statusBarX = value
+                WritCreater.updateQuestStatusAnchors()
+            end,
+            getFunction = function()
+                return WritCreater:GetSettings().statusBarX
+            end,
+            default = 5,
+            min = 0,
+            max = GuiRoot:GetWidth()-120,
+            step = 50,
+            -- unit = "", --optional unit
+            format = "%d", --value format
+            disable = function() return not WritCreater:GetSettings().showStatusBar end,
+        },
+        {
+            type = LibHarvensAddonSettings.ST_SLIDER,
+            label = "Vertical Position",
+            tooltip = "Horizontal position of the status bar",
+            setFunction = function(value)
+                WritCreater:GetSettings().statusBarY = value
+                WritCreater.updateQuestStatusAnchors()
+            end,
+            getFunction = function()
+                return WritCreater:GetSettings().statusBarY
+            end,
+            default = 5,
+            min = 0,
+            max = GuiRoot:GetHeight()-120,
+            step = 50,
+            -- unit = "", --optional unit
+            format = "%d", --value format
+            disable = function() return not WritCreater:GetSettings().showStatusBar end,
+        },
         -- {
         --     type = LHA.ST_SECTION,
         --     label = WritCreater.optionStrings["writRewards submenu"],
@@ -404,6 +442,65 @@ function WritCreater.initializeSettingsMenu()
         --     type = LHA.ST_SECTION,
         --     label = WritCreater.optionStrings["style stone menu"],
         -- },
+        {
+            type = LHA.ST_SECTION,
+            label = WritCreater.optionStrings["writRewards submenu"],
+        },
+        {
+            type = LHA.ST_SECTION,
+            label = WritCreater.optionStrings["masterReward"],
+        },
+        -- WritCreater.lamConvertedOptions["masterrewards1"],
+        WritCreater.lamConvertedOptions["masterrewards2"],
+        -- WritCreater.lamConvertedOptions["masterrewards3"],
+        -- WritCreater.lamConvertedOptions["masterrewards4"],
+        -- WritCreater.lamConvertedOptions["masterrewards5"],
+        -- WritCreater.lamConvertedOptions["masterrewards6"],
+        -- WritCreater.lamConvertedOptions["masterrewards7"],
+        -- WritCreater.lamConvertedOptions["masterrewards8"],
+        -- WritCreater.lamConvertedOptions["masterrewards9"],
+        -- WritCreater.lamConvertedOptions["masterrewards10"],
+        {
+            type = LHA.ST_SECTION,
+            label = WritCreater.optionStrings["intricateReward"],
+        },
+        -- WritCreater.lamConvertedOptions["intricaterewards1"],
+        WritCreater.lamConvertedOptions["intricaterewards2"],
+        -- WritCreater.lamConvertedOptions["intricaterewards3"],
+        -- WritCreater.lamConvertedOptions["intricaterewards4"],
+        -- WritCreater.lamConvertedOptions["intricaterewards5"],
+        -- WritCreater.lamConvertedOptions["intricaterewards6"],
+        -- WritCreater.lamConvertedOptions["intricaterewards7"],
+        {
+            type = LHA.ST_SECTION,
+            label = WritCreater.optionStrings["ornateReward"],
+        },
+        -- WritCreater.lamConvertedOptions["ornaterewards1"],
+        WritCreater.lamConvertedOptions["ornaterewards2"],
+        -- WritCreater.lamConvertedOptions["ornaterewards3"],
+        -- WritCreater.lamConvertedOptions["ornaterewards4"],
+        -- WritCreater.lamConvertedOptions["ornaterewards5"],
+        -- WritCreater.lamConvertedOptions["ornaterewards6"],
+        -- WritCreater.lamConvertedOptions["ornaterewards7"],
+        {
+            type = LHA.ST_SECTION,
+            label = WritCreater.optionStrings["surveyReward"],
+        },
+        -- WritCreater.lamConvertedOptions["surveyrewards1"],
+        WritCreater.lamConvertedOptions["surveyrewards2"],
+        -- WritCreater.lamConvertedOptions["surveyrewards3"],
+        -- WritCreater.lamConvertedOptions["surveyrewards4"],
+        -- WritCreater.lamConvertedOptions["surveyrewards5"],
+        -- WritCreater.lamConvertedOptions["surveyrewards6"],
+        -- WritCreater.lamConvertedOptions["surveyrewards7"],
+        -- WritCreater.lamConvertedOptions["surveyrewards8"],
+        -- WritCreater.lamConvertedOptions["surveyrewards9"],
+        {
+            type = LHA.ST_SECTION,
+            label = WritCreater.optionStrings["repairRewards"],
+        },
+        WritCreater.lamConvertedOptions["repairReward"],
+
     }
     local addAbandon = {
         WritCreater.lamConvertedOptions[zo_strformat(WritCreater.optionStrings["abandon quest for item"], "|H1:item:45850:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h")],
