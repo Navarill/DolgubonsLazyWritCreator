@@ -58,12 +58,13 @@ local function lootOutput(itemLink, itemType, quantity, isAnniversary, isZenitha
 			text = zo_strformat( WritCreater.strings.lootReceived, itemLink, amount, quantity)
 		end
 		if isAnniversary then
-			text = text.. " (Anniversary Box)"
+			text = text.. " (Event Box)"
 		elseif isZenithar then
 			text = text.. " (Zenithar Box)"
 		else
-			d(text)
+			
 		end
+		d(text)
 	end
 end
 
@@ -90,7 +91,7 @@ local function LootAllHook(boxType) -- technically not a hook.
 			end
 		elseif CanItemLinkBeVirtual(itemLink) then 
 			updateSavedVars(vars, GetItemLinkItemId(itemLink), quantity)
-			if GetItemLinkFunctionalQuality(itemLink) == ITEM_FUNCTIONAL_QUALITY_LEGENDARY or GetItemLinkItemId(itemLink) ==135153 or GetItemLinkItemId(itemLink) == 135149 then
+			if GetItemLinkFunctionalQuality(itemLink) == ITEM_FUNCTIONAL_QUALITY_LEGENDARY then
 				lootOutput(itemLink, nil, quantity)
 			end
 		elseif itemType==ITEMTYPE_RECIPE then 
@@ -224,15 +225,16 @@ local function OnLootUpdated(event)
 				local itemId = GetItemLinkItemId(itemLink)
 				--d(itemLink)
 				local quality = GetItemLinkFunctionalQuality(itemLink)
-				local itemType, specializedType = GetItemLinkItemType(itemLink) 
+				local itemType, specializedType = GetItemLinkItemType(itemLink)
+				local isSpecialBox = boxInfo == 0
 				if specializedType == SPECIALIZED_ITEMTYPE_RACIAL_STYLE_MOTIF_CHAPTER then
-					lootOutput(itemLink, nil, quantity, true)
+					lootOutput(itemLink, nil, quantity, isSpecialBox)
 				elseif specializedType == SPECIALIZED_ITEMTYPE_CONTAINER_STYLE_PAGE then
-					lootOutput(itemLink, nil, quantity, true)
+					lootOutput(itemLink, nil, quantity, isSpecialBox)
 				elseif quality>=ITEM_FUNCTIONAL_QUALITY_ARCANE then
-					lootOutput(itemLink, nil, quantity, true)
+					lootOutput(itemLink, nil, quantity, isSpecialBox)
 				elseif itemId == 56863 or itemId == 56862 then
-					lootOutput(itemLink, nil, quantity, true)
+					lootOutput(itemLink, nil, quantity, isSpecialBox)
 				end
 			end
 		end

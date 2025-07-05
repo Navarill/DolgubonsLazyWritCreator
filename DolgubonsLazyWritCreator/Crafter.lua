@@ -84,6 +84,9 @@ local myButtonGroup = {
 	},
 }
 
+local function removeCraftKeybind()
+	KEYBIND_STRIP:RemoveKeybindButtonGroup(myButtonGroup)
+end
 
 local function showCraftButton(craftingWrits)
 	if not IsInGamepadPreferredMode() then
@@ -132,6 +135,7 @@ SCENE_MANAGER:RegisterCallback("SceneStateChanged", function(scene, newState)
 	elseif (newState == SCENE_SHOWING) and not craftingRootScenes[sceneName] then
 		-- if IsSmithingCraftingType(GetCraftingInteractionType() ) then
 			out(WritCreater.gpCraftOutOriginalText)
+			removeCraftKeybind()
 		-- end
 	end
 	 end)
