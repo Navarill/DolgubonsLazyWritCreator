@@ -249,7 +249,7 @@ function WritCreater.alchemyWrit(solvent, reagents, requiredItemId, craftingWrit
 			out(missingOut)
 			return 
 		end
-		out(zo_strformat("Crafting will use 1 <<t:1>>, 1 <<t:2>>, and 1 <<t:3>>", getItemLinkFromItemId(solvent.itemId), getItemLinkFromItemId(minCombo[1]), getItemLinkFromItemId(minCombo[2])))
+		
 		if craftingWrits then
 			out(getOut().."\n"..WritCreater.strings.crafting)
 			shouldShowGamepadPrompt = false
@@ -269,6 +269,7 @@ function WritCreater.alchemyWrit(solvent, reagents, requiredItemId, craftingWrit
 				d("You have selected to craft a full stack, but you do not have the craft multiplication passives active")
 			end
 		end
+		out(zo_strformat("Crafting will use <<t:4>> <<t:1>>, <<t:4>> <<t:2>>, and <<t:4>> <<t:3>>", getItemLinkFromItemId(solvent.itemId), getItemLinkFromItemId(minCombo[1]), getItemLinkFromItemId(minCombo[2]), quantity))
 		DolgubonsWritsBackdropCraft:SetText(WritCreater.strings.craft)
 		WritCreater.showCraftButton(craftingWrits)
 		WritCreater.LLCInteraction:CraftAlchemyItemId(solvent.itemId, minCombo[1], minCombo[2], nil, quantity, craftingWrits)

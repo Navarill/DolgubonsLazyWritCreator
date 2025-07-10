@@ -1206,15 +1206,22 @@ function WritCreater.Options() --Sentimental
 				end,
 			}
 	end
+	-- actions:
+	-- 1 : Nothing
+	-- 2 : Deposit
+	-- 3 : Junk
+	-- 4 : Destroy
+	-- 5 : Decon
 	local validForReward = 
 	{  -- Name , list of crafts, valid actions
 		-- {"mats" ,    {1,2,3,4,5,6,7}, },
 		{"repair" ,  {}, {1,2,3,4}},
+		{"glyph"  ,  {}, {1, 2, 3, 4, 5 }},
+		{"soulGem",  {}, {1,2,3,4}},
 		{"master" ,  {1,2,3,4,5,6,7} , {1,2,3,4}},
 		{"survey" ,  {1,2,3,4,6,7}, {1,2,3,4}},
 		{"ornate" ,  {1,2,6,7}, {1,2,3,4,5}},
 		{"intricate" ,  {1,2,6,7}, {1,2,3,4,5}},
-		
 		-- {"soulGem" ,    {3}, },
 		-- {"glyph" ,    {3}, },
 		-- {"fragment" ,    {5}, },

@@ -500,6 +500,8 @@ function WritCreater.initializeSettingsMenu()
             label = WritCreater.optionStrings["repairRewards"],
         },
         WritCreater.lamConvertedOptions["repairReward"],
+        WritCreater.lamConvertedOptions["soulGemReward"],
+        WritCreater.lamConvertedOptions["glyphReward"],
 
     }
     local addAbandon = {

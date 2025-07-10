@@ -132,6 +132,7 @@ WritCreater.default =
 	["statusBarIcons"] = not GetCVar("language.2")=="en",
 	["transparentStatusBar"] = false,
 	["deconstructList"] = {},
+	["depositList"] = {},
 	["completeColour"] = {0.2,1,0.2},
 	["incompleteColour"] = {1,0,0},
 }
@@ -682,6 +683,8 @@ local function initializeLibraries()
 			return
 		end
 	 end)
+
+	
 	
 	local buttonInfo = 
 	{0,25000,100000, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7CZ3LW6E66NAU&source=url"

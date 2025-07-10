@@ -20,6 +20,22 @@ local CRAFTING_TYPE_CHARITY = 300
 local CRAFTING_TYPE_DEEPWINTER = 400
 local CRAFTING_TYPE_IMPERIAL = 500
 -- Debug function. Has the ability to save stuff and then later send it in a mail rather than outputting it in chat. Mail currently not enabled.
+local outputCounter
+
+local d = function(...)
+	if outputCounter then
+	else
+		CHAT_ROUTER:AddSystemMessage(...)
+		return
+	end
+	outputCounter = outputCounter + 1
+	if outputCounter < 10 then
+		CHAT_ROUTER:AddSystemMessage(...)
+	elseif outputCounter == 10 then
+		-- d("Large number of writs ")
+	end
+end
+
 
 function DolgubonGlobalDebugOutput(...)
 	if GetDisplayName()=="@Dolgubon" and (DolgubonGlobalDebugToggle or localDebugToggle) then
@@ -466,6 +482,7 @@ function WritCreater.InitializeRightClick()
 end
 
 function WritCreater.queueAllSealedWrits(bag)
+	outputCounter = 0
 	WritCreater.LLCInteractionMaster:cancelItem()
 	for i = 0, GetBagSize(bag) do
 		local itemType, specializedType = GetItemType(bag, i)
@@ -476,8 +493,11 @@ function WritCreater.queueAllSealedWrits(bag)
 				itemHandler(bag, i, stationType)
 			end
 		end
-
 	end
+	if outputCounter >= 10 then
+		CHAT_ROUTER:AddSystemMessage("Writ Crafter queued "..outputCounter.." sealed writs")
+	end
+	outputCounter = nil
 end
 
 --]]
