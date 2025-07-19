@@ -459,7 +459,7 @@ function WritCreater.alchemySealedWrit(bag, slot)
 	-- 
 end
 -- 395549
-local function getPotEffects(encodedTraits)
+local function decodeEffects(encodedTraits)
 
 	local e1 = (math.floor(encodedTraits / 65536) % 64)
 	local e2 = (math.floor(encodedTraits / 256) % 64)
@@ -482,7 +482,7 @@ function WritCreater.alchemyMasterQuestAdded(journalIndex, name)
 		solvent = 75365
 		quantity = 1
 	end
-	local effect1, effect2, effect3 = getPotEffects(encodedTraits)
+	local effect1, effect2, effect3 = decodeEffects(encodedTraits)
 	local r1, r2, r3 = findMasterWritReagents(materialId, effect1, effect2, effect3)
 	queueAlchemyMasterWrit(solvent, r1, r2, r3, quantity, journalIndex, name)
 end

@@ -20,7 +20,6 @@
 local dbug = function(...) d(...) end
 WritCreater = WritCreater or {}
 WritCreater.name = "DolgubonsLazyWritCreator"
-WritCreater.expectedVersion = 4004
 
 CRAFTING_TYPE_JEWELRYCRAFTING = CRAFTING_TYPE_JEWELRYCRAFTING or 7
 if DolgubonsWritsBackdropQuestOutput then DolgubonsWritsBackdropQuestOutput.SetText = function()end end
@@ -29,13 +28,19 @@ local function GetAddOnVersion( name )
 	local am = GetAddOnManager()
 	for i = 1, am:GetNumAddOns() do
 		if (am:GetAddOnInfo(i) == name) then
-			return am:GetAddOnVersion(i)
+			WritCreater.addonIndex = i
+			local _,displayedName = GetAddOnManager():GetAddOnInfo(i)
+			displayedName = string.sub(displayedName, 31) 
+			displayedName = string.gsub(displayedName,"[.]","")
+			return am:GetAddOnVersion(i), tonumber(displayedName)
 		end
 	end
 	return nil
 end
 -- Make sure Minion didn't mess up the manifest - thanks Code!
-if (GetAddOnVersion(WritCreater.name) < WritCreater.expectedVersion) then
+local loadedVersion, expectedVersion = GetAddOnVersion(WritCreater.name)
+WritCreater.expectedVersion = expectedVersion
+if expectedVersion and loadedVersion < expectedVersion then
 	EVENT_MANAGER:RegisterForEvent(WritCreater.name.."IntegrityCheck", EVENT_PLAYER_ACTIVATED, function()
 		EVENT_MANAGER:UnregisterForEvent(WritCreater.name.."IntegrityCheck", EVENT_PLAYER_ACTIVATED)
 		-- Fallback message if the localization file is unavailable
@@ -98,7 +103,8 @@ WritCreater.default =
 	["updateChoiceCopies"]= {
 	},
 	["keepQuestBuffer"] = false,
-	["craftMultiplier"] = 1,
+	["craftMultiplier"] = 0,
+	["simpleMultiplier"] = false,
 	["consumableMultiplier"] = 1,
 	["rewardHandling"] = {
 		mats =   		{sameForAllCrafts = true, [0] = 1, [1]= 1,[2]= 1,[3]= 1,[4]= 1,[5]= 1,[6]= 1,[7] = 1},
@@ -292,7 +298,11 @@ WritCreater.defaultAccountWide = {
 		["gutDestruction"] = 0,
 		["cheeseNerd"] = 0,
 		["cheeseCompletion"] = 0,
-	}
+	},
+	["viewedChangelogs"] = {
+
+	},
+	["initialInstall"] = true,
 }
 
 function WritCreater.resetSettings()
@@ -573,16 +583,34 @@ local function initializeOtherStuff()
 		HodorReflexes.users["@Dolgubon"] = {"Dolgubon", "|cDABD01Dolgubon|r", "DolgubonsLazyWritCreator/WizardMousedds.dds"} 
 	end
 
+	-- Added with the new multiplier behaviour. If they had it at 1 before, we keep the same behaviour, as 1 would cause it to still craft a full cycle
+	-- also add a simple multiplier option, in case they want to keep old behaviour (not implemented yet)
+	if not WritCreater.savedVars.convertMult then
+		if WritCreater.savedVars.craftMultiplier == 1 then
+			WritCreater.savedVars.craftMultiplier = 0
+		end
+		WritCreater.savedVars.simpleMultiplier = false
+		WritCreater.savedVars.convertMult = true
+	end
+	if not WritCreater.savedVarsAccountWide.convertMult then
+		if WritCreater.savedVarsAccountWide.craftMultiplier == 1 then
+			WritCreater.savedVarsAccountWide.craftMultiplier = 0
+		end
+		WritCreater.savedVars.simpleMultiplier = false
+		WritCreater.savedVarsAccountWide.convertMult = true
+	end
+
 	EVENT_MANAGER:RegisterForEvent(WritCreater.name, EVENT_PLAYER_ACTIVATED,function() 
 
-		if newlyLoaded then  
-			newlyLoaded = false  
+		if newlyLoaded then
+			newlyLoaded = false
+			WritCreater.displayChangelog()
 			WritCreater.scanAllQuests() 
 			EVENT_MANAGER:UnregisterForEvent(WritCreater.name, EVENT_PLAYER_ACTIVATED) 
 			if WritCreater:GetSettings().scanForUnopened then
 				WritCreater.scanForUnopenedContainers()
 			end
-			WritCreater.initializeStatsScene()
+			-- WritCreater.initializeStatsScene()
 		end 
 	end )
 
@@ -598,6 +626,7 @@ local function initializeOtherStuff()
 	if hashes[HashString(GetDisplayName())*11] then
 		WritCreater.savedVarsAccountWide[6697110] = true
 	end
+
 end--|H1:item:50616:369:50:26580:370:50:0:0:0:0:0:0:0:0:0:15:0:0:0:10000:0|h|h
 
 WritCreater.masterWritCompletion = function(...) end -- Empty function, intended to be overwritten by other addons
@@ -663,9 +692,9 @@ local function initializeLibraries()
 	 	WritCreater.masterWritCompletion(event, station, result)end 
 	 end)
 
-
+	WritCreater.savedVarsAccountWide["craftLog"] = WritCreater.savedVarsAccountWide["craftLog"]  or {}
 	WritCreater.LLCInteraction = LibLazyCrafting:AddRequestingAddon(WritCreater.name, true, function(event, station, result,...)
-		if event == LLC_CRAFT_SUCCESS then 
+		if event == LLC_CRAFT_SUCCESS then
 			WritCreater.writItemCompletion(event, station, result,...) 
 		end end, nil, function()return WritCreater:GetSettings().styles end 
 		)
@@ -677,7 +706,10 @@ local function initializeLibraries()
 		end
 	 end)
 
-	
+	WritCreater.LLCInteractionMultiplicator = LibLazyCrafting:AddRequestingAddon(WritCreater.name.."Multiplicator", true, function(event, station, result)
+	 end, nil , function()return WritCreater:GetSettings().styles end)
+
+
 	
 	local buttonInfo = 
 	{0,25000,100000, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7CZ3LW6E66NAU&source=url"
@@ -773,6 +805,7 @@ function WritCreater:Initialize()
 		WritCreater.InitializeRightClick()
 		WritCreater.setupScrollLists()
 		WritCreater.loadStatusBar()
+
 	end
 	if GetDate()%10000 == 1031 then
 		DolgubonsLazyWritStatsWindowBackdropTitle:SetText("Dolgubon's Lazy Wraith Crafter")
