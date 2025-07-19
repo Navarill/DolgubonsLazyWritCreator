@@ -1051,12 +1051,21 @@ function WritCreater.Options() --Sentimental
 			type = "slider",
 			name = WritCreater.optionStrings['craftMultiplier'],
 			tooltip = WritCreater.optionStrings['craftMultiplierTooltip'],
-			min = 1,
+			min = 0,
 			max = 8,
 			step = 1,
 			getFunc = function() return  WritCreater:GetSettings().craftMultiplier end,
 			setFunc = function(value) 
 				WritCreater:GetSettings().craftMultiplier = value
+			end,
+		},
+		{
+			type = "checkbox",
+			name = WritCreater.optionStrings['smartMultiplier'],
+			tooltip = WritCreater.optionStrings['smartMultiplierTooltip'],
+			getFunc = function() return not WritCreater:GetSettings().simpleMultiplier end,
+			setFunc = function(value) 
+				WritCreater:GetSettings().simpleMultiplier = not value
 			end,
 		},
 		{
