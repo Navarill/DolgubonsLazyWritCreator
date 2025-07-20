@@ -1,16 +1,18 @@
+--  bullet point: |t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t
 local changelog = {
 	{4030,
 [[Changelog window
- - You're looking at it! It will be used primarily to communicate new features and important bugfixes
+|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t You're looking at it! It will be used primarily to communicate new features and important bugfixes
 Improved Craft Multiplier
- - Will now craft for a full cycle of writs when you interact with a station (equipable gear only for now)
- - Checks the current contents of your bag, and crafts up to x amount of each item. e.g., if you have a multiplier of 3, and currently have 1 sword, it will craft two swords
- - If you want the old behaviour, you can turn the smart multiplier off in the settings menu
+|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t Will now craft for a full cycle of writs when you interact with a station (equipable gear only for now)
+|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t Checks the current contents of your bag, and crafts up to x amount of each item. e.g., if you have a multiplier of 3, and currently have 1 sword, it will craft two swords
+|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t If you want the old behaviour, you can turn the smart multiplier off in the settings menu
+Slight load optimization - stat window functionality will only be loaded if you open the window
 ]],
 [[
 QR codes for settings links (Console only)
- - Will pop up a QR code for you to scan, for example if you want to go to the forum thread for posting bugs
- - LibQRCode added as a dependency to facilitate this behaviour
+|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t Will pop up a QR code for you to scan, for example if you want to go to the forum thread for posting bugs
+|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t LibQRCode added as a dependency to facilitate this behaviour
 ]]
 
 }

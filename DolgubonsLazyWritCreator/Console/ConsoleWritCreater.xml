@@ -33,12 +33,12 @@
 			</Controls>
 		</TopLevelControl>
 		<TopLevelControl name="DolgubonsLazyWritChangelog" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="true">
-			<Dimensions x="700" y="600" />
+			<Dimensions x="800" y="700" />
 			<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="TOP" offsetX="0" offsetY="200" />
 			<Controls>
 				<Backdrop name="$(parent)Backdrop" centerColor="FFFFFF" edgeColor="00000000" inherits="ZO_InsetBackdrop">
 					<Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER" offsetX="0" offsetY="0" />
-					<Dimensions x="700" y="600" />
+					<Dimensions x="800" y="700" />
 					<Edge edgeSize="1" />
 					<Controls>
 						<Label name="$(parent)Title" font="ZoFontGamepad27" color="FFAA33" horizontalAlignment="CENTER" text="Dolgubon's Lazy Writ Creator">
@@ -47,7 +47,7 @@
 						<Label name="$(parent)Output" font="ZoFontGamepad27" color="FFFFFF" horizontalAlignment="LEFT"
 							verticalAlignment="TOP" text="The daily reset for writs will be in 1 hour" mouseEnabled="true">
 							<Anchor point="TOP" relativeTo="$(parent)Title" relativePoint="BOTTOM" offsetX="0" offsetY="-5" />
-							<Dimensions x="640" y="530" />
+							<Dimensions x="740" y="630" />
 						</Label>
 					</Controls>
 				</Backdrop>
