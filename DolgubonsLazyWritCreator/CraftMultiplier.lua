@@ -121,6 +121,7 @@ local multiplierQueued = false
 local function updateOut()
     local station = GetCraftingInteractionType()
     if not WritCreater.shouldUseSmartMultiplier() then return end
+    if station == 0 then return end
     DolgubonsWrits:SetHidden(false)
     local stationQueue = WritCreater.LLCInteractionMultiplicator:getAddonCraftingQueue(station)
     local total = 0

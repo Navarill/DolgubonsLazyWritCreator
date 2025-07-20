@@ -21,7 +21,7 @@ function WritCreater.showQRCode(url)
     if not DolgubonsLazyWritQRCode or not LibQRCode then
         RequestOpenUnsafeURL(url)
     end
-    if url == nil then url = "ojiioiasdjfoiasdjfio" end
+    if url == nil then return end
     if not WritCreater.qrCodeScene then
         local qrCodeScene = ZO_Scene:New("dlwcqrCode", SCENE_MANAGER)
         WritCreater.qrCodeScene = qrCodeScene

@@ -585,19 +585,20 @@ local function initializeOtherStuff()
 
 	-- Added with the new multiplier behaviour. If they had it at 1 before, we keep the same behaviour, as 1 would cause it to still craft a full cycle
 	-- also add a simple multiplier option, in case they want to keep old behaviour (not implemented yet)
+
 	if not WritCreater.savedVars.convertMult then
-		if WritCreater.savedVars.craftMultiplier == 1 then
+		if WritCreater.savedVars.craftMultiplier == 1 or not WritCreater.savedVars.craftMultiplier then
 			WritCreater.savedVars.craftMultiplier = 0
 		end
 		WritCreater.savedVars.simpleMultiplier = false
 		WritCreater.savedVars.convertMult = true
 	end
-	if not WritCreater.savedVarsAccountWide.convertMult then
-		if WritCreater.savedVarsAccountWide.craftMultiplier == 1 then
-			WritCreater.savedVarsAccountWide.craftMultiplier = 0
+	if not WritCreater.savedVarsAccountWide.accountWideProfile.convertMult then
+		if WritCreater.savedVarsAccountWide.accountWideProfile.craftMultiplier == 1 or not WritCreater.savedVarsAccountWide.accountWideProfile.craftMultiplier then
+			WritCreater.savedVarsAccountWide.accountWideProfile.craftMultiplier = 0
 		end
-		WritCreater.savedVars.simpleMultiplier = false
-		WritCreater.savedVarsAccountWide.convertMult = true
+		WritCreater.savedVarsAccountWide.accountWideProfile.simpleMultiplier = false
+		WritCreater.savedVarsAccountWide.accountWideProfile.convertMult = true
 	end
 
 	EVENT_MANAGER:RegisterForEvent(WritCreater.name, EVENT_PLAYER_ACTIVATED,function() 
