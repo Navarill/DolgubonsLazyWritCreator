@@ -18,8 +18,8 @@ QR codes for settings links (Console only)
 },
 {4032,
 [[Bug Fixes
-|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t Fixed lua errors which fired when using the deconstruction assistants
-|t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t Fixed a bug where the smart multiplier wouldn't properly detect level 1 crafted items
+- Fixed lua errors which fired when using the deconstruction assistants
+- Fixed a bug where the smart multiplier wouldn't properly detect level 1 crafted items
 ]]
 }
 }
@@ -47,7 +47,7 @@ function WritCreater.displayChangelog()
 		if not WritCreater.savedVarsAccountWide.viewedChangelogs[changelog[i][1]] then
 			WritCreater.savedVarsAccountWide.viewedChangelogs[changelog[i][1]] = true
 			local text = changelog[i][2]
-			if IsConsoleUI() then
+			if IsConsoleUI() and changelog[i][3] then
 				text = text..changelog[i][3]
 			end 
 			displayText(text)
