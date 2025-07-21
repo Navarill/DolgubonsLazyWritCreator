@@ -579,9 +579,6 @@ local function initializeOtherStuff()
 		WritCreater.savedVarsAccountWide.luckyProgress = WritCreater.defaultAccountWide.luckyProgress
 		WritCreater.savedVarsAccountWide.resetCheeseFor2025 = true
 	end
-	if HodorReflexes and HodorReflexes.users then 
-		HodorReflexes.users["@Dolgubon"] = {"Dolgubon", "|cDABD01Dolgubon|r", "DolgubonsLazyWritCreator/WizardMousedds.dds"} 
-	end
 
 	-- Added with the new multiplier behaviour. If they had it at 1 before, we keep the same behaviour, as 1 would cause it to still craft a full cycle
 	-- also add a simple multiplier option, in case they want to keep old behaviour (not implemented yet)

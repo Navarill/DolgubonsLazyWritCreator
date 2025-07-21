@@ -63,7 +63,7 @@ local itemsToCraft =
         2, "bow", 1, CRAFTING_TYPE_WOODWORKING},
     [43556] = 
     {
-        1, "shield", 2, CRAFTING_TYPE_WOODWORKING},
+        2, "shield", 2, CRAFTING_TYPE_WOODWORKING},
     [43557] = 
     {
         1, "inferno staff", 3, CRAFTING_TYPE_WOODWORKING},
@@ -83,7 +83,7 @@ local itemsToCraft =
 
 local craftLevels = 
 {
-	[1] = { false, 1 },
+	[1] = { false, 2 }, -- This is not an erorr. GetItemLevel returns 2 for items of level 1
 	[2] = { false, 16 },
 	[3] = { false, 26 },
 	[4] = { false, 36 },
@@ -96,7 +96,7 @@ local craftLevels =
 }
 
 local jewelryLevels={
-	[1] = { false, 1 },
+	[1] = { false, 2 },
 	[2] = { false, 26 },
 	[3] = { true, 10 },
 	[4] = { true, 80 },
@@ -167,7 +167,13 @@ local function peekBagState()
 		-- so we can easily continue to the next iteration of the loop
 		for x = 1, 1 do
 			local creatorName = GetItemCreatorName(BAG_BACKPACK, i)
-			if creatorName ~= playerName then
+            -- if IsConsoleUI() then
+            --     local link = GetItemLink(BAG_BACKPACK, i)
+            --     if not IsItemLinkCrafted(link) then
+            --         break
+            --     end
+            -- else
+            if creatorName ~= playerName then
 				break
 			end
 			local itemId = GetItemId(BAG_BACKPACK, i)
@@ -213,14 +219,17 @@ function WritCreater.preCraftMultiple(interactedStation)
 			local craftLevelInfo = levelsToUse[GetNonCombatBonus(craftingProficiencyLevels[station])]
 			local isChampion, level = craftLevelInfo[1], craftLevelInfo[2]
 			local patternIndex = craftInfo[3]
-			WritCreater.LLCInteractionMultiplicator:CraftSmithingItemByLevel(patternIndex, isChampion, level, LLC_FREE_STYLE_CHOICE, 1, false, station, INDEX_NO_SET, ITEM_FUNCTIONAL_QUALITY_NORMAL, WritCreater:GetSettings().autoCraft, itemId, nil, nil, nil, requiredAmount)
+            if level == 2 then
+                level = 1 -- items of level 1 return level 2 from the api, so we need to correct for that here
+            end
+			local r = WritCreater.LLCInteractionMultiplicator:CraftSmithingItemByLevel(patternIndex, isChampion, level, LLC_FREE_STYLE_CHOICE, 1, false, station, INDEX_NO_SET, ITEM_FUNCTIONAL_QUALITY_NORMAL, WritCreater:GetSettings().autoCraft, itemId, nil, nil, nil, requiredAmount)
 		end
 	end
     updateOut(interactedStation)
 end
 
 local function stationClosed(event, station)
-    if not WritCreater.shouldUseSmartMultiplier() then return end
+    if not WritCreater.shouldUseSmartMultiplier() or station == 0 then return end
     multiplierQueued = false
     WritCreater.LLCInteractionMultiplicator:cancelItem(station)
     DolgubonsWrits:SetHidden(true)
