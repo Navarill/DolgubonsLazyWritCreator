@@ -711,7 +711,7 @@ local function initializeLibraries()
 	 end, nil , function()return WritCreater:GetSettings().styles end)
 
 
-	
+	--[[
 	local buttonInfo = 
 	{0,25000,100000, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7CZ3LW6E66NAU&source=url"
 		-- ,{"https://www.patreon.com/Dolgubon", "Patreon"}
@@ -739,7 +739,7 @@ local function initializeLibraries()
 	buttonInfo, 
 	feedbackString)
 	DolgubonsWritsFeedback2 = feedbackWindow2
-end
+end ]]
 
 local function initializeLocalization()
 	local langs = {
