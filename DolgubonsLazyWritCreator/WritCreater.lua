@@ -541,12 +541,12 @@ local function initializeUI()
 	WritCreater.initializeSettingsMenu()
 	DolgubonsWrits:ClearAnchors()
 	DolgubonsWrits:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, WritCreater:GetSettings().OffsetX-470, WritCreater:GetSettings().OffsetY)
-	if false then --GetWorldName() ~= "NA Megaserver" then
+--[[	if false then --GetWorldName() ~= "NA Megaserver" then
 		DolgubonsWritsFeedbackSmall:SetHidden(true)
 		DolgubonsWritsFeedbackMedium:SetHidden(true)
 		DolgubonsWritsFeedbackLarge:SetHidden(true)
 		DolgubonsWritsFeedbackNote:SetText("If you found a bug, have a request or a suggestion, send me a mail. Note that mails with no attachments will expire within three days. Consider attaching 1g.")
-	end
+	end ]]
 	if WritCreater.savedVarsAccountWide.skin == "cheese"  then
 		DolgubonsWritsBackdropBackdrop:SetCenterTexture("/esoui/art/icons/housing_gen_inc_cheesewheel001.dds")
 		DolgubonsWritsBackdropBackdrop:ClearAnchors()
@@ -738,8 +738,8 @@ local function initializeLibraries()
 	{TOPRIGHT, DolgubonsLazyWritStatsWindow, TOPRIGHT,-20,55}, 
 	buttonInfo, 
 	feedbackString)
-	DolgubonsWritsFeedback2 = feedbackWindow2
-end ]]
+	DolgubonsWritsFeedback2 = feedbackWindow2 ]]
+end
 
 local function initializeLocalization()
 	local langs = {
