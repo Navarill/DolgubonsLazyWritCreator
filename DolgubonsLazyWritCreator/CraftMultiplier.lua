@@ -150,8 +150,28 @@ end
 
 WritCreater.updateCraftMultiplierOut = updateOut
 
+local function convert()
+    if WritCreater:GetSettings().craftMultiplier == 1 or not WritCreater:GetSettings().craftMultiplier then
+        WritCreater:GetSettings().craftMultiplier = 0
+    end
+    WritCreater:GetSettings().simpleMultiplier = false
+    WritCreater:GetSettings().convertMult = true
+end
+local function revert() -- for testing purposes
+    -- if WritCreater:GetSettings().craftMultiplier == 1 or not WritCreater:GetSettings().craftMultiplier then
+    --     WritCreater:GetSettings().craftMultiplier = 0
+    -- end
+    WritCreater:GetSettings().craftMultiplier = 1
+    WritCreater:GetSettings().simpleMultiplier = false
+    WritCreater:GetSettings().convertMult = nil
+end
+
+
 function WritCreater.shouldUseSmartMultiplier()
-    return WritCreater:GetSettings().craftMultiplier > 0 and not WritCreater:GetSettings().simpleMultiplier
+    if not WritCreater:GetSettings().convertMult then
+        convert()
+    end
+    return WritCreater:GetSettings().craftMultiplier > 0 and not WritCreater:GetSettings().simpleMultiplier and  WritCreater:GetSettings().convertMult
 end
 
 local craftingProficiencyLevels = {

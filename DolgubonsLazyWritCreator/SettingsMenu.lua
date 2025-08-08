@@ -115,6 +115,10 @@ local function styleCompiler()
 				end,
 		},
 		{
+			type = "description",
+			text = "Reminder: You can purchase base racial style stones from any crafting NPC vendor for 15g each",
+		},
+		{
 			type = "divider",
 			height = 15,
 			alpha = 0.5,
@@ -861,6 +865,14 @@ function WritCreater.Options() --Sentimental
             tooltip = "Queue all sealed writs in your inventory. Does not queue Alchemy sealed writs. Skips junked writs.",
 			func = function(value) 
 				WritCreater.queueAllSealedWrits(BAG_BACKPACK)
+			end,
+		},
+		{ 
+			type = "button",
+			name = WritCreater.optionStrings.craftHousePort,
+            tooltip = WritCreater.optionStrings.craftHousePortTooltip,
+			func = function(value) 
+				WritCreater.portToCraftingHouse()
 			end,
 		},
 		-- {
