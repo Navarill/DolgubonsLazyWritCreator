@@ -711,7 +711,10 @@ local function initializeLibraries()
 		end
 	 end)
 
-	WritCreater.LLCInteractionMultiplicator = LibLazyCrafting:AddRequestingAddon(WritCreater.name.."Multiplicator", true, function(event, station, result)
+	WritCreater.LLCInteractionMultiplicator = LibLazyCrafting:AddRequestingAddon(WritCreater.name.."Multiplicator", true, function(event, station, result,...)
+		if event == LLC_CRAFT_SUCCESS then
+			WritCreater.writItemCompletion(event, station, result,...) 
+		end
 	 end, nil , function()return WritCreater:GetSettings().styles end)
 
 

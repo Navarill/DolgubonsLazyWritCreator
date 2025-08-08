@@ -713,7 +713,7 @@ end
 local function enchantCrafting(quest,add)
 	out("")
 	local multiplierToUse = WritCreater:GetSettings().craftMultiplier or 1
-	if WritCreater:GetSettings().simpleMultiplier or WritCreater:GetSettings().craftMultiplier == 0 then
+	if WritCreater:GetSettings().craftMultiplier == 0 then
 		multiplierToUse = 1
 	end
 	DolgubonsWritsBackdropQuestOutput:SetText("")

@@ -180,8 +180,8 @@ function WritCreater.initializeSettingsMenu()
         },
         {
             type = LHA.ST_BUTTON,
-            label = "Port to crafting house",
-            tooltip = "Port to a publicly available crafting house",
+            label = WritCreater.optionStrings.craftHousePort,
+            tooltip = WritCreater.optionStrings.craftHousePortTooltip,
             buttonText = "Port",
             clickHandler = function(control, button)
                 WritCreater.portToCraftingHouse()
