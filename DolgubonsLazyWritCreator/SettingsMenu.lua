@@ -1253,10 +1253,9 @@ function WritCreater.Options() --Sentimental
 		{"survey" ,  {1,2,3,4,6,7}, {1,2,3,4}},
 		{"ornate" ,  {1,2,6,7}, {1,2,3,4,5}},
 		{"intricate" ,  {1,2,6,7}, {1,2,3,4,5}},
-		-- {"soulGem" ,    {3}, },
-		-- {"glyph" ,    {3}, },
-		-- {"fragment" ,    {5}, },
-		-- {"recipe" ,    {5}, },
+		{"fragment" ,    {5}, {1,2,3,4}},
+		-- {"gold" , {1,2,3, 6,7}, {1, 2}}
+		-- {"recipe" ,    {5}, {1,2,3,4}},
 	}
 	-- use same for all craft chaeckbox
 	-- option to use

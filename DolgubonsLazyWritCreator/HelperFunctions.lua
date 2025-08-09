@@ -44,8 +44,8 @@ local craftingHouses =
         subHeading = "Stations at front, to the right.", chatMessage = "Like their guild house and want to join? Check them out here: |H1:guild:1218717|hRebels Reign|h"},
         {displayName = "@Razberry9876" , houseId = 18, greeting = "Welcome to the Master Writ Pit!",
         subHeading = "Stations in front entry area.",},
-        {displayName = "@MisfitOfSith" , houseId = 62, greeting = "Welcome to the Tarnished Architect's Guild House! Feel free to craft to your heart's content with your fellow housing nerds.",
-        subHeading = "Inside house, in grand hall.", chatMessage = "Like their guild house and want to join? Check them out here: |H1:guild:1111961|hTarnished Architects|h"},},
+        {displayName = "@MisfitOfSith" , houseId = 94, greeting = "Welcome to the Tarnished Architect's Guild House! Prepare yourself to be Bio Shocked!",
+        subHeading = "Follow the portal", chatMessage = "Like their guild house and want to join? Check them out here: |H1:guild:1111961|hTarnished Architects|h"},},
     ["PS4live"] = 
         {{displayName = "@bat_girl77" , houseId =  55, greeting = "Welcome to bat’s Craft House!",
         subHeading = "Stations are located by front entrance.", chatMessage = "Like their guild house and want to join? Check them out here: |H1:guild:908761|hDecor and Design|h|h",},
@@ -76,7 +76,9 @@ local craftingHouses =
         {displayName = "@Ek1", houseId = 66, greeting = "Welcome to Ek1's house!", subheading = "Stations right here!", chatMessage = ""},
     }
 }
-
+if GetTimeStamp() < 1754784957 then
+    craftingHouses["XB1live"][3] = nil
+end
 
 ---Join AHC in Alinor - where traders thrive in a friendly community. Check it out here: |H1:guild:370167|hAuction House Central|h
 -- Like their guild house? Join AHC in Alinor here: |H1:guild:370167|hAuction House Central|h
