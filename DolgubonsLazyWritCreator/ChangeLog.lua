@@ -21,6 +21,13 @@ QR codes for settings links (Console only)
 - Fixed lua errors which fired when using the deconstruction assistants
 - Fixed a bug where the smart multiplier wouldn't properly detect level 1 crafted items
 ]]
+},
+{
+	4036,
+[[Added Psijic Recipe Fragments to supported writ reward handling
+Added the ability to craft set items for the 'A Crafty Business' Golden Pursuit. When you interact with a grand master crafting station, 
+you will see a prompt to craft the items. Will only craft the ones you still need, and will only show if you haven't finished the capstone reward
+]]
 }
 }
 

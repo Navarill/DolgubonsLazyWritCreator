@@ -55,6 +55,8 @@ local function out(str)
 	DolgubonsWritsBackdropOutput:SetText(str)
 end
 
+
+
 function WritCreater.setCloseOnce()
 	closeOnce = true
 end
@@ -257,7 +259,69 @@ local function maxStyle (piece) -- Searches to find the style that the user has 
 	return max, maxStones
 end
 
+------------------ 
+-- GOLDEN PURSUITS
+------------------
+local function craftGoldenPusuit()
 
+	local sets = {43, 80, 51, 38, 54, 37, 75}
+	if not WritCreater.pomotionalLLC then
+	end
+	if GetCraftingInteractionType() == 0 or GetCraftingInteractionType() > 7 then
+		WritCreater.pomotionalLLC:cancelItem()
+		return
+	end
+	local campaignKey = GetActivePromotionalEventCampaignKey(1)
+	local campaignId,_,_,numNeeded = GetPromotionalEventCampaignInfo(campaignKey)
+	for i = 1, GetNumActivePromotionalEventCampaigns() do
+		campaignKey = GetActivePromotionalEventCampaignKey(i) -- maybe it's the hero's return?
+		campaignId,_,_,numNeeded = GetPromotionalEventCampaignInfo(campaignKey)
+		if campaignId == 89 then -- aka crafty business
+			break
+		end
+	end
+	if campaignId ~= 89 then
+		return
+	end
+	local numComplete = GetPromotionalEventCampaignProgress(campaignKey)
+	if numComplete >= numNeeded then
+		return
+	end
+	local numCrafted = 0
+	for i = 1, #sets do
+		local progress = GetPromotionalEventCampaignActivityProgress(campaignKey, 32+i)
+		if progress == 0 then
+			numCrafted = numCrafted + 1
+			local result = WritCreater.pomotionalLLC:CraftSmithingItemByLevel(1,false, 1, LLC_FREE_STYLE_CHOICE, 1, false, GetCraftingInteractionType() , sets[i], ITEM_FUNCTIONAL_QUALITY_NORMAL, true, sets[i] )
+		end
+	end
+end
+
+local function showGoldenPursuitPrompt()
+	if not GetCraftingInteractionMode() == CRAFTING_INTERACTION_MODE_CONSOLIDATED_STATION then
+		return
+	end
+	local campaignKey = GetActivePromotionalEventCampaignKey(1)
+	local campaignId,_,_,numNeeded = GetPromotionalEventCampaignInfo(campaignKey)
+	for i = 1, GetNumActivePromotionalEventCampaigns() do
+		campaignKey = GetActivePromotionalEventCampaignKey(i) -- maybe it's the hero's return?
+		campaignId,_,_,numNeeded = GetPromotionalEventCampaignInfo(campaignKey)
+		if campaignId == 89 then -- aka crafty business
+			break
+		end
+	end
+	if campaignId ~= 89 then
+		return
+	end
+	local numComplete = GetPromotionalEventCampaignProgress(campaignKey)
+	if numComplete >= numNeeded then
+		return
+	end
+	out("Craft set items for unfinished golden pursuits?")
+	DolgubonsWrits:SetHidden(false)
+	showCraftButton(false)
+	pursuitCrafting = true
+end
 
 
 local function addMats(type,num,matsRequired, pattern, index)
@@ -940,10 +1004,6 @@ local function craftCheck(eventcode, station)
 		d("Writ Crafter needs translations for your language! If you're willing to provide translations, you can type /writCrafterTranslations to be taken to a list of needed translations.")
 	end
 
-	if HashString(GetDisplayName())*7 == 22297273509 then
-		d("About time you updated "..string.sub( GetDisplayName(), 2, 5 ).."!!")
-	end
-
 	local writs
 	if WritCreater:GetSettings().autoCraft then
 		craftingWrits = true
@@ -967,6 +1027,8 @@ local function craftCheck(eventcode, station)
 			DolgubonsWrits:SetHidden(not WritCreater:GetSettings().showWindow)
 			smithingCrafting(writs[station],craftingWrits)
 		end
+	else
+		showGoldenPursuitPrompt()
 	end
 	-- Prevent UI bug due to fast Esc
 	CALLBACK_MANAGER:FireCallbacks("CraftingAnimationsStopped")
@@ -977,6 +1039,9 @@ WritCreater.craftCheck = craftCheck
 
 
 WritCreater.craft = function()
+	if pursuitCrafting then
+		craftGoldenPusuit()
+	end
 	shouldShowGamepadPrompt = true
 	local station =GetCraftingInteractionType()
 	craftingWrits = true 
@@ -1009,6 +1074,8 @@ local function closeWindow(event, station)
 	DolgubonsWritsBackdropCraft:SetHidden(true)
 	closeOnce = false
 	WritCreater.LLCInteraction:cancelItem()
+	WritCreater.pomotionalLLC:cancelItem()
+	pursuitCrafting = false
 
 	ZO_AlertNoSuppression = originalAlertSuppression
 end
@@ -1036,7 +1103,11 @@ function WritCreater.initializeCraftingEvents()
 	EVENT_MANAGER:RegisterForEvent(WritCreater.name,  EVENT_BATTLEGROUND_STATE_CHANGED, function(event , pre, new) if pre == 0 and new > 0 then WritCreater.closeWindow() end end )
 	EVENT_MANAGER:RegisterForEvent(WritCreater.name, EVENT_END_CRAFTING_STATION_INTERACT, WritCreater.closeWindow)
 
-
+	WritCreater.pomotionalLLC =  LibLazyCrafting:AddRequestingAddon(WritCreater.name.."PromotionalEvents", true, function(event, station, result,...)
+		if event == LLC_CRAFT_SUCCESS then
+			-- WritCreater.writItemCompletion(event, station, result,...) 
+		end
+	 end, nil , function()return WritCreater:GetSettings().styles end)
 
 end
 -- This is just me expounding about self, dots, colons, and functions in lua.

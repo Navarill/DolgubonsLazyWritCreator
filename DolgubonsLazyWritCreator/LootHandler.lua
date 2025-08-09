@@ -448,6 +448,7 @@ local handledItemTypes =
 	[ITEMTYPE_GLYPH_JEWELRY] = "glyph",
 	[ITEMTYPE_GLYPH_WEAPON] = "glyph",
 	[ITEMTYPE_SOUL_GEM] = "soulGem",
+	[SPECIALIZED_ITEMTYPE_TROPHY_RECIPE_FRAGMENT] = "fragment",
 }
 
 local function getItemLinkCraftType(link)
