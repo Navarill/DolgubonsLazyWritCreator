@@ -331,6 +331,9 @@ WritCreater.optionStrings["recipeReward"]								= "Recipes"
 WritCreater.optionStrings["recipeRewardTooltip"]						= "What to do with recipes"
 WritCreater.optionStrings["fragmentReward"]								= "Psijic Fragments"
 WritCreater.optionStrings["fragmentRewardTooltip"]						= "What to do with psijic fragments"
+WritCreater.optionStrings["currencyReward"]								= "Gold"
+WritCreater.optionStrings["currencyRewardTooltip"]						= "What to do with quest reward gold"
+
 
 
 WritCreater.optionStrings["writRewards submenu"]						= "Writ Reward Handling"

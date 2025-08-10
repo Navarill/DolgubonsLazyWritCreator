@@ -30,7 +30,7 @@ local function GetAddOnVersion( name )
 		if (am:GetAddOnInfo(i) == name) then
 			WritCreater.addonIndex = i
 			local _,displayedName = GetAddOnManager():GetAddOnInfo(i)
-			displayedName = string.sub(displayedName, 31) 
+			displayedName = string.sub(displayedName, 31,38) 
 			displayedName = string.gsub(displayedName,"[.]","")
 			return am:GetAddOnVersion(i), tonumber(displayedName)
 		end
@@ -114,10 +114,12 @@ WritCreater.default =
 		intricate = 	{sameForAllCrafts = true, [0] = 1, [1]= 1,[2]= 1,[6]= 1,[7] = 1},
 		repair = 		{sameForAllCrafts = true, [0] = 1, [1]= 1,[2]= 1,[6]= 1,[7] = 1},
 		soulGem =   	{sameForAllCrafts = true, [0] = 1, },
-		glyph =   		{sameForAllCrafts = true, [0] = 1, },
-		fragment = 	 	{sameForAllCrafts = true, [0] = 1, },
-		recipe =   		{sameForAllCrafts = true, [0] = 1, },
+		glyph =   	{sameForAllCrafts = true, [0] = 1, },
+		fragment =	{sameForAllCrafts = true, [0] = 1, },
+		recipe =   	{sameForAllCrafts = true, [0] = 1, },
+		currency = 	{sameForAllCrafts = true, [0] = 1, },
 	},
+	["goldToDeposit"] = 0,
 	["mail"] = {
 		delete = false,
 		loot = IsESOPlusSubscriber(),
@@ -505,7 +507,7 @@ local function writSearch()
 		local Qname=GetJournalQuestName(i)
 
 		local isEnding = IsJournalQuestStepEnding(i,1,1)
-		if itemId and craftType and craftType ~=0 and GetJournalQuestRepeatType(i)==QUEST_REPEAT_DAILY and (GetJournalQuestType(i) == QUEST_TYPE_CRAFTING ) then
+		if itemId and craftType and craftType ~=0 and GetJournalQuestRepeatType(i)==QUEST_REPEAT_DAILY and (GetJournalQuestType(i) == QUEST_TYPE_CRAFTING or GetJournalQuestType(i) == QUEST_TYPE_HOLIDAY_EVENT ) then
 			W[craftType] = i
 			anyFound = true
 		elseif itemId and craftType and craftType ~=0 and GetJournalQuestRepeatType(i) == QUEST_REPEAT_NOT_REPEATABLE and GetJournalQuestType(i) == QUEST_TYPE_CRAFTING  then
@@ -517,7 +519,7 @@ local function writSearch()
 			end
 			-- If it's on the ending step, then the above can't find it. So we use the backup of the string matching
 		elseif isEnding then
-			if (GetJournalQuestType(i) == QUEST_TYPE_CRAFTING ) and GetJournalQuestRepeatType(i)==QUEST_REPEAT_DAILY then
+			if (GetJournalQuestType(i) == QUEST_TYPE_CRAFTING or GetJournalQuestType(i) == QUEST_TYPE_HOLIDAY_EVENT ) and GetJournalQuestRepeatType(i)==QUEST_REPEAT_DAILY then
 				for j = 1, #WritCreater.writNames do 
 					if string.find(myLower(Qname),myLower(WritCreater.writNames[j])) then
 						W[j] = i

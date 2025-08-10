@@ -350,6 +350,11 @@ local function runProcessDeposits()
 			numItems = numItems + 1
 		end
 	end
+	if WritCreater:GetSettings().goldToDeposit > 0 then
+		numItems = numItems + 1
+		TransferCurrency(CURT_MONEY, WritCreater:GetSettings().goldToDeposit, CURRENCY_LOCATION_CHARACTER,CURRENCY_LOCATION_BANK)
+		WritCreater:GetSettings().goldToDeposit = 0
+	end
 	for k, v in pairs(WritCreater.savedVars.depositList) do
 		local bag = v.bag
 		local index = v.slot
