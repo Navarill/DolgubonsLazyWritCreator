@@ -262,12 +262,15 @@ end
 ------------------ 
 -- GOLDEN PURSUITS
 ------------------
+
+local validGoldenPursuitCraftTypes = {[CRAFTING_TYPE_BLACKSMITHING] = true, [CRAFTING_TYPE_CLOTHIER] = true, [CRAFTING_TYPE_JEWELRYCRAFTING] = true, [CRAFTING_TYPE_WOODWORKING] = true}
+
 local function craftGoldenPusuit()
 
 	local sets = {43, 80, 51, 38, 54, 37, 75}
 	if not WritCreater.pomotionalLLC then
 	end
-	if GetCraftingInteractionType() == 0 or GetCraftingInteractionType() > 7 then
+	if not validGoldenPursuitCraftTypes[GetCraftingInteractionType()] then
 		WritCreater.pomotionalLLC:cancelItem()
 		return
 	end
@@ -298,7 +301,7 @@ local function craftGoldenPusuit()
 end
 
 local function showGoldenPursuitPrompt()
-	if not GetCraftingInteractionMode() == CRAFTING_INTERACTION_MODE_CONSOLIDATED_STATION then
+	if not (GetCraftingInteractionMode() == CRAFTING_INTERACTION_MODE_CONSOLIDATED_STATION) then
 		return
 	end
 	local campaignKey = GetActivePromotionalEventCampaignKey(1)
@@ -317,7 +320,7 @@ local function showGoldenPursuitPrompt()
 	if numComplete >= numNeeded then
 		return
 	end
-	out("Craft set items for unfinished golden pursuits?")
+	out("Craft set items for unfinished golden pursuits?\n(May be unable to craft anything. Axe/Bow/Ring/Robe only, uses iron)")
 	DolgubonsWrits:SetHidden(false)
 	showCraftButton(false)
 	pursuitCrafting = true
@@ -371,13 +374,13 @@ local function setupConditionsTable(quest, indexTableToUse)
 		["mats"] = {},
 	}
 	for condition = 1, GetJournalQuestNumConditions(quest,1) do
-		conditionsTable["text"][condition], conditionsTable["cur"][condition], conditionsTable["max"][condition],_,conditionsTable["complete"][condition] = GetJournalQuestConditionInfo(quest, 1, condition)
+		conditionsTable["text"][condition], conditionsTable["cur"][condition], conditionsTable["max"][condition],_,conditionsTable["complete"][condition], _,_,conditionType = GetJournalQuestConditionInfo(quest, 1, condition)
 		local itemIdT, _, stationT = GetQuestConditionItemInfo(quest, 1, condition)
 		WritCreater.savedVarsAccountWide["craftLog"][stationT] = WritCreater.savedVarsAccountWide["craftLog"][stationT] or {}
 		WritCreater.savedVarsAccountWide["craftLog"][stationT][itemIdT] = WritCreater.savedVarsAccountWide["craftLog"][stationT][itemIdT] or {( 0) + conditionsTable["max"][condition],GetItemLinkName(getItemLinkFromItemId(itemIdT))}
 		DolgubonsWritsBackdropQuestOutput:AddText("\n"..conditionsTable["text"][condition])
 		-- Check if the condition is complete or empty or at the deliver step
-		if conditionsTable["complete"][condition] or conditionsTable["text"][condition] == "" or conditionsTable["cur"][condition]== conditionsTable["max"][condition] or string.find(myLower(conditionsTable["text"][condition]),myLower(WritCreater.writCompleteStrings()["Deliver"])) then
+		if conditionType == QUEST_CONDITION_TYPE_ADVANCE_COMPLETABLE_SIBLINGS or conditionsTable["complete"][condition] or conditionsTable["text"][condition] == "" or conditionsTable["cur"][condition]== conditionsTable["max"][condition] or string.find(myLower(conditionsTable["text"][condition]),myLower(WritCreater.writCompleteStrings()["Deliver"])) then
 			conditionsTable["text"][condition] = nil
 		else
 			local found = false
@@ -670,6 +673,7 @@ function smithingCrafting(quest, craftItems)
 				end
 			end
 		else
+			writCompleteUIHandle()
 			return --pattern or level not found.
 		end
 	end
@@ -978,7 +982,7 @@ local showOnce= true
 local updateWarningShown = false
 local function craftCheck(eventcode, station)
 
-	local currentAPIVersionOfAddon = 101046
+	local currentAPIVersionOfAddon = 101047
 
 	if GetAPIVersion() > currentAPIVersionOfAddon and GetWorldName()~="PTS" and not updateWarningShown then 
 		d("Update your addons!") 
@@ -1041,6 +1045,7 @@ WritCreater.craftCheck = craftCheck
 WritCreater.craft = function()
 	if pursuitCrafting then
 		craftGoldenPusuit()
+		return
 	end
 	shouldShowGamepadPrompt = true
 	local station =GetCraftingInteractionType()
