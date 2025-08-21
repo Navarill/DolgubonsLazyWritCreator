@@ -93,7 +93,7 @@ local function QuestCompleteDialogGoldListener(eventCode, journalIndex)
 end
 
 local function QuestConfirmCompleteGoldListener(eventCode, completedQuestName)
-	if questName == completedQuestName then
+	if questName == completedQuestName and WritCreater:GetSettings().rewardHandling["currency"] == 2 then
 		WritCreater.savedVars.goldToDeposit = WritCreater.savedVars.goldToDeposit + questGold
 		questName = ""
 		questGold = 0
