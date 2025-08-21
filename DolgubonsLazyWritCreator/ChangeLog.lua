@@ -30,7 +30,14 @@ Added the ability to craft set items for the 'A Crafty Business' Golden Pursuit.
 |t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t Will only craft the ones you still need, and will only show if you haven't finished the capstone reward
 |t12:12:EsoUI/Art/Miscellaneous/bullet.dds|t Note that it's very basic, so will only craft robes/axes/bow/ring
 ]]
+},
+{
+	4038,
+[[Added gold to writ reward handling. You can set it to deposit all gold you get from writs into your bank. Only the actual quest gold will be deposited
+Fixed a bug where reward handling for the new unknown surveys was using the setting for the unknown master writs
+]],pc="Added a 'port to craft house' button to the settings menu (a few versions ago)"
 }
+
 }-- ,pc =[[Added a port to crafting house button to the settings menu]]
 
 local welcomeMessage = "Thanks for installing Dolgubon's Lazy Writ Crafter! Please check out the settings to customize the behaviour of the addon"
@@ -58,7 +65,7 @@ function WritCreater.displayChangelog()
 			local text = changelog[i][2]
 			if IsConsoleUI() and changelog[i].console then
 				text = text..changelog[i].console
-			elseif changelog[i].pc then
+			elseif not IsConsoleUI() and changelog[i].pc then
 				text = text..changelog[i].pc
 			end
 			displayText(text)

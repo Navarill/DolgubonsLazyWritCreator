@@ -1255,7 +1255,7 @@ function WritCreater.Options() --Sentimental
 		{"intricate" ,  {1,2,6,7}, {1,2,3,4,5}},
 		{"fragment" ,    {5}, {1,2,3,4}},
 		-- {"goldmat" , {1,2,3, 6,7}, {1, 2}}
-		-- {"currency" , {}, {1, 2}}
+		{"currency" , {}, {1, 2}}
 		-- {"recipe" ,    {5}, {1,2,3,4}},
 	}
 	-- use same for all craft chaeckbox
