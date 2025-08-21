@@ -431,10 +431,18 @@ local function rewardHandler(bag, slot)
 	end
 end
 
+local function distinguishStackableContainers(link)
+	if GetItemLinkFunctionalQuality(link) == ITEM_FUNCTIONAL_QUALITY_ARCANE then
+		return "survey"
+	elseif GetItemLinkFunctionalQuality(link) == ITEM_FUNCTIONAL_QUALITY_ARTIFACT then
+		return "master"
+	end
+end
+
 local handledItemTypes = 
 {
 	[ITEMTYPE_MASTER_WRIT] = "master",
-	[ITEMTYPE_CONTAINER_STACKABLE] = "master",
+	[ITEMTYPE_CONTAINER_STACKABLE] = distinguishStackableContainers,
 	[SPECIALIZED_ITEMTYPE_TROPHY_SURVEY_REPORT] = "survey",
 	[44879] = "repair",
 	-- Subtracting 100 so that an item with an item type matching the item trait does not return intricate
@@ -516,6 +524,9 @@ local function slotUpdateHandler(event, bag, slot, isNew,_,reason,changeAmount,.
 			local itemName = GetItemLinkName(link)
 			local itemTrait = GetItemLinkTraitInfo(link)
 			local actionSourceName = handledItemTypes[itemType] or handledItemTypes[specializedType] or handledItemTypes[itemId] or handledItemTypes[itemTrait-100]
+			if type(actionSourceName) == "function" then
+				actionSourceName = actionSourceName(link)
+			end
 			if actionSourceName then
 				-- d("Passed first check")
 				local craftType

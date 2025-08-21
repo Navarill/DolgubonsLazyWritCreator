@@ -422,6 +422,7 @@ function WritCreater.initializeSettingsMenu()
         WritCreater.lamConvertedOptions["repairReward"],
         WritCreater.lamConvertedOptions["soulGemReward"],
         WritCreater.lamConvertedOptions["glyphReward"],
+        WritCreater.lamConvertedOptions["currencyReward"],
 
     }
     local addAbandon = {
