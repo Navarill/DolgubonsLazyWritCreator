@@ -350,7 +350,7 @@ local function runProcessDeposits()
 			numItems = numItems + 1
 		end
 	end
-	if WritCreater.savedVars.goldToDeposit > 0 and WritCreater:GetSettings().rewardHandling["currency"] == 2 then
+	if WritCreater.savedVars.goldToDeposit > 0 and WritCreater:GetSettings().rewardHandling["currency"].all == 2 then
 		if GetInteractionType()~=INTERACTION_BANK and GetInteractionType() == INTERACTION_CONVERSATION then
 			openBankInterface()
 			return zo_callLater( runProcessDeposits, GetLatency()+50)

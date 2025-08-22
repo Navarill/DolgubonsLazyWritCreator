@@ -12,7 +12,16 @@
 
 
 WritCreater = WritCreater or {}
-local completionStrings
+local completionStrings = { -- This will be overridden in other languages, but we can have the english as a default
+	["place"] = "Place the goods",
+	["sign"] = "Sign the Manifest",
+	["masterPlace"] = "I've finished the ",
+	["masterSign"] = "<Finish the job.>",
+	["masterStart"] = "<Accept the contract.>",
+	["Rolis Hlaalu"] = "Rolis Hlaalu", -- This is the same in most languages but ofc chinese and japanese are different
+	["Deliver"] = "Deliver",
+	["Acquire"] = "acquire",
+}
 local function onWritComplete()
 	local zoneIndex = GetUnitZoneIndex("player")
 	local zoneId = GetZoneId(zoneIndex)
@@ -93,7 +102,7 @@ local function QuestCompleteDialogGoldListener(eventCode, journalIndex)
 end
 
 local function QuestConfirmCompleteGoldListener(eventCode, completedQuestName)
-	if questName == completedQuestName and WritCreater:GetSettings().rewardHandling["currency"] == 2 then
+	if questName == completedQuestName and WritCreater:GetSettings().rewardHandling["currency"].all == 2 then
 		WritCreater.savedVars.goldToDeposit = WritCreater.savedVars.goldToDeposit + questGold
 		questName = ""
 		questGold = 0
